@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "947916193662",
+    "firebase_url": "https://littlekites-c58cd.firebaseio.com",
+    "project_id": "littlekites-c58cd",
+    "storage_bucket": "littlekites-c58cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947916193662:android:2cda06d8003cf4ad",
+        "android_client_info": {
+          "package_name": "xplotica.littlekites"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947916193662-3fl39iegtj1v5rmmt311ni9i1o296bj7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xplotica.littlekites",
+            "certificate_hash": "921e08b3b29abec9e33eb1c34eb114a22be12a3c"
+          }
+        },
+        {
+          "client_id": "947916193662-oqq1fgvhcsptcp4ce40ttb7bidroea6u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrj07EECX76ASEdo-PGIUyVuHHdJk-w1I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947916193662-oqq1fgvhcsptcp4ce40ttb7bidroea6u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

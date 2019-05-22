@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1005714744540",
+    "firebase_url": "https://gmtuser-7c8ff.firebaseio.com",
+    "project_id": "gmtuser-7c8ff",
+    "storage_bucket": "gmtuser-7c8ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005714744540:android:a22b0f97d88215d5",
+        "android_client_info": {
+          "package_name": "g2evolution.GMT"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005714744540-4kf55j2u0rp01sbgumeutnupotf1rl6u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "g2evolution.GMT",
+            "certificate_hash": "2dc9f739b12ac8fbe1d452f3f0251c06627a3404"
+          }
+        },
+        {
+          "client_id": "1005714744540-m8f811pd7q2b7dmni43vdtceu91ruo8t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAyZRLbbhRFi3x6WHDX1H4KGIO5mRgahw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005714744540-m8f811pd7q2b7dmni43vdtceu91ruo8t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

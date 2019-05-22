@@ -1,0 +1,205 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".Activity.Activity_PaymentMode"
+    android:background="@drawable/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Payment Mode"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/green"
+                android:gravity="center"
+                android:layout_marginTop="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:weightSum="2"
+                android:gravity="center"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Net Amount:"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/netamount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:ems="10"
+                    android:maxLength="10"
+                    android:layout_toRightOf="@+id/text1"
+                    android:text="" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Delivery Charge:  "
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/dcharge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:ems="10"
+                    android:maxLength="10"
+                    android:layout_toRightOf="@+id/text1"
+                    android:text="" />
+
+            </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:weightSum="2"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Payable Amount :  "
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:ems="10"
+                    android:maxLength="10"
+                    android:layout_toRightOf="@+id/text1"
+                    android:text="" />
+
+            </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <RadioGroup
+            android:id="@+id/radiocancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@color/grey"
+            android:orientation="vertical">
+
+            <!-- <RadioButton
+                 android:layout_width="match_parent"
+                 android:layout_height="50dp"
+                 android:text="Credit Card"
+                 android:layout_marginTop="1dp"
+                 android:layout_marginLeft="1dp"
+                 android:padding="5dp"
+                 android:layout_marginRight="1dp"
+                 android:background="@color/white"
+                 android:id="@+id/radio1" />
+             <RadioButton
+                 android:layout_width="match_parent"
+                 android:layout_height="50dp"
+                 android:text="Debit Card"
+                 android:background="@color/white"
+                 android:layout_marginTop="1dp"
+                 android:layout_marginLeft="1dp"
+                 android:layout_marginRight="1dp"
+                 android:padding="5dp"
+                 android:id="@+id/radio2" />-->
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:text="Online Payment" />
+
+            <RadioButton
+                android:id="@+id/radio4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:text="Cash on Delivery(COD)" />
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/green"
+        android:layout_alignParentBottom="true"
+
+        android:text="Order"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>

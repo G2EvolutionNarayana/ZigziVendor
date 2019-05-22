@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="g2evolution.GMT">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!--
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    -->
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:name=".Payment.Application"
+        android:allowBackup="false"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Activity.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+        <receiver
+            android:name=".Autoverifyotp.SmsBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDlmRi8IrJ9wPk3CgElVGooXfrC_tI-3y0" />
+
+        <!-- Firebase Notifications -->
+
+        <service android:name=".service.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Firebase Notifications -->
+
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme2">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".Activity.Activity_otp"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.Signup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_cart"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_productdetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_address"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_review"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_categories"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_search"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_orderdetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_PaymentMode"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_BookPaymentMode"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Account"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Gallery_Images"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_TermsandConditions"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Aboutus"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.My_Orders"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Fragment.Fragment_AccountInformation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Payment.Activity_Payment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_ContactUs"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_subcategory_details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Testing_Menu"
+            android:theme="@style/AppTheme5" />
+        <activity
+            android:name=".Fragment.Fragment_Offer_Products"
+            android:screenOrientation="portrait" />
+        <!--
+        <activity android:name=".CCAvenue.InitialScreenActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:label="@string/app_name"
+            android:name="CCAvenue.WebViewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name="CCAvenue.StatusActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".CCAvenue.WebViewActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        -->
+
+        <activity
+            android:name=".ccavenue.InitialScreenActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="ccavenue.WebViewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="ccavenue.StatusActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ccavenue.WebViewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Product_List"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Activity_Address_Navigation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Fragment.fragment_filter"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Fragment.Fragment_filter_new_Pagination"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.Activity_ForgotPassword" />
+        <activity android:name=".Activity.Activity_Profile" />
+        <activity android:name=".Activity.Activity_ChangePassword" />
+        <activity android:name=".Activity.Sort_Activity" />
+        <activity android:name=".Activity.Notifications_Activity" />
+        <activity android:name=".Activity.My_Bookings_Activity" />
+        <activity android:name=".Activity.New_Login_Activity"></activity>
+    </application>
+
+</manifest>

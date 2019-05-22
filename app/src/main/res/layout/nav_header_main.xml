@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="100dp"
+    android:orientation="vertical"
+    android:background="@color/green"
+android:paddingBottom="0dp"
+android:paddingTop="0dp"
+>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pro_image"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/white"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/profile"
+
+
+       />
+    <TextView
+        android:id="@+id/profilename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/white"
+        android:layout_toRightOf="@+id/pro_image"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:id="@+id/profileid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text=""
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/pro_image"
+        android:layout_below="@+id/profilename"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="20dp"/>
+
+
+    <LinearLayout
+        android:layout_below="@+id/profileid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:foregroundGravity="center"
+            android:src="@drawable/home1"
+            />
+
+    <TextView
+        android:id="@+id/texthome"
+        android:layout_width="0dp"
+        android:layout_weight="1.8"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:padding="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:layout_gravity="end"
+            android:layout_weight="0.5"
+            android:foregroundGravity="right"
+            android:src="@drawable/logo"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

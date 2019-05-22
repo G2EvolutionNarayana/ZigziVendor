@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/logoutdialoglay"  >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:background="@color/green">
+        <TextView
+            android:text="Log Out"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:textSize="17dp"
+            android:layout_weight="5"/>
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Are You sure you want to logout?"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_marginTop="60dp"
+        android:textColor="@color/black" />
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        card_view:cardCornerRadius="1dp"
+        card_view:cardElevation="2dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:elevation="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                android:text="Cancel"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:id="@+id/no"
+                android:background="@color/green"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:layout_weight="0.03"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                android:text="OK"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:id="@+id/yes"
+                android:textColor="@color/white"
+                android:background="@color/green"
+
+                />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
+
