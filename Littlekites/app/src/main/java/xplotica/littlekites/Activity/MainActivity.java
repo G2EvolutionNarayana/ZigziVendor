@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
         mToolbar.setTitle("Home");
         fragment_home fragment0 = new fragment_home();
-        android.support.v4.app.FragmentTransaction fragmentTransaction0 =
+        androidx.core.app.FragmentTransaction fragmentTransaction0 =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction0.replace(R.id.fragment_container, fragment0);
         fragmentTransaction0.commit();
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
                 mToolbar.setTitle("Home");
                 Log.e("testing", "Case:0");
                 fragment_home fragment0 = new fragment_home();
-                android.support.v4.app.FragmentTransaction fragmentTransaction0 =
+                androidx.core.app.FragmentTransaction fragmentTransaction0 =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction0.replace(R.id.fragment_container, fragment0);
                 fragmentTransaction0.commit();
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
                 mToolbar.setTitle("Contact us");
                 Log.e("testing", "Case:5");
                 fragment_contactus fragment5 = new fragment_contactus();
-                android.support.v4.app.FragmentTransaction fragmentTransaction5 =
+                androidx.core.app.FragmentTransaction fragmentTransaction5 =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction5.replace(R.id.fragment_container, fragment5);
                 fragmentTransaction5.commit();
@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
                 mToolbar.setTitle("About Us");
                 Log.e("testing", "Case:6");
                 fragment_aboutus fragment6 = new fragment_aboutus();
-                android.support.v4.app.FragmentTransaction fragmentTransaction6 =
+                androidx.core.app.FragmentTransaction fragmentTransaction6 =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction6.replace(R.id.fragment_container, fragment6);
                 fragmentTransaction6.commit();

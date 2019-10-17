@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    app:cardCornerRadius="5dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="5dp"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/img_relative"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/linearlayout1">
+
+            <ImageView
+                android:id="@+id/electronicimage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"
+                />
+
+            <TextView
+                android:id="@+id/textdiscount"
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:text="-35%"
+                android:textColor="#ffffff"
+                android:textSize="11sp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_circle"
+                android:gravity="center_vertical|center_horizontal"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearlayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/electronicname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Sample title"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:textSize="15dp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/electronicdetail1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="(Black,32 GB)"
+                android:textSize="12dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/actual_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textStyle="bold"
+                    android:text="2,390.00"
+                    android:textColor="@color/grey1"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    android:textSize="12dp" />
+                <TextView
+                    android:id="@+id/pdsubprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="5000/-"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    android:layout_below="@id/actual_price"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/pdprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/pdsubprice"
+                    android:layout_below="@id/actual_price"
+                    android:visibility="gone"
+                    android:text="5000/-"
+                    android:textColor="@color/grey1"
+                    android:textSize="12dp" />
+
+
+                <TextView
+                    android:id="@+id/discount_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/pdsubprice"
+                    android:text="discount price"
+                    android:textSize="12sp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:textColor="@color/grey"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

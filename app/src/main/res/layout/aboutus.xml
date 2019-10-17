@@ -13,7 +13,7 @@
     android:orientation="horizontal"
 
     android:layout_margin="20dp">
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_weight="1"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -56,7 +56,7 @@ in 2018 with a focus on personalisation of electronic items, Photo Frame
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 

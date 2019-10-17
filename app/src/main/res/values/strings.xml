@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GMT</string>
+    <string name="app_name">Boutique</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>>
     <string name="search_hint"></string>
@@ -16,5 +16,28 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <string name="api_key">AIzaSyCUP7tH5YrzhKpWaYT3SURSqrtPaKeTqyg</string>
+
+
+    <string-array name="spinner_category">
+        <item>Tailor</item>
+        <item>Business Plan</item>
+        <item>Supplier</item>
+        <item>Cutting Master</item>
+    </string-array>
+
+    <string-array name="spinner_qualification">
+        <item>10th</item>
+        <item>12th</item>
+        <item>Graduation</item>
+        <item>Post Graduation</item>
+    </string-array>
+
+    <string-array name="spinner_language">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Kannada</item>
+    </string-array>
 
 </resources>

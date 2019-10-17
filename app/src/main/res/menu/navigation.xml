@@ -9,12 +9,12 @@
         app:showAsAction="ifRoom"
         android:title="HOME" />
 
-    <item
+  <!--  <item
         android:id="@+id/cart"
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:icon="@drawable/cart1"
-        android:title="ADDRESS" />
+        android:title="ADDRESS" />-->
 
     <item
         android:id="@+id/orderhistory"

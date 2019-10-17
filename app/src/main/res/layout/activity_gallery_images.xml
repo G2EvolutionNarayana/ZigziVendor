@@ -14,13 +14,13 @@
         android:background="#A9A9A9"
         android:fitsSystemWindows="true">
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="72dp">
 
-        </android.support.v4.view.ViewPager>
+        </androidx.viewpager.widget.ViewPager>
 
         <!--   <ImageButton
        android:id="@+id/btn_close"

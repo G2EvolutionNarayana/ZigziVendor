@@ -46,7 +46,7 @@
                 android:layout_below="@+id/slider"
                 android:gravity="center"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view1"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_width="match_parent"
@@ -78,7 +78,7 @@
         app:menu="@menu/navigation"/>-->
 
 
-    <android.support.design.widget.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/navigation"

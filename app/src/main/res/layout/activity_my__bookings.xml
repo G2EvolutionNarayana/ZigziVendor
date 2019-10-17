@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="g2evolution.GMT.Activity.My_Bookings_Activity">
+    tools:context="g2evolution.Boutique.Activity.My_Bookings_Activity">
 
 
     <LinearLayout

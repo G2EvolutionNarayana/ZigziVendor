@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg"
-    tools:context="g2evolution.GMT.Activity.New_Login_Activity">
+    android:background="@drawable/bg_image"
+    tools:context="g2evolution.Boutique.Activity.New_Login_Activity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +21,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="80sp"
                 android:orientation="vertical">
 
 
@@ -30,7 +31,8 @@
                     android:orientation="horizontal"
                     android:layout_margin="@dimen/dimen_20dp"
                     android:background="@drawable/green_border"
-                    android:layout_gravity="end">
+                    android:layout_gravity="end"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/skip"
@@ -42,6 +44,8 @@
                         android:textColor="@color/white"
                         android:layout_height="wrap_content"
                         android:text="Skip"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
                         />
 
 
@@ -53,139 +57,99 @@
 
 
                 <TextView
+                    android:id="@+id/title_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40sp"
-                    android:textStyle="italic"
-                    android:text="Welcome"/>
-                <ImageView
+                    android:text="Boutique"
+                    android:textStyle="bold"
+                    android:gravity="center_horizontal"
+                    android:textSize="35sp"
+
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:id="@+id/sub_title_text"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/logo"/>
+                    android:layout_height="wrap_content"
+                    android:text="Best fashion collection for you"
+                    android:textStyle="bold"
+                    android:gravity="center_horizontal"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"/>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="vertical"
-                        android:layout_marginTop="@dimen/dimen_20dp"
-                        android:layout_marginRight="@dimen/dimen_20dp"
-                        android:layout_marginLeft="@dimen/dimen_20dp"
-                        android:background="@drawable/bordergreyround">
 
 
-                        <EditText
-                            android:id="@+id/logmob"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:theme="@style/fontStyle"
-                            android:layout_gravity="center"
-                            android:hint="Enter MobileNo"
-                            android:layout_marginTop="@dimen/dimen_15dp"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/dimen_10dp"
-                            android:textColor="@color/black"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:singleLine="true"
-                            android:textSize="15sp" />
+                <EditText
+                    android:id="@+id/logmob"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="80sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:maxLines="1"
+                    android:textStyle="normal"
+                    android:hint="  Mobile no"
+                    app:backgroundTint="@color/white"
+                    android:inputType="phone"
+                    android:singleLine="true"
+                    android:drawableLeft="@drawable/user" />
 
-                    </LinearLayout>
+
+
+
+                <com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText
+                    android:id="@+id/logpassword"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:inputType="textPassword"
+                    android:textStyle="normal"
+                    android:hint=" Password"
+                    app:backgroundTint="@color/white"
+                    android:drawableLeft="@drawable/lock"
+                    android:singleLine="true"
+                    android:maxLines="1" />
 
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="vertical"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:layout_marginRight="@dimen/dimen_20dp"
-                    android:layout_marginLeft="@dimen/dimen_20dp"
-                    android:background="@drawable/bordergreyround">
-
-                    <com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText
-                        android:id="@+id/logpassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:theme="@style/fontStyle"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="10sp"
-                        android:layout_marginRight="@dimen/dimen_10dp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:hint="Enter Password"
-                        android:singleLine="true"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20dp"
-                    android:layout_marginRight="@dimen/dimen_20dp"
-                    android:layout_marginLeft="@dimen/dimen_20dp"
-                    android:backgroundTint="@color/green"
-                    android:background="@drawable/bordergreyround">
+                    android:layout_marginTop="40dp"
+                    android:weightSum="2">
 
-                    <Button
+                    <TextView
                         android:id="@+id/logsubmit"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@null"
-                        android:gravity="center"
-                        android:padding="1dp"
-                        android:paddingLeft="0sp"
-                        android:text="Login "
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2"
-                    android:layout_marginRight="@dimen/dimen_20dp"
-                    android:layout_marginLeft="@dimen/dimen_20dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/forgetpasswd"
-                        android:text="Forgot Password?"
-                      android:layout_weight="1"
-                        android:padding="5dp"
-                        android:textSize="18sp"
-                        android:gravity="center_horizontal"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/white" />
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="20dp"
-                       android:layout_gravity="center_vertical"
-                        android:background="@color/white"/>
-
-                    <TextView
-                        android:id="@+id/signup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="Signup?"
                         android:layout_weight="1"
-                        android:padding="5dp"
-                        android:gravity="center_horizontal"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/white"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:text="Sign In"/>
+
+
+                    <TextView
+                        android:id="@+id/forgetpasswd"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:textColor="@color/white"
+                        android:text="Forgot Password"/>
 
                 </LinearLayout>
+
+
+
+
 
 
             </LinearLayout>
@@ -193,7 +157,23 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+
+        <TextView
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:text="Don't have an account?"/>
+
+    </RelativeLayout>
 
 
-
-</LinearLayout>
+</RelativeLayout>

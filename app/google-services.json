@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1005714744540:android:a22b0f97d88215d5",
         "android_client_info": {
-          "package_name": "g2evolution.GMT"
+          "package_name": "g2evolution.Boutique"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1005714744540-4kf55j2u0rp01sbgumeutnupotf1rl6u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "g2evolution.GMT",
+            "package_name": "g2evolution.Boutique",
             "certificate_hash": "2dc9f739b12ac8fbe1d452f3f0251c06627a3404"
           }
         },

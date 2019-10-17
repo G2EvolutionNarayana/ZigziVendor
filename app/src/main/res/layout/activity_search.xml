@@ -14,7 +14,7 @@
             android:id="@+id/editsearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search grocery products in GMT"
+            android:hint="Search grocery products in Boutique"
             android:padding="10dp"
             android:singleLine="true"
             android:textColor="@color/black"
