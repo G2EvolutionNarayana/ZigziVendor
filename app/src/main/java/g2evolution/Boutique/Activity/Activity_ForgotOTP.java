@@ -1,12 +1,12 @@
-package g2evolution.Boutique;
+package g2evolution.Boutique.Activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,143 +31,56 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import g2evolution.Boutique.Activity.Activity_ForgotOTP;
+import g2evolution.Boutique.EndUrl;
+import g2evolution.Boutique.Login_Activity;
+import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.JSONParser;
 
-public class Login_Activity extends AppCompatActivity implements View.OnClickListener {
+public class Activity_ForgotOTP extends AppCompatActivity implements View.OnClickListener{
 
 
+    Button butverify;
+
+    EditText otp_edit;
+
+
+    String strotp;
+    Context context;
+
+    String strreguser_id;
 
     JSONParser jsonParser = new JSONParser();
 
-    @BindView(R.id.user_name_edit_text)
-    EditText user_name_edit_text;
-    @BindView(R.id.password_edit_text)
-    EditText password_edit_text;
-    @BindView(R.id.login_text)
-    TextView login_text;
-    @BindView(R.id.sign_in_text)
-    TextView sign_in_text;
-    @BindView(R.id.forgot_password_text)
-    TextView forgot_password_text;
+    EditText new_password, confirm_password;
+    Button butpasswordsubmit;
+    String strnewpassword, strconfirmpassword;
 
-
-    EditText editforgotmobileno;
-    String strforgotmobileno;
-    String str_user_id;
-    Button butforgot;
     String strforgot_user_id;
-
-    String strmobileno, strpassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);// hide statusbar of Android
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_boutlogin);
+        setContentView(R.layout.activity_forgot_otp);
+        context = this;
 
-        ButterKnife.bind(this);
+        butverify = (Button) findViewById(R.id.butverify);
+        otp_edit = (EditText) findViewById(R.id.otp_edit);
+        butverify.setOnClickListener(this);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "arial.ttf");
-
-        ((TextView) findViewById(R.id.title_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.sub_title_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.sign_in_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.login_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.forgot_password_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.user_name_edit_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.password_edit_text)).setTypeface(typeface);
-
-        listeners();
-    }
-
-    private void listeners() {
-
-        sign_in_text.setOnClickListener(this);
-        login_text.setOnClickListener(this);
-        forgot_password_text.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.sign_in_text:
-
-                Intent intent1=new Intent(Login_Activity.this,SignUp_ACtivity.class);
-                startActivity(intent1);
-                break;
+        SharedPreferences prefuserdata2 = getSharedPreferences("strforgot_user_id", 0);
+        strforgot_user_id = prefuserdata2.getString("strforgot_user_id", "");
+        Log.e("testing","strforgot_user_id = "+strforgot_user_id);
 
 
-            case R.id.login_text:
-
-                submit();
-
-                break;
-
-
-            case R.id.forgot_password_text:
-
-               /* Intent intent3=new Intent(Login_Activity.this,Forgot_Password_Activity.class);
-                startActivity(intent3);*/
-
-                forgetotp();
-
-                break;
-
-                default:
-
-
-        }
 
     }
-    private void submit() {
+    private void setpassword() {
 
-        strmobileno = user_name_edit_text.getText().toString();
-        strpassword = password_edit_text.getText().toString();
-
-        if (strmobileno.isEmpty()){
-
-            Toast.makeText(Login_Activity.this, "Please Enter Mobileno", Toast.LENGTH_SHORT).show();
-        }
-
-        else {
-            if (strpassword.isEmpty()){
-
-                Toast.makeText(Login_Activity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-            }else{
-
-            }
-
-            //  strpassword = logpassword.getText().toString();
-
-            ConnectionDetector cd = new ConnectionDetector(Login_Activity.this);
-            if (cd.isConnectingToInternet()) {
-
-                // new Loader().execute();
-                new LoadPLogin().execute();
-
-            } else {
-
-
-                Toast.makeText(Login_Activity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
-
-            }
-
-
-        }
-
-    }
-
-    private void forgetotp() {
-        final Dialog dialogpassword = new Dialog(Login_Activity.this);
+        final Dialog dialogpassword = new Dialog(Activity_ForgotOTP.this);
         dialogpassword.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        LayoutInflater inflater = (LayoutInflater) Login_Activity.this.getSystemService(Login_Activity.this.LAYOUT_INFLATER_SERVICE);
-        View convertView = (View) inflater.inflate(R.layout.dialog_forgot, null);
+        LayoutInflater inflater = (LayoutInflater) Activity_ForgotOTP.this.getSystemService(Activity_ForgotOTP.this.LAYOUT_INFLATER_SERVICE);
+        View convertView = (View) inflater.inflate(R.layout.dialog_password, null);
         //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
 
         dialogpassword.setContentView(convertView);
@@ -186,8 +98,9 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        editforgotmobileno = (EditText) convertView.findViewById(R.id.editforgotmobileno);
-        butforgot = (Button) convertView.findViewById(R.id.butforgot);
+        new_password = (EditText) convertView.findViewById(R.id.new_password);
+        confirm_password = (EditText) convertView.findViewById(R.id.confirm_password);
+        butpasswordsubmit = (Button) convertView.findViewById(R.id.butpasswordsubmit);
         ImageView imgcancel = (ImageView) convertView.findViewById(R.id.imgcancel);
         imgcancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,193 +108,120 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
                 dialogpassword.dismiss();
             }
         });
-        butforgot.setOnClickListener(new View.OnClickListener() {
+        butpasswordsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitforgot();
+                submitpassword();
             }
         });
 
         dialogpassword.show();
-
-
     }
 
-    private void submitforgot() {
+    private void submitpassword() {
 
-        strforgotmobileno = editforgotmobileno.getText().toString();
+        strnewpassword = new_password.getText().toString();
+        strconfirmpassword = confirm_password.getText().toString();
 
 
-        if (strforgotmobileno == null || strforgotmobileno.trim().length() == 0){
-            editforgotmobileno.setFocusableInTouchMode(true);
-            editforgotmobileno.requestFocus();
-            Toast.makeText(Login_Activity.this, "Please enter proper  Mobile number", Toast.LENGTH_SHORT).show();
+        if (strnewpassword == null || strnewpassword.trim().length() == 0 || strnewpassword.trim().length() < 6 || strnewpassword.trim().length() > 13){
+            new_password.setFocusableInTouchMode(true);
+            new_password.requestFocus();
+            Toast.makeText(context, "Please enter Password length 6 to 13 characters", Toast.LENGTH_SHORT).show();
+
+        }else if (strconfirmpassword == null || strconfirmpassword.trim().length() == 0 || strconfirmpassword.trim().length() < 6 || strconfirmpassword.trim().length() > 13){
+            confirm_password.setFocusableInTouchMode(true);
+            confirm_password.requestFocus();
+            Toast.makeText(context, "Please enter Confirm Password length 6 to 13 characters", Toast.LENGTH_SHORT).show();
 
         }else {
 
-            ConnectionDetector cd = new ConnectionDetector(Login_Activity.this);
-            if (cd.isConnectingToInternet()) {
+            if (strnewpassword.equals(strconfirmpassword)){
+                ConnectionDetector cd = new ConnectionDetector(context);
+                if (cd.isConnectingToInternet()) {
 
 
 
 
-                new ForgotPasswordLoad().execute();
+                    new PasswordSet().execute();
 
-            } else {
-                Toast.makeText(Login_Activity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
+                }
+
+
+            }else{
+                Toast.makeText(context, "Password Not Match", Toast.LENGTH_SHORT).show();
             }
 
         }
 
     }
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.butverify:
 
 
-    class LoadPLogin extends AsyncTask<String, String, String> {
-        String responce;
-        JSONArray responcearccay;
-        String status;
-        String strresponse;
-        String strdata;
-        ProgressDialog mProgress;
-        String strcode, strtype, strmessage;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgress = new ProgressDialog(Login_Activity.this);
-            mProgress.setMessage("Fetching data...");
-            mProgress.show();
-            mProgress.setCancelable(false);
-
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
+                strotp = otp_edit.getText().toString();
 
 
-        }
+                if (strotp == null || strotp.trim().length() == 0){
+                    otp_edit.setFocusableInTouchMode(true);
+                    otp_edit.requestFocus();
+                    Toast.makeText(context, "Please enter OTP", Toast.LENGTH_SHORT).show();
 
-        public String doInBackground(String... args) {
-            // Create an array
+                }else {
 
-            // Retrieve JSON Objects from the given URL address
-            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+                    ConnectionDetector cd = new ConnectionDetector(context);
+                    if (cd.isConnectingToInternet()) {
 
 
 
-            userpramas.add(new BasicNameValuePair(EndUrl.Login_emailphone, strmobileno));
-            userpramas.add(new BasicNameValuePair(EndUrl.Login_password, strpassword));
 
-            Log.e("testing", "userpramas = " + userpramas);
-
-            String strurl = EndUrl.Login_URL;
-            Log.e("testing", "strurl = " + strurl);
-            JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
-
-
-            Log.e("testing", "json result = " + json);
-            if (json == null) {
-
-                Log.e("testing", "jon11111111111111111");
-                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
-
-                return responce;
-            } else {
-                Log.e("testing", "jon2222222222222");
-
-                try {
-
-                    status = json.getString("status");
-                    strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
-                    strcode = jsonobject.getString("code");
-                    strtype = jsonobject.getString("type");
-                    strmessage = jsonobject.getString("message");
-                    if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
+                        new OTPLoad().execute();
 
                     } else {
+                        Toast.makeText(context, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
                     }
 
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-                return responce;
-            }
+
+
+
+
+
+                break;
+
+            default:
+                break;
         }
-
-        @Override
-        protected void onPostExecute(String responce) {
-            super.onPostExecute(responce);
-            mProgress.dismiss();
-            Log.e("testing","status = "+status);
-            Log.e("testing","strresponse = "+strresponse);
-            Log.e("testing","strmessage = "+strmessage);
-
-            if (status == null || status.length() == 0){
-
-            }else if (status.equals("success")) {
-
-                Toast.makeText(Login_Activity.this, strmessage, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Login_Activity.this, Home_Activity.class);
-                SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
-                SharedPreferences.Editor prefeditor = prefuserdata.edit();
-
-                prefeditor.putString("UserId", "" + str_user_id);
-
-
-                prefeditor.commit();
-
-
-
-                startActivity(intent);
-
-              /*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*/
-
-
-
-            } else if (status.equals("failure")) {
-                Toast.makeText(Login_Activity.this, strmessage, Toast.LENGTH_SHORT).show();
-                //  alertdialog(strtype, strmessage);
-            }else{
-
-            }
-
-
-        }
-
     }
-    class ForgotPasswordLoad extends AsyncTask<String, String, String> {
+
+
+    class OTPLoad extends AsyncTask<String, String, String> {
         String responce;
         JSONArray responcearray;
         String status;
         String strresponse;
+        String strmode;
+        String Message;
+        String struserid;
         String strdata;
+        String strvalid;
+        JSONObject responceobject;
+        String strresult1, strresult2, strresult3;
+        String img;
+        String textname, textRent, textDeposit;
+        // String glbarrstr_package_cost[];
         ProgressDialog mProgress;
+
         String strcode, strtype, strmessage;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgress = new ProgressDialog(Login_Activity.this);
+            mProgress = new ProgressDialog(context);
             mProgress.setMessage("Fetching data...");
             mProgress.show();
             mProgress.setCancelable(false);
@@ -401,13 +241,12 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
             // Retrieve JSON Objects from the given URL address
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
-
-
-            userpramas.add(new BasicNameValuePair(EndUrl.ForgotPassword_emailphone, strforgotmobileno));
-
+            //  userpramas.add(new BasicNameValuePair(EndUrls.Signup_registering_by, "user"));
+            userpramas.add(new BasicNameValuePair(EndUrl.ValidateForgotPasswordOTP_URL_user_id, strforgot_user_id));
+            userpramas.add(new BasicNameValuePair(EndUrl.ValidateForgotPasswordOTP_URL_forgot_exp, strotp));
             Log.e("testing", "userpramas = " + userpramas);
 
-            String strurl = EndUrl.ForgotPassword_URL;
+            String strurl = EndUrl.ValidateForgotPasswordOTP_URL;
             Log.e("testing", "strurl = " + strurl);
             JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
 
@@ -436,7 +275,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
                         strdata = json.getString("data");
 
                         JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        strforgot_user_id = jsonobjectdata.getString("user_id");
+                        strreguser_id = jsonobjectdata.getString("user_id");
 
 
 
@@ -465,20 +304,12 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
                 if (strresponse == null || strresponse.length() == 0){
 
-                }else if (strtype.equals("send_success")){
-                    Toast.makeText(Login_Activity.this, strmessage, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Login_Activity.this, Activity_ForgotOTP.class);
-                    SharedPreferences prefuserdata = getSharedPreferences("strforgot_user_id", 0);
-                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                }else if (strtype.equals("verify_success")){
+                    Toast.makeText(context, strmessage, Toast.LENGTH_SHORT).show();
 
-                    prefeditor.putString("strforgot_user_id", "" + strforgot_user_id);
+                    setpassword();
 
 
-                    prefeditor.commit();
-
-
-
-                    startActivity(intent);
                 }else{
 
                 }
@@ -486,7 +317,8 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
 
             } else if (status.equals("failure")) {
-                alertdialog(strtype, strmessage);
+                Toast.makeText(context, strmessage, Toast.LENGTH_SHORT).show();
+                // alertdialog(strtype, strmessage);
             }else{
 
             }
@@ -496,14 +328,129 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    class PasswordSet extends AsyncTask<String, String, String> {
+        String responce;
+        JSONArray responcearray;
+        String status;
+        String strresponse;
+        String strmode;
+        String Message;
+        String struserid;
+        String strdata;
+        String strvalid;
+        JSONObject responceobject;
+        String strresult1, strresult2, strresult3;
+        String img;
+        String textname, textRent, textDeposit;
+        // String glbarrstr_package_cost[];
+        ProgressDialog mProgress;
 
+        String strcode, strtype, strmessage;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress = new ProgressDialog(context);
+            mProgress.setMessage("Fetching data...");
+            mProgress.show();
+            mProgress.setCancelable(false);
+
+           /* pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading.....");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+
+
+        }
+
+        public String doInBackground(String... args) {
+            // Create an array
+
+            // Retrieve JSON Objects from the given URL address
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+            //  userpramas.add(new BasicNameValuePair(EndUrls.Signup_registering_by, "user"));
+            userpramas.add(new BasicNameValuePair(EndUrl.SignupUpdatePassword_URL_user_id, strreguser_id));
+            userpramas.add(new BasicNameValuePair(EndUrl.SignupUpdatePassword_URL_password, strnewpassword));
+            Log.e("testing", "userpramas = " + userpramas);
+
+            String strurl = EndUrl.SignupUpdatePassword_URL;
+            Log.e("testing", "strurl = " + strurl);
+            JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
+
+
+            Log.e("testing", "json result = " + json);
+            if (json == null) {
+
+                Log.e("testing", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing", "jon2222222222222");
+
+                try {
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return responce;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+            mProgress.dismiss();
+            Log.e("testing","status = "+status);
+            Log.e("testing","strresponse = "+strresponse);
+            Log.e("testing","strmessage = "+strmessage);
+
+            if (status == null || status.length() == 0){
+
+            }else if (status.equals("success")) {
+
+                if (strresponse == null || strresponse.length() == 0){
+
+                }else if (strtype.equals("update_success")){
+                    //  Toast.makeText(context, strmessage, Toast.LENGTH_SHORT).show();
+
+
+                    alertdialog(strtype, strmessage);
+
+                }else{
+
+                }
+
+
+
+            } else if (status.equals("failure")) {
+                Toast.makeText(context, strmessage, Toast.LENGTH_SHORT).show();
+
+            }else{
+
+            }
+
+
+        }
+
+    }
     private void alertdialog(String strresponse, String strmessage) {
 
         final AlertDialog alertDialog = new AlertDialog.Builder(
-                Login_Activity.this).create();
+                context).create();
 
         // Setting Dialog Title
-        alertDialog.setTitle(strresponse);
+        alertDialog.setTitle("Verification Success");
         alertDialog.setCancelable(false);
         // Setting Dialog Message
         alertDialog.setMessage(strmessage);
@@ -518,8 +465,10 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
                         alertDialog.dismiss();
 
-                        Intent intent = new Intent(Login_Activity.this, Login_Activity.class);
+                        Intent intent = new Intent(context, Login_Activity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        finish();
                         // Write your code here to execute after dialog
                         // closed
                        /* Toast.makeText(getApplicationContext(),
@@ -531,7 +480,4 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
         alertDialog.show();
     }
-
-
-
 }

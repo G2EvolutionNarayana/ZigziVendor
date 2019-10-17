@@ -269,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     DrawerLayout mDrawerLayout;
 
+    TextView textmyaddress, textmycart, textmyorders, textnotifications, textmybookings, textaboutus, textcontactus, textterms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -297,6 +298,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        textmyaddress = (TextView) findViewById(R.id.textmyaddress);
+        textmycart = (TextView) findViewById(R.id.textmycart);
+        textmyorders = (TextView) findViewById(R.id.textmyorders);
+        textnotifications = (TextView) findViewById(R.id.textnotifications);
+        textmybookings = (TextView) findViewById(R.id.textmybookings);
+        textaboutus = (TextView) findViewById(R.id.textaboutus);
+        textcontactus = (TextView) findViewById(R.id.textcontactus);
+        textterms = (TextView) findViewById(R.id.textterms);
 
      /*   NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -705,8 +714,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                Intent intent=new Intent(MainActivity.this,MainActivity.class);
+                Intent intent=new Intent(MainActivity.this,Home_Activity.class);
                 startActivity(intent);
+                finish();
 
               /*  mFragmentManager = getSupportFragmentManager();
                 mFragmentTransaction = mFragmentManager.beginTransaction();
@@ -744,6 +754,114 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         });
 */
+
+
+
+        textmyaddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+
+                    ShowLogoutAlert1("Please login");
+
+                }else {
+
+                    Intent intent = new Intent(MainActivity.this, Activity_Address_Navigation.class);
+                    startActivity(intent);
+
+                }
+            }
+        });
+
+        textmycart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+
+                    ShowLogoutAlert1("Please login");
+
+                }else {
+
+                    Intent intent = new Intent(MainActivity.this, Activity_cart.class);
+                    startActivity(intent);
+
+                }
+            }
+        });
+
+        textmyorders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewUserId==null ||viewUserId.equals("") || viewUserId.equals("null") ||  viewUserId.equals("0")){
+
+                    ShowLogoutAlert1("Please login");
+
+                }else {
+
+
+                    Intent intent = new Intent(MainActivity.this, My_Orders.class);
+                    startActivity(intent);
+
+
+                }
+            }
+        });
+
+        textnotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+
+                    ShowLogoutAlert1("Please login");
+
+                }else {
+
+                    Intent intent = new Intent(MainActivity.this, Notifications_Activity.class);
+                    startActivity(intent);
+
+                }
+            }
+        });
+
+        textmybookings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+
+                    ShowLogoutAlert1("Please login");
+
+                }else {
+
+                    Intent intent = new Intent(MainActivity.this, My_Bookings_Activity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        textaboutus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Activity_Aboutus.class);
+                startActivity(intent);
+            }
+        });
+
+        textcontactus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentc = new Intent(MainActivity.this, Activity_ContactUs.class);
+                startActivity(intentc);
+            }
+        });
+
+        textterms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentt = new Intent(MainActivity.this, Activity_TermsandConditions.class);
+                startActivity(intentt);
+            }
+        });
+
 
     }
 
@@ -834,13 +952,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void ShowLogoutAlert1(String data) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Login to Boutique");
+        alertDialog.setTitle("Login to Zigzi");
         alertDialog.setMessage(data);
         //  alertDialog.setBackgroundResource(R.color.dialog_color);
         // alertDialog.setIcon(R.drawable.exit);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(MainActivity.this, Login.class);
+                Intent intent = new Intent(MainActivity.this, Login_Activity.class);
                 startActivity(intent);
                 finish();
                 //loginandregistermethod1();
@@ -937,7 +1055,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         MenuItem menuItemlogin = menu.findItem(R.id.login);
         MenuItem menuItemlogout = menu.findItem(R.id.logout);
-        if (Usermob==null||Usermob.length()==0|Usermob.equals("")||Usermob.equals("null")){
+        /*if (UserId==null||UserId.trim().length()==0||UserId.trim().equals("0")||UserId.trim().equals("null")){
 
 
 
@@ -953,7 +1071,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // profilename .setText(Username);
 
-        }
+        }*/
 
         for(int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
@@ -1009,119 +1127,8 @@ public boolean onOptionsItemSelected(MenuItem item) {
             setocationdialog();
 
             return true;*/
-        case R.id.accounts:
 
-            if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                ShowLogoutAlert1("Please login");
-
-            }else {
-
-                Intent intent = new Intent(MainActivity.this, Activity_Address_Navigation.class);
-                startActivity(intent);
-
-            }
-
-
-            return true;
-        case R.id.cart:
-
-            if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                ShowLogoutAlert1("Please login");
-
-            }else {
-
-                Intent intent = new Intent(MainActivity.this, Activity_cart.class);
-                startActivity(intent);
-
-            }
-
-
-            return true;
-        case R.id.myorders:
-
-
-            if (viewUserId==null ||viewUserId.equals("") || viewUserId.equals("null") ||  viewUserId.equals("0")){
-
-                ShowLogoutAlert1("Please login");
-
-            }else {
-
-
-                Intent intent = new Intent(MainActivity.this, My_Orders.class);
-                startActivity(intent);
-
-
-            }
-
-            return true;
-        case R.id.notifcations:
-
-            if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                ShowLogoutAlert1("Please login");
-
-            }else {
-
-                Intent intent = new Intent(MainActivity.this, Notifications_Activity.class);
-                startActivity(intent);
-
-            }
-
-            return true;
-        case R.id.my_bookings:
-
-            if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                ShowLogoutAlert1("Please login");
-
-            }else {
-
-                Intent intent = new Intent(MainActivity.this, My_Bookings_Activity.class);
-                startActivity(intent);
-            }
-
-            return true;
-        case R.id.about:
-
-
-            Intent intent = new Intent(MainActivity.this, Activity_Aboutus.class);
-            startActivity(intent);
-
-               /* mFragmentManager = getSupportFragmentManager();
-                mFragmentTransaction = mFragmentManager.beginTransaction();
-                mFragmentTransaction.replace(R.id.fragment_container, new Fragment_aboutus()).commit();*/
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-
-            return true;
-        case R.id.contactus:
-
-
-            Intent intentc = new Intent(MainActivity.this, Activity_ContactUs.class);
-            startActivity(intentc);
-
-
-            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer1.closeDrawer(GravityCompat.START);
-            return true;
-        case R.id.terms:
-
-            Intent intentt = new Intent(MainActivity.this, Activity_TermsandConditions.class);
-            startActivity(intentt);
-
-              /*  mFragmentManager = getSupportFragmentManager();
-                mFragmentTransaction = mFragmentManager.beginTransaction();
-                mFragmentTransaction.replace(R.id.fragment_container, new Fragment_terms()).commit();
-*/
-
-            DrawerLayout drawer2 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer2.closeDrawer(GravityCompat.START);
-
-            return true;
-        case R.id.login:
+      /*  case R.id.login:
             ShowLogoutAlert1("Please login");
 
 
@@ -1132,7 +1139,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
             logoutmethod();
 
 
-            return true;
+            return true;*/
         case R.id.filter:
 
             if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
@@ -1345,7 +1352,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                     edit1.clear();
                     edit1.commit();
 
-                    Intent i = new Intent(MainActivity.this, Login.class);
+                    Intent i = new Intent(MainActivity.this, Login_Activity.class);
                     startActivity(i);
                     finish();
                 }

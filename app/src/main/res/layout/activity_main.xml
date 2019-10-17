@@ -43,7 +43,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Boutique"
+                        android:text="Zigzi"
                         android:textSize="18dp"
                         android:textColor="@color/white"
                         android:gravity="center"/>
@@ -147,228 +147,187 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:fillViewport="true">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"/>
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:padding="15dp"
-                    android:text="All Categories"
-                    android:textStyle="bold"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/green" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"/>
-<!--
-                <TextView
-                    android:id="@+id/textoffers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Offer Products"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:padding="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-<!--
-
-                <ExpandableListView
-
-                    android:id="@+id/myList"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                   />
--->
-
-                <ExpandableListView
-                    android:layout_below="@+id/textView5"
-                    android:id="@+id/myList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="true"
-
-                    android:groupIndicator="@null"
-                 >
-                </ExpandableListView>
-
-                 <!--    <android.support.v7.widget.RecyclerView
-                         android:id="@+id/recycler_view"
-                         android:layout_below="@+id/top_linear"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:background="@color/white"/>
--->
-        <!--<LinearLayout
+        <ExpandableListView
+            android:layout_below="@+id/textView5"
+            android:id="@+id/myList"
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="match_parent"
+            android:nestedScrollingEnabled="true"
+            android:layout_marginBottom="@dimen/dimen_30dp"
 
-            android:background="@color/ash"
-            android:layout_gravity="center_horizontal"
-
+            android:groupIndicator="@null"
+            android:visibility="gone"
             >
-        </LinearLayout>-->
-
-           <!--     <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"/>
-
-                <TextView
-                    android:layout_below="@+id/myList"
-                    android:id="@+id/accounts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="My Addresses"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"/>
-
-                <TextView
-                    android:layout_below="@+id/accounts"
-                    android:id="@+id/cart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="My Cart"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_below="@+id/cart"
-                    android:id="@+id/myorders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="My Orders"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-
-                <TextView
-                    android:layout_below="@+id/myorders"
-                    android:id="@+id/notifcations"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Notifications"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+        </ExpandableListView>
 
 
 
-                <TextView
-                    android:layout_below="@+id/notifcations"
-                    android:id="@+id/my_bookings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="My Bookings"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_below="@+id/my_bookings"
-                    android:id="@+id/about"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="About us"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
 
 
 
-                <View
-                    android:layout_below="@+id/about"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"/>
-
-                <TextView
-                    android:layout_below="@id/about"
-                    android:id="@+id/contactus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Contact Us"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:paddingTop="10dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_below="@+id/contactus"
-                    android:id="@+id/terms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Terms &amp; Conditions"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-
-
-
-                <TextView
-                    android:id="@+id/logout"
-                    android:layout_below="@id/terms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Logout"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="10dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>-->
-<!--
-        <android.support.design.widget.NavigationView
-            android:layout_below="@+id/terms"
-            android:id="@+id/navigation"
+        <TextView
+            android:id="@+id/textmyaddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemTextColor="@color/black"
-            android:background="@color/white"
-            app:itemIconTint="#ffffff"
-            app:menu="@menu/menu_main" />-->
+            android:text="MY ADDRESS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+
+        <TextView
+            android:id="@+id/textmycart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MY CART"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
 
 
-            </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+
+        <TextView
+            android:layout_below="@+id/cart"
+            android:id="@+id/textmyorders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MY ORDERS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+        <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+        <TextView
+            android:layout_below="@+id/wishlist"
+            android:id="@+id/textnotifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NOTIFICATIONS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+        <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+        <TextView
+            android:layout_below="@+id/myorders"
+            android:id="@+id/textmybookings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MY BOOKINGS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+        <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+
+        <TextView
+            android:layout_below="@+id/about"
+            android:id="@+id/textaboutus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ABOUT US"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+
+        <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+
+
+        <TextView
+            android:layout_below="@+id/logout"
+            android:id="@+id/textcontactus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONTACT US"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+        <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+        <TextView
+            android:layout_below="@+id/contactus"
+            android:id="@+id/textterms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TERMS &amp; CONDITIONS"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>
+      <!--  <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+        <TextView
+            android:layout_below="@+id/contactus"
+            android:id="@+id/textlogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOGOUT"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"/>-->
+        <View
+            android:layout_below="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey"/>
+
+
+
+    </LinearLayout>
+
 
 </ScrollView>
     </LinearLayout>

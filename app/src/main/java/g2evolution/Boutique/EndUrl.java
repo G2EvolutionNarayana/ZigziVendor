@@ -431,16 +431,98 @@ public class EndUrl {
 
 
 
-//--------------------------------Notifications -------------------
-public static final String Notifications_URL = APIURLgrocerry + "get_user_notifications";
-    public static final String Notifications_URL_Userid = "user_id";
+ //--------------------------------Notifications -------------------
+ public static final String Notifications_URL = APIURLgrocerry + "get_user_notifications";
+ public static final String Notifications_URL_Userid = "user_id";
 
 
-//=========================Ecommerce============================
+ //=========================Ecommerce============================
 
 
- public static final String APIURLMain = "http://casual365.sutures.ind.in/";
+ public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
 
+
+
+
+ //-------------------------------Login-------------------------//
+
+ public static final String Login_URL = APIURLMain + "api/user/authentication/signin/index";
+
+ public static final String Login_emailphone  = "emailphone";
+ public static final String Login_password  = "password";
+ public static final String Login_firebase_token  = "firebase_token";
+
+
+
+ //-------------------------------Signup-------------------------//
+
+ public static final String Signup_URL = APIURLMain + "api/user/authentication/signup/index";
+
+ public static final String Signup_phone  = "phone";
+ public static final String Signup_name = "name";
+ public static final String Signup_email = "email";
+ public static final String Signup_password = "password";
+
+
+
+ //-------------------------------Signup OTP-------------------------//
+
+ public static final String SignupOTP_URL = APIURLMain + "api/user/authentication/signup/verify";
+
+ public static final String SignupOTP_register_exp  = "register_exp";
+ public static final String SignupOTP_temp_user_id  = "temp_user_id";
+
+
+ //-------------------------------Signup Resend OTP-------------------------//
+
+ public static final String ResendSignupOTP_URL = APIURLMain + "api/user/authentication/signup/resend";
+
+ public static final String ResendSignupOTP_URL_temp_user_id  = "temp_user_id";
+
+
+ //---------------------------------Forgot Password--------------------------
+ public static final String ForgotPassword_URL = APIURLMain + "api/user/authentication/forgot-password/send";
+ public static final String ForgotPassword_emailphone  = "emailphone";
+
+
+
+ //---------------------------------ForgotPassword OTP--------------------------
+ public static final String ValidateForgotPasswordOTP_URL = APIURLMain + "api/user/authentication/forgot-password/verify";
+ public static final String ValidateForgotPasswordOTP_URL_forgot_exp  = "forgot_exp";
+ public static final String ValidateForgotPasswordOTP_URL_user_id   = "user_id";
+
+
+ //---------------------------------Signup Update Password--------------------------
+ public static final String SignupUpdatePassword_URL = APIURLMain + "api/user/authentication/password/update";
+ public static final String SignupUpdatePassword_URL_user_id   = "user_id";
+ public static final String SignupUpdatePassword_URL_password   = "password";
+
+
+ //-------------------------------Get Profile Details-------------------------//
+
+ public static final String GetProfileDetails_URL = APIURLMain + "api/user/authentication/signin/profile";
+
+ public static final String GetProfileDetails_user_id  = "user_id";
+
+
+ //-------------------------------Get Upload Profile-------------------------//
+
+ public static final String GetUploadProfiles_URL = APIURLMain + "api/user/authentication/signin/profile";
+
+ public static final String GetUploadProfile_user_id  = "user_id";
+ public static final String GetUploadProfile_image  = "image";
+ public static final String GetUploadProfile_name  = "name";
+ public static final String GetUploadProfile_email  = "email";
+ public static final String GetUploadProfile_fcm_token  = "fcm_token";
+
+
+ //-------------------------------Change Password-------------------------//
+
+ public static final String ChangePASSWORD_URL = APIURLMain + "api/user/authentication/password/change";
+
+ public static final String ChangePASSWORD_user_id = "user_id";
+ public static final String ChangePASSWORD_PASSWORD = "password";
+ public static final String ChangePASSWORD_old_password = "old_password";
 
  //-----------------------------------Sliding Image-----------------------
 
@@ -464,5 +546,8 @@ public static final String Notifications_URL = APIURLgrocerry + "get_user_notifi
  public static final String GetProductst_URL = APIURLMain + "api/rest/product/list";
 
  public static final String GetProducts_id = "id";
+
+
+
 
 }

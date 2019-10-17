@@ -95,6 +95,8 @@ public class Activity_Profile extends AppCompatActivity {
 
     private Bitmap bitmap;
 
+    String strjsonusername, strjsonemailid, strjsonmobileno, strjsonprofilePath;
+
     CircleImageView user_pic;
     private static final int REQUEST_WRITE_PERMISSION = 786;
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
@@ -131,11 +133,11 @@ public class Activity_Profile extends AppCompatActivity {
         name_text = (TextView) findViewById(R.id.name_text);
         txt_email_id = (TextView) findViewById(R.id.txt_email_id);
         txt_mobile_no = (TextView) findViewById(R.id.txt_mobile_no);
-        txt_email_id.setText(shemailid);
+       /* txt_email_id.setText(shemailid);
         txt_mobile_no.setText(shmobileno);
 
         String upperString = shname.substring(0,1).toUpperCase() + shname.substring(1);
-        name_text.setText(upperString);
+        name_text.setText(upperString);*/
 
         relativeprofile = (RelativeLayout) findViewById(R.id.relativeprofile);
 
@@ -178,7 +180,7 @@ public class Activity_Profile extends AppCompatActivity {
             }
         });
 
-        new GetProfile().execute();
+        new LoadProfile().execute();
 
 
     }
@@ -700,7 +702,7 @@ public class Activity_Profile extends AppCompatActivity {
             try {
 
                 // String url = "http://www.brprojects.co.in/second_doctor/customer_queries.php";
-                String url = EndUrl.Update_UserProfile_URL;
+                String url = EndUrl.GetUploadProfiles_URL;
 
                 /*for (i = 0; i < map.size(); i++) {
                     bitmap[i] = decodeFile(map.get(i));
@@ -738,7 +740,7 @@ public class Activity_Profile extends AppCompatActivity {
                 mpEntity.addPart("your_file", cbFile);*/
 
 
-                entity.addPart(EndUrl.Update_UserProfile_Userid, new StringBody(userid));
+                entity.addPart(EndUrl.GetUploadProfile_user_id, new StringBody(userid));
 
 
 
@@ -755,7 +757,7 @@ public class Activity_Profile extends AppCompatActivity {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         xyz.compress(Bitmap.CompressFormat.PNG, 100, bos);
                         byte[] data = bos.toByteArray();
-                        entity.addPart(EndUrl.Update_UserProfile_Profileimage, new ByteArrayBody(data, "image/jpeg", filepathimage));
+                        entity.addPart(EndUrl.GetUploadProfile_image, new ByteArrayBody(data, "image/jpeg", filepathimage));
 
                     }else if (imageformat.equals("jpg")){
 
@@ -763,7 +765,7 @@ public class Activity_Profile extends AppCompatActivity {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         xyz.compress(Bitmap.CompressFormat.JPEG, 100, bos);
                         byte[] data = bos.toByteArray();
-                        entity.addPart(EndUrl.Update_UserProfile_Profileimage, new ByteArrayBody(data, "image/jpeg", filepathimage));
+                        entity.addPart(EndUrl.GetUploadProfile_image, new ByteArrayBody(data, "image/jpeg", filepathimage));
 
 
                     }else{
@@ -772,7 +774,7 @@ public class Activity_Profile extends AppCompatActivity {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         xyz.compress(Bitmap.CompressFormat.WEBP, 100, bos);
                         byte[] data = bos.toByteArray();
-                        entity.addPart(EndUrl.Update_UserProfile_Profileimage, new ByteArrayBody(data, "image/jpeg", filepathimage));
+                        entity.addPart(EndUrl.GetUploadProfile_image, new ByteArrayBody(data, "image/jpeg", filepathimage));
 
 
                     }
@@ -798,7 +800,12 @@ public class Activity_Profile extends AppCompatActivity {
                 //action_type = object.getString("action_type");
                 strMessage = object.getString("message");
 
-
+                strResult = object.getString("status");
+                strresponse = object.getString("response");
+                JSONObject  jsonobject = new JSONObject(strresponse);
+                String strcode = jsonobject.getString("code");
+                String strtype = jsonobject.getString("type");
+                strMessage = jsonobject.getString("message");
                 System.out.println("sResponse : " + sResponse);
 
             } catch (Exception e) {
@@ -818,7 +825,7 @@ public class Activity_Profile extends AppCompatActivity {
 
 
                 Toast.makeText(Activity_Profile.this, strMessage, Toast.LENGTH_SHORT).show();
-                new GetProfile().execute();
+                new LoadProfile().execute();
             }else if (strResult.equals("failure")){
                 Toast.makeText(Activity_Profile.this,
                         strMessage,
@@ -989,4 +996,146 @@ public class Activity_Profile extends AppCompatActivity {
 
         }
     }
+
+
+
+    class LoadProfile extends AsyncTask<String, String, String> {
+        String responce;
+        JSONArray responcearccay;
+        String status;
+        String strresponse;
+        String strdata;
+        ProgressDialog mProgress;
+        String strcode, strtype, strmessage;
+        ProgressDialog pDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+          /*  mProgress = new ProgressDialog(Activity_Profile.this);
+            mProgress.setMessage("Fetching data...");
+            mProgress.show();
+            mProgress.setCancelable(false);
+*/
+            pDialog = new ProgressDialog(Activity_Profile.this);
+            pDialog.setMessage("Loading.....");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+
+        }
+
+        public String doInBackground(String... args) {
+            // Create an array
+
+            // Retrieve JSON Objects from the given URL address
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetProfileDetails_user_id, userid));
+
+            Log.e("testing", "userpramas = " + userpramas);
+
+            String strurl = EndUrl.GetProfileDetails_URL;
+            Log.e("testing", "strurl = " + strurl);
+            JSONObject json = jsonParser.makeHttpRequest(strurl, "GET", userpramas);
+
+
+            Log.e("testing", "json result = " + json);
+            if (json == null) {
+
+                Log.e("testing", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing", "jon2222222222222");
+
+                try {
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        strdata = json.getString("data");
+
+
+                        JSONObject  jsonobjectdata = new JSONObject(strdata);
+                        strjsonusername = jsonobjectdata.getString("name");
+                        strjsonemailid = jsonobjectdata.getString("email");
+                        strjsonmobileno = jsonobjectdata.getString("phone");
+                        strjsonprofilePath = jsonobjectdata.getString("image");
+
+
+
+                    } else {
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return responce;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+            pDialog.dismiss();
+            Log.e("testing","status = "+status);
+            Log.e("testing","strresponse = "+strresponse);
+            Log.e("testing","strmessage = "+strmessage);
+
+            if (status == null || status.length() == 0){
+
+            }else if (status.equals("success")) {
+
+
+
+
+                name_text.setText(strjsonusername);
+                txt_email_id.setText(strjsonemailid);
+                txt_mobile_no.setText(strjsonmobileno);
+
+                if (strjsonprofilePath==null||strjsonprofilePath.length()==0||strjsonprofilePath.equals("")){
+
+
+                }else {
+
+
+                    Glide.with(Activity_Profile.this)
+                            .load( Uri.parse(String.valueOf(strjsonprofilePath)))
+                            // .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .centerCrop()
+                            .error(R.drawable.logo)
+                            //  .placeholder(R.drawable.spa)
+                            //  .skipMemoryCache(true)
+                            .into(user_pic);
+
+
+                }
+
+
+            } else if (status.equals("failure")) {
+                Toast.makeText(Activity_Profile.this, strmessage, Toast.LENGTH_SHORT).show();
+                //  alertdialog(strtype, strmessage);
+            }else{
+
+            }
+
+
+        }
+
+    }
+
+
+
+
 }

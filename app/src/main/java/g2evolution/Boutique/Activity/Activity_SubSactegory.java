@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
@@ -50,6 +51,15 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
 
         Log.e("testing","category_id = "+category_id);
         mCallback=this;
+
+        ImageView back = (ImageView) findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         allSampleData = new ArrayList<Entity_CategorySimilarDataModel>();
         my_recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         my_recycler_view.setHasFixedSize(true);

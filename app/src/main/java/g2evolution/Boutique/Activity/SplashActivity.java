@@ -161,6 +161,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
                     String viewuseremail = prefuserdata.getString("UserId", "");
+                    Log.e("testing","viewuseremail = "+viewuseremail);
 
                     if (viewuseremail.equals("") || viewuseremail.equals("null") || viewuseremail.equals(null) || viewuseremail.equals("0")) {
 

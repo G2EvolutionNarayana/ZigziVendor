@@ -570,7 +570,7 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
             switch (item.getItemId()) {
                 case R.id.home:
 
-                    Intent intent = new Intent(getActivity(), Home_Activity.class);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
 

@@ -29,7 +29,7 @@
                     android:id="@+id/title_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Boutique"
+                    android:text="Zigzi"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
                     android:textSize="35sp"
@@ -56,7 +56,7 @@
                     android:maxLines="1"
                     android:hint="  User Name"
                     app:backgroundTint="@color/white"
-                    android:inputType="textEmailAddress"
+                    android:inputType="text"
                     android:drawableLeft="@drawable/user" />
 
 
@@ -73,7 +73,18 @@
                     android:inputType="phone"
                     android:drawableLeft="@drawable/cellphone" />
 
-
+                <EditText
+                    android:id="@+id/edit_emailid"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:maxLines="1"
+                    android:hint="  Email Id"
+                    app:backgroundTint="@color/white"
+                    android:inputType="textEmailAddress"
+                    android:drawableLeft="@drawable/cellphone" />
 
                 <com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText
                     android:id="@+id/password_edit_text"
@@ -90,20 +101,6 @@
                     android:maxLines="1" />
 
 
-
-                <com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText
-                    android:id="@+id/confirm_password_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:inputType="textPassword"
-                    android:textStyle="normal"
-                    android:hint=" Confirm Password"
-                    app:backgroundTint="@color/white"
-                    android:drawableLeft="@drawable/lock"
-                    android:maxLines="1" />
 
                 <LinearLayout
                     android:orientation="horizontal"

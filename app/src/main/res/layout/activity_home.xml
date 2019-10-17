@@ -34,11 +34,18 @@
                     android:background="@drawable/button_effect"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     android:layout_height="55dp">
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Zigzi"
+                        android:textSize="18dp"
+                        android:textColor="@color/white"
+                        android:gravity="center"/>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp">
+
 
 
                     </RelativeLayout>
