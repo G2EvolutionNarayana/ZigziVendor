@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_image">
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_effect"
+        android:orientation="vertical">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="80dp">
+
+
+                <TextView
+                    android:id="@+id/otp_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="15sp"
+                 android:layout_gravity="center"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:id="@+id/otp_text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"/>
+
+
+
+                <com.chaos.view.PinView
+                    android:id="@+id/firstPinView"
+                    style="@style/PinWidget.PinView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:cursorVisible="true"
+                    android:hint="Hint."
+                    android:layout_marginTop="30dp"
+                    android:inputType="phone"
+                    android:padding="5dp"
+                    app:cursorWidth="2dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    app:hideLineWhenFilled="false"
+                    app:itemCount="4"
+                    app:itemHeight="40dp"
+                    app:itemRadius="2dp"
+                    app:itemWidth="40dp"
+                    android:textSize="15sp"
+                    android:keyboardNavigationCluster="false"
+                    android:textColor="@color/black"
+                    app:lineColor="@color/colorPrimary"
+                    app:lineWidth="2dp"
+                    app:viewType="rectangle" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/submit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:text="submit"/>
+
+
+                    <TextView
+                        android:id="@+id/resend_text"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:layout_gravity="center"
+                        android:textAllCaps="true"
+                        android:background="@drawable/button_effect1"
+                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:textColor="@color/white"
+                        android:text="Resend"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+    </LinearLayout>
+</LinearLayout>
