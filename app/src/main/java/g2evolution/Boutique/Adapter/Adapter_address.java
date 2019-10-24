@@ -76,7 +76,7 @@ public class Adapter_address extends RecyclerView.Adapter<ViewHolder_address> {
         holder.textname.setText(feederInfo.getTextname());
         holder.textaddress.setText(feederInfo.getTextaddress());
         holder.textlandmark.setText(feederInfo.getTextlandmark());
-        holder.textlandmark1.setText(feederInfo.getLandMark1());
+        holder.textstate.setText(feederInfo.getCity());
         if (feederInfo.getTextmobileno() == null || feederInfo.getTextmobileno().length() == 0 || feederInfo.getTextmobileno().equals("0")) {
 
 

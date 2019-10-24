@@ -58,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1.8"
                 android:padding="5dp"
                 android:text=""
@@ -75,7 +76,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/textlandmark1"
+                android:id="@+id/textstate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

@@ -4,6 +4,11 @@ package g2evolution.Boutique;
 public class EndUrl {
 
 
+
+    public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
+    public static final String APIURLMaintest = "http://casual365.sutures.ind.in/";
+
+
     public static final String APIURL2 = "http://g2evolution.in/eshop_New/admin/payumoney/";
 
 
@@ -439,7 +444,6 @@ public class EndUrl {
  //=========================Ecommerce============================
 
 
- public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
 
 
 
@@ -539,15 +543,144 @@ public class EndUrl {
 
  public static final String GetSubcatList_id = "id";
 
-
+//========================================================================================================================================
 
 //--------------------------------Get Products--------------------
 
- public static final String GetProductst_URL = APIURLMain + "api/rest/product/list";
+ public static final String GetProductst_URL = APIURLMaintest + "api/rest/product/list";
 
  public static final String GetProducts_id = "id";
 
 
+
+//--------------------------------Get Products Details--------------------
+
+ public static final String GetProductstDetails_URL = APIURLMaintest + "api/rest/product/detail";
+
+ public static final String GetProductsDetails_id = "product_id";
+
+
+//-------------------------------Post Whishlist--------------------
+
+ public static final String PostWhishlist_URL = APIURLMaintest + "api/rest/wishlist/store";
+
+ public static final String PostWhishlist_User_id = "user_id";
+ public static final String PostWhishlist_product_id = "product_id";
+
+
+
+//-------------------------------CheckPincode--------------------
+
+ public static final String CheckPincode_URL = APIURLMaintest + "api/rest/pin";
+
+ public static final String CheckPincode_pincode = "pincode";
+
+//-------------------------------Add To Cart--------------------
+
+ public static final String AddToCart_URL = APIURLMaintest + "api/rest/cart/store";
+
+ public static final String AddToCart_product_id = "product_id";
+ public static final String AddToCart_product_name = "size";
+ public static final String AddToCart_user_id = "user_id";
+ public static final String AddToCart_quantity = "quantity";
+ public static final String AddToCart_price = "price";
+
+
+//-------------------------------Get Whishlist--------------------
+
+ public static final String GetWhishlist_URL = APIURLMaintest + "api/rest/wishlist/list";
+
+ public static final String GetWhishlist_User_id = "user_id";
+
+
+//-------------------------------Delete Whishlist--------------------
+
+ public static final String DeleteWhishlist_URL = APIURLMaintest + "api/rest/wishlist/remove";
+
+ public static final String DeleteWhishlist_User_id = "user_id";
+ public static final String DeleteWhishlist_id = "id";
+
+
+
+//-------------------------------Get Reviews--------------------
+
+ public static final String GetReviews_URL = APIURLMaintest + "api/rest/review/list";
+
+ public static final String GetReviews_product_id = "product_id";
+
+
+//-------------------------------Post Reviews--------------------
+
+ public static final String PostReviews_URL = APIURLMaintest + "api/rest/review/store";
+
+ public static final String PostReviews_product_id = "product_id";
+ public static final String PostReviews_user_id = "user_id";
+ public static final String PostReviews_title = "title";
+ public static final String PostReviews_description = "description";
+ public static final String PostReviews_rating = "rating";
+
+
+//-------------------------------Add Address--------------------
+
+ public static final String AddAddress_URL = APIURLMaintest + "api/user/address/store";
+
+ public static final String AddAddress_id = "id";
+ public static final String AddAddress_user_id = "user_id";
+ public static final String AddAddress_address_type = "address_type";
+ public static final String AddAddress_name = "name";
+ public static final String AddAddress_phone = "phone";
+ public static final String AddAddress_Alternate_phone = "alternate_phone";
+ public static final String AddAddress_House_no = "house_no";
+ public static final String AddAddress_Locality = "locality";
+ public static final String AddAddress_Landmark = "landmark";
+ public static final String AddAddress_City = "city";
+ public static final String AddAddress_State = "state";
+ public static final String AddAddress_pin = "pin";
+
+
+//-------------------------------Delete Address--------------------
+
+ public static final String DeleteAddress_URL = APIURLMaintest + "api/user/address/remove";
+
+ public static final String DeleteAddress_id = "id";
+//-------------------------------Get Address List--------------------
+
+ public static final String GetAddressList_URL = APIURLMaintest + "api/user/address/list";
+
+ public static final String GetAddressList_user_id = "user_id";
+
+
+//-------------------------------Cart List--------------------
+
+ public static final String CartList_URL = APIURLMaintest + "api/rest/cart/list";
+
+ public static final String CartList_user_id = "user_id";
+
+
+//-------------------------------Cart Delete--------------------
+
+ public static final String CartDelete_URL = APIURLMaintest + "api/rest/cart/remove";
+
+ public static final String CartDelete_id = "id";
+
+
+
+//-------------------------------Cart Update--------------------
+
+ public static final String PostCartUpdate_URL = APIURLMaintest + "api/rest/cart/store";
+
+ public static final String PostCartUpdate_product_id = "product_id";
+ public static final String PostCartUpdate_product_name = "size";
+ public static final String PostCartUpdate_user_id = "user_id";
+ public static final String PostCartUpdate_quantity = "quantity";
+ public static final String PostCartUpdate_price = "price";
+
+
+//-------------------------------CheckCoupon--------------------
+
+ public static final String CheckCoupon_URL = APIURLMaintest + "api/rest/coupon/list";
+
+ public static final String CheckCoupon_coupon_code = "coupon_code";
 
 
 }

@@ -18,7 +18,7 @@ public class ViewHolder_address extends RecyclerView.ViewHolder implements View.
     public TextView textname,textaddress,textlandmark,textmobileno,textpincode,impnotice;
 
     public ImageView imgdelete;
-    public TextView radiobutton,textlandmark1;
+    public TextView radiobutton,textstate;
 
 
 
@@ -39,7 +39,7 @@ public class ViewHolder_address extends RecyclerView.ViewHolder implements View.
         textlandmark = (TextView)itemView.findViewById(R.id.textlandmark);
         textmobileno = (TextView)itemView.findViewById(R.id.textmobileno);
         textpincode = (TextView)itemView.findViewById(R.id.textpincode);
-        textlandmark1 = (TextView)itemView.findViewById(R.id.textlandmark1);
+        textstate = (TextView)itemView.findViewById(R.id.textstate);
 
 
 

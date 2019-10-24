@@ -74,7 +74,7 @@
             android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/textlandmark1"
+                android:id="@+id/textstate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

@@ -1,6 +1,5 @@
 package g2evolution.Boutique.Activity;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,20 +7,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.apache.http.HttpResponse;
@@ -43,228 +35,72 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import g2evolution.Boutique.Adapter.Adapter_List_Product;
-import g2evolution.Boutique.Adapter.Adapter_Subcategory_list;
-import g2evolution.Boutique.Adapter.Adapter_child_subcategory_list;
+import g2evolution.Boutique.Adapter.Adapter_Whishlist_List;
 import g2evolution.Boutique.EndUrl;
-import g2evolution.Boutique.FeederInfo.FeederInfo_Subcategory_list;
-import g2evolution.Boutique.FeederInfo.FeederInfo_child_subcategory_list;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.JSONParser;
-import g2evolution.Boutique.entit.FeederInfo_List_Product;
+import g2evolution.Boutique.entit.FeederInfo_Whishlist_List;
 
 
-public class Activity_ListProduct extends AppCompatActivity {
-
-    //testing comments
-    ArrayList<HashMap<String, String>> arraylist1;
-    private ArrayList<FeederInfo_Subcategory_list> allItems1 = new ArrayList<FeederInfo_Subcategory_list>();
-    private RecyclerView mFeedRecyler;
-    Adapter_Subcategory_list mAdapterFeeds;
-
-    GridLayoutManager lLayout;
-    private Adapter_Subcategory_list.OnItemClick mCallback;
-
-    private Adapter_child_subcategory_list.OnItemClick1 mCallback1;
-
-    String status,message,products;
-
-    private ArrayList<FeederInfo_child_subcategory_list> allItems2 = new ArrayList<FeederInfo_child_subcategory_list>();
-    private RecyclerView mFeedRecyler1;
-    Adapter_child_subcategory_list mAdapterFeeds1;
+public class Activity_WishList extends AppCompatActivity implements Adapter_Whishlist_List.OnItemClick{
 
     GridLayoutManager lLayout1;
+    String status,message,products;
 
-    private ArrayList<FeederInfo_List_Product> allItems3 = new ArrayList<FeederInfo_List_Product>();
+    private ArrayList<FeederInfo_Whishlist_List> allItems3 = new ArrayList<FeederInfo_Whishlist_List>();
     private RecyclerView mFeedRecyler2;
-    Adapter_List_Product mAdapterFeeds2;
+    Adapter_Whishlist_List mAdapterFeeds2;
 
-    GridLayoutManager lLayout2;
-    String catid, categoryname_heading;
+    Adapter_Whishlist_List.OnItemClick mCallback;
+    TextView text_wishlist;
     ImageView back;
-    LinearLayout filter,sort;
-    Integer introwposition;
-    TextView text;
-    ImageView cartImage,wishlistImage,searchImage;
 
+    String strwhishlistid;
 
     JSONParser jsonParser = new JSONParser();
 
-
+    String viewUserId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_product);
-
-        SharedPreferences prefuserdata = getSharedPreferences("ProDetails", 0);
-        catid = prefuserdata.getString("Proid", "");
-        categoryname_heading = prefuserdata.getString("categoryName", "");
+        setContentView(R.layout.activity_wish_list);
 
 
+        SharedPreferences prefuserdata23 = getSharedPreferences("regId", 0);
+        viewUserId = prefuserdata23.getString("UserId", "");
 
+        text_wishlist=(TextView)findViewById(R.id.textview_title1);
+        text_wishlist.setText("WishList");
         back=(ImageView)findViewById(R.id.back);
-        filter=(LinearLayout)findViewById(R.id.filter);
-        sort=(LinearLayout)findViewById(R.id.sort);
-        text = (TextView) findViewById(R.id.text);
-
-        text.setText(categoryname_heading);
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
-        mFeedRecyler = (RecyclerView) findViewById(R.id.recycler_view);
-        mFeedRecyler.setHasFixedSize(true);
-        mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this));
-        mFeedRecyler.setLayoutManager(lLayout);
-
-
-
-        cartImage = (ImageView) findViewById(R.id.cart_image);
-        wishlistImage = (ImageView) findViewById(R.id.wish_list_image);
-        searchImage = (ImageView) findViewById(R.id.search_image);
-
-        cartImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent =new Intent(Activity_ListProduct.this,Activity_cart.class);
-                startActivity(intent);
-
-            }
-        });
-
-        wishlistImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-              /*  Intent intent =new Intent(Activity_ListProduct.this,Activity_WishList.class);
-                startActivity(intent);*/
-
-            }
-        });
-        searchImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent =new Intent(Activity_ListProduct.this,Activity_search.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-        new LoadProductList().execute();
-
-
-        mFeedRecyler1 = (RecyclerView) findViewById(R.id.recycler_view1);
-        mFeedRecyler1.setHasFixedSize(true);
-        //  mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this));
-        mFeedRecyler1.setLayoutManager(lLayout1);
-
-
+        mCallback = this;
         mFeedRecyler2 = (RecyclerView) findViewById(R.id.recycler_view2);
         mFeedRecyler2.setHasFixedSize(true);
-        mFeedRecyler2.setLayoutManager(new GridLayoutManager(Activity_ListProduct.this,2));
+        mFeedRecyler2.setLayoutManager(new GridLayoutManager(Activity_WishList.this,2));
 
-        // mFeedRecyler2.setLayoutManager(lLayout2);
-
-        //   new Child_SubCategory_List().execute();
-        //   new PRODUCT_LIST().execute();
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog logoutdialog = new Dialog(Activity_ListProduct.this);
-                logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                logoutdialog.setCancelable(true);
-                logoutdialog.setCanceledOnTouchOutside(true);
-                LayoutInflater inflater = (LayoutInflater) Activity_ListProduct.this.getSystemService(Activity_ListProduct.this.LAYOUT_INFLATER_SERVICE);
-                View convertView = (View) inflater.inflate(R.layout.sort_custom_layout, null);
-                //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
-
-                logoutdialog.setContentView(convertView);
-
-                // LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                lp.copyFrom(logoutdialog.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                lp.gravity = Gravity.BOTTOM;
-                logoutdialog.getWindow().setAttributes(lp);
-                logoutdialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        new LoadWhishList().execute();
 
 
-                ImageView imgcancel = (ImageView) convertView.findViewById(R.id.imgcancel);
-                imgcancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        logoutdialog.dismiss();
-                    }
-                });
-
-                logoutdialog.show();
-
-            }
-        });
-
-        filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-               /* final Dialog logoutdialog = new Dialog(Activity_ListProduct.this);
-                logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                logoutdialog.setCancelable(true);
-                logoutdialog.setCanceledOnTouchOutside(true);
-                LayoutInflater inflater = (LayoutInflater) Activity_ListProduct.this.getSystemService(Activity_ListProduct.this.LAYOUT_INFLATER_SERVICE);
-                View convertView = (View) inflater.inflate(R.layout.filter_layout, null);
-                //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
-
-                logoutdialog.setContentView(convertView);
-
-                // LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                lp.copyFrom(logoutdialog.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.gravity = Gravity.BOTTOM;
-                logoutdialog.getWindow().setAttributes(lp);
-                logoutdialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
-                ImageView imgcancel = (ImageView) convertView.findViewById(R.id.back);
-                imgcancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        logoutdialog.dismiss();
-                    }
-                });
-
-                lvCategory = convertView.findViewById(R.id.lvCategory);
-                new Filterdata().execute();
-
-                logoutdialog.show();*/
-
-
-
-
-            }
-        });
 
     }
 
+    @Override
+    public void onClickedItem(int pos, String qty, int status) {
 
 
+        strwhishlistid = qty;
+
+        new PostWhislist().execute();
 
 
+    }
 
 
     class PRODUCT_LIST extends AsyncTask<Void, Void, JSONObject> {
@@ -275,9 +111,9 @@ public class Activity_ListProduct extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_ListProduct.this, ProgressDialog.THEME_HOLO_LIGHT);
+                dialog = new ProgressDialog(Activity_WishList.this, ProgressDialog.THEME_HOLO_LIGHT);
             } else {
-                dialog = new ProgressDialog(Activity_ListProduct.this);
+                dialog = new ProgressDialog(Activity_WishList.this);
             }
             dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
             dialog.setIndeterminate(true);
@@ -289,7 +125,7 @@ public class Activity_ListProduct extends AppCompatActivity {
         @Override
         protected JSONObject doInBackground(Void... params) {
             allItems3.clear();
-            allItems3 = new ArrayList<FeederInfo_List_Product>();
+            allItems3 = new ArrayList<FeederInfo_Whishlist_List>();
             return postJsonObject2(EndUrl.GetCategoryChildProductList_URL, makingJson2());
 
         }
@@ -307,24 +143,24 @@ public class Activity_ListProduct extends AppCompatActivity {
 
                     Log.e("testing", "result in post execute=========" + allItems3);
 
-                    mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                    //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this, LinearLayoutManager.VERTICAL, true));
+                    mAdapterFeeds2 = new Adapter_Whishlist_List(Activity_WishList.this, allItems3, mCallback);
+                    //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Product_List.this, LinearLayoutManager.VERTICAL, true));
                     mFeedRecyler2.setAdapter(mAdapterFeeds2);
 
                 } else if (status.equals("fail")) {
 
                     allItems3.clear();
 
-                    mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
+                    mAdapterFeeds2 = new Adapter_Whishlist_List(Activity_WishList.this, allItems3, mCallback);
                     mFeedRecyler2.setAdapter(mAdapterFeeds2);
 
-                    Toast.makeText(Activity_ListProduct.this, "no data found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Activity_WishList.this, "no data found", Toast.LENGTH_LONG).show();
 
                 }
 
             } else {
 
-                Toast.makeText(Activity_ListProduct.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(Activity_WishList.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
 
             }
@@ -335,12 +171,12 @@ public class Activity_ListProduct extends AppCompatActivity {
     public JSONObject makingJson2() {
 
         JSONObject jobj = new JSONObject();
-     /*   // user_id = edt_mobileno.getText().toString();
+        // user_id = edt_mobileno.getText().toString();
 
         try {
 
-            jobj.put(EndUrl.Get_subcatId,subcategoryname);
-            jobj.put(EndUrl.Get_childCatId,childid);
+            jobj.put(EndUrl.Get_subcatId,"30");
+            jobj.put(EndUrl.Get_childCatId,"All");
 
 
         } catch (JSONException e) {
@@ -348,7 +184,7 @@ public class Activity_ListProduct extends AppCompatActivity {
 
         }
 
-        Log.e("testing","json object "+jobj);*/
+        Log.e("testing","json object "+jobj);
         return jobj;
 
 
@@ -440,7 +276,7 @@ public class Activity_ListProduct extends AppCompatActivity {
                     JSONObject post2 = responcearray2.getJSONObject(i2);
 
 
-                    FeederInfo_List_Product item = new FeederInfo_List_Product();
+                    FeederInfo_Whishlist_List item = new FeederInfo_Whishlist_List();
 
                     item.setId(post2.optString("productId"));
                     item.setCategoryname(post2.optString("categoryName"));
@@ -483,7 +319,8 @@ public class Activity_ListProduct extends AppCompatActivity {
 
 
     }
-    class LoadProductList extends AsyncTask<String, String, String>
+
+    class LoadWhishList extends AsyncTask<String, String, String>
             //implements RemoveClickListner
     {
 
@@ -498,7 +335,7 @@ public class Activity_ListProduct extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(Activity_ListProduct.this);
+            pDialog = new ProgressDialog(Activity_WishList.this);
             pDialog.setMessage("Please Wait ...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -510,15 +347,14 @@ public class Activity_ListProduct extends AppCompatActivity {
 
             //  product_details_lists = new ArrayList<Product_list>();
 
-            allItems3 =new ArrayList<FeederInfo_List_Product>();
+            allItems3 =new ArrayList<FeederInfo_Whishlist_List>();
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
-           // userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, "6"));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetWhishlist_User_id, viewUserId));
 
 
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductst_URL, "GET", userpramas);
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetWhishlist_URL, "GET", userpramas);
 
             Log.e("testing", "userpramas result = " + userpramas);
             Log.e("testing", "json result = " + json);
@@ -553,17 +389,18 @@ public class Activity_ListProduct extends AppCompatActivity {
                             HashMap<String, String> map = new HashMap<String, String>();
 
 
-                            FeederInfo_List_Product item = new FeederInfo_List_Product();
+                            FeederInfo_Whishlist_List item = new FeederInfo_Whishlist_List();
 
-                            item.setId(post.optString("product_id"));
+                            item.setId(post.optString("id"));
+                            item.setProductid(post.optString("product_id"));
                             item.setCategoryname(post.optString("name"));
                             item.setElectronicname(post.optString("name"));
                             item.setElectronicdetail1(post.optString("sku"));
-                            item.setElectronicprice(post.optString("actual_price"));
                             item.setElectronicimage(post.optString("image"));
+                            item.setElectronicprice(post.optString("actual_price"));
                             //  item.setStockQuantity(post.optString("stockQuantity"));
-                            item.setDiscountvalue(post.optString("offers"));
-                            item.setAfterdiscount(post.optString("offer_price"));
+                            item.setDiscountvalue(post.optString("offer_price"));
+                            item.setAfterdiscount(post.optString("discount_price"));
 
 
                             allItems3.add(item);
@@ -599,7 +436,7 @@ public class Activity_ListProduct extends AppCompatActivity {
             if (status == null || status.trim().length() == 0 || status.equals("null")){
 
             }else if (status.equals("success")) {
-                Log.e("testing123", "allItems1===" + allItems1);
+                //  Log.e("testing123", "allItems1===" + allItems1);
 
 
 /*
@@ -608,8 +445,8 @@ public class Activity_ListProduct extends AppCompatActivity {
                 product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
                 prodcuts_recycler.setAdapter(product_details_adapter);*/
 
-                mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this, LinearLayoutManager.VERTICAL, true));
+                mAdapterFeeds2 = new Adapter_Whishlist_List(Activity_WishList.this, allItems3, mCallback);
+                //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Product_List.this, LinearLayoutManager.VERTICAL, true));
                 mFeedRecyler2.setAdapter(mAdapterFeeds2);
 
 
@@ -618,8 +455,8 @@ public class Activity_ListProduct extends AppCompatActivity {
 
             }
             else {
-                mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this, LinearLayoutManager.VERTICAL, true));
+                mAdapterFeeds2 = new Adapter_Whishlist_List(Activity_WishList.this, allItems3, mCallback);
+                //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Product_List.this, LinearLayoutManager.VERTICAL, true));
                 mFeedRecyler2.setAdapter(mAdapterFeeds2);
 
             /*    product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
@@ -630,6 +467,136 @@ public class Activity_ListProduct extends AppCompatActivity {
 
             }
 
+
+
+        }
+
+    }
+    class PostWhislist extends AsyncTask<String, String, String> {
+        String responce;
+        JSONArray responcearccay;
+        String status;
+        String strresponse;
+        String strdata;
+        ProgressDialog mProgress;
+        String strcode, strtype, strmessage;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress = new ProgressDialog(Activity_WishList.this);
+            mProgress.setMessage("Fetching data...");
+            mProgress.show();
+            mProgress.setCancelable(false);
+
+           /* pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading.....");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+
+
+        }
+
+        public String doInBackground(String... args) {
+            // Create an array
+
+            // Retrieve JSON Objects from the given URL address
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.DeleteWhishlist_User_id, viewUserId));
+            userpramas.add(new BasicNameValuePair(EndUrl.DeleteWhishlist_id, strwhishlistid));
+
+            Log.e("testing", "userpramas = " + userpramas);
+
+            String strurl = EndUrl.DeleteWhishlist_URL;
+            Log.e("testing", "strurl = " + strurl);
+            JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
+
+
+            Log.e("testing", "json result = " + json);
+            if (json == null) {
+
+                Log.e("testing", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing", "jon2222222222222");
+
+                try {
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                  /*  if (status.equals("success")) {
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        strdata = json.getString("data");
+
+                        JSONObject  jsonobjectdata = new JSONObject(strdata);
+                        str_user_id = jsonobjectdata.getString("user_id");
+                        Log.e("testing","userid - "+str_user_id);
+
+
+
+                    } else {
+                    }*/
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return responce;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+            mProgress.dismiss();
+            Log.e("testing","status = "+status);
+            Log.e("testing","strresponse = "+strresponse);
+            Log.e("testing","strmessage = "+strmessage);
+
+            if (status == null || status.length() == 0){
+
+            }else if (status.equals("success")) {
+
+/*
+                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
+
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                startActivity(intent);*/
+
+                new LoadWhishList().execute();
+
+              /*  Log.e("testing","status 2= "+status);
+                if (strtype == null || strtype.length() == 0){
+
+                    Log.e("testing","status 3= "+status);
+                }else if (strtype.equals("‘verify_success")){
+
+                    Log.e("testing","status 4= "+strtype);
+
+                }else{
+
+                }*/
+
+
+
+            } else if (status.equals("failure")) {
+                Toast.makeText(Activity_WishList.this, strmessage, Toast.LENGTH_SHORT).show();
+                //  alertdialog(strtype, strmessage);
+            }else{
+
+            }
 
 
         }

@@ -74,7 +74,7 @@ public class Adapter_address_Navigation extends RecyclerView.Adapter<ViewHolder_
         holder.textname.setText(feederInfo.getTextname());
         holder.textaddress.setText(feederInfo.getTextaddress());
         holder.textlandmark.setText(feederInfo.getTextlandmark());
-        holder.textlandmark1.setText(feederInfo.getLandMark1());
+        holder.textstate.setText(feederInfo.getCity());
        // holder.textmobileno.setText(feederInfo.getTextmobileno());
         holder.textpincode.setText(feederInfo.getTextpincode());
         holder.impnotice.setText(feederInfo.getImpnotice());

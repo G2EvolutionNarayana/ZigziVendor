@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_margin="@dimen/dimen_10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="discount codes"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:textAllCaps="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:text="Enter your coupon code if you have one"/>
+        <EditText
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:id="@+id/coupon_edit_text"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/dimen_5dp"
+            android:background="@drawable/shape_edit_text"/>
+
+
+        <Button
+            android:id="@+id/apply_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="apply coupon"
+            android:padding="@dimen/dimen_5dp"
+            android:background="#4BEAE3"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/dimen_10dp"/>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_edit_text"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+              android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:text="WLCM250"/>
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textSize="10sp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_below="@id/text1"
+                android:textAllCaps="true"
+                android:text="This coupon code is for new registration only"/>
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:gravity="center"
+                android:textSize="10sp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_below="@id/text2"
+                android:textAllCaps="true"
+                android:text="VALID FOR A MONTH FROM DATE OF REGISTRATION, APPLIES FOR ONE TIME PURCHASE, ORDER WORTH OF RS.1500/- AND ABOVE."/>
+
+        </RelativeLayout>
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -15,7 +15,7 @@ import g2evolution.Boutique.R;
 public class ViewHolder_cart extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
-    public TextView cartname,cartprodetails,pdsubprice,pdprice,cartquantity,carttotalamount;
+    public TextView cartname,cartprodetails,pdsubprice,pdprice,cartquantity,carttotalamount, textsize;
 
     public ImageView cartimage,butdecrement,butincrement,delete;
 
@@ -36,6 +36,7 @@ public class ViewHolder_cart extends RecyclerView.ViewHolder implements View.OnC
         pdsubprice = (TextView)itemView.findViewById(R.id.pdsubprice);
         cartquantity = (TextView)itemView.findViewById(R.id.cartquantity);
         carttotalamount = (TextView)itemView.findViewById(R.id.carttotalamount);
+        textsize = (TextView)itemView.findViewById(R.id.textsize);
 
 
     }

@@ -20,7 +20,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.Activity_ForgotOTP"></activity>
+        <activity android:name=".Activity.Activity_WishList"></activity>
+        <activity android:name=".Activity.Activity_ForgotOTP" />
         <activity android:name=".Activity.Activity_ListProduct" />
         <activity android:name=".Activity.Activity_SubSactegory" />
         <activity android:name=".Activity.Activity_ResourcesList" />

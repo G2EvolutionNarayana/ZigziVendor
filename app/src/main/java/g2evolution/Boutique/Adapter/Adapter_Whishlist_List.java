@@ -16,50 +16,56 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-import g2evolution.Boutique.R;
-import g2evolution.Boutique.Viewholder.ViewHolder_List_Product;
-import g2evolution.Boutique.entit.FeederInfo_List_Product;
 import g2evolution.Boutique.Activity.Activity_productdetails;
+import g2evolution.Boutique.R;
+import g2evolution.Boutique.Viewholder.ViewHolder_Whishlist_List;
+import g2evolution.Boutique.entit.FeederInfo_Whishlist_List;
 
-public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_Product> {
 
-    private ArrayList<FeederInfo_List_Product> mListFeeds;
+public class Adapter_Whishlist_List extends RecyclerView.Adapter<ViewHolder_Whishlist_List> {
+
+    private ArrayList<FeederInfo_Whishlist_List> mListFeeds;
     private LayoutInflater mInflater;
     private int mPreviousPosition = 0;
     private Context mContext;
     int currentNos;
     String categoryName, postid;
+    private Adapter_Whishlist_List.OnItemClick mCallback;
 
     String _descvalue,stockQuantity;
 
-    public Adapter_List_Product(Context context, ArrayList<FeederInfo_List_Product> feedList){
+    public Adapter_Whishlist_List(Context context, ArrayList<FeederInfo_Whishlist_List> feedList, Adapter_Whishlist_List.OnItemClick mCallback){
         mContext = context;
         // mInflater = LayoutInflater.from(context);
         mListFeeds=feedList;
-
+        this.mCallback = mCallback;
 
     }
 
 
-    public void setData( ArrayList<FeederInfo_List_Product> feedList){
+    public void setData( ArrayList<FeederInfo_Whishlist_List> feedList){
         mListFeeds=feedList;
         notifyDataSetChanged();
     }
 
 
-    @Override
-    public ViewHolder_List_Product onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_product, null);
-        ViewHolder_List_Product rcv = new ViewHolder_List_Product(layoutView);
+    public interface OnItemClick {
+        void onClickedItem(int pos, String qty, int status);
+    }
+    @Override
+    public ViewHolder_Whishlist_List onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_whishlist_list, null);
+        ViewHolder_Whishlist_List rcv = new ViewHolder_Whishlist_List(layoutView);
         return rcv;
 
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder_List_Product holder, int position) {
-        final FeederInfo_List_Product feederInfo = mListFeeds.get(position);
+    public void onBindViewHolder(final ViewHolder_Whishlist_List holder, final int position) {
+        final FeederInfo_Whishlist_List feederInfo = mListFeeds.get(position);
 
         String feedDesc = null;
 
@@ -91,50 +97,54 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
         if (foo>0){*/
 
 
-        if (feederInfo.getElectronicimage() == null || feederInfo.getElectronicimage().equals("0")||feederInfo.getElectronicimage().equals("")||feederInfo.getElectronicimage().equals("null")){
-            holder.electronicimage.setImageResource(R.drawable.car);
-        }else {
-            Glide.with(mContext)
-                    .load(Uri.parse(feederInfo.getElectronicimage()))
-                    // .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    //.skipMemoryCache(true)
-                    .error(R.drawable.car)
-                    .into(holder.electronicimage);
-
-        }
-
-        holder.line.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                postid = feederInfo.getId();
-                categoryName =  feederInfo.getCategoryname();
-
-
-                SharedPreferences prefuserdata = mContext.getSharedPreferences("ProDetails", 0);
-                SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                prefeditor.putString("Proid", "" + postid);
-                prefeditor.putString("categoryName", "" + categoryName);
-
-                Log.e("testing","Proid  = " + postid);
-                Log.e("testing","productid in adapter = "+postid);
-                prefeditor.commit();
-
-                SharedPreferences prefuserdata2 = mContext.getSharedPreferences("regId", 0);
-                SharedPreferences.Editor prefeditor2 = prefuserdata2.edit();
-                prefeditor2.putString("UserId", "" + "2");
-
-                prefeditor2.commit();
-
-
-                Intent intent = new Intent(mContext, Activity_productdetails.class);
-                mContext.startActivity(intent);
-
+            if (feederInfo.getElectronicimage() == null || feederInfo.getElectronicimage().equals("0")||feederInfo.getElectronicimage().equals("")||feederInfo.getElectronicimage().equals("null")){
+                holder.electronicimage.setImageResource(R.drawable.car);
+            }else {
+                Glide.with(mContext)
+                        .load(Uri.parse(feederInfo.getElectronicimage()))
+                        // .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        //.skipMemoryCache(true)
+                        .error(R.drawable.car)
+                        .into(holder.electronicimage);
 
             }
-        });
 
+            holder.line.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    postid = feederInfo.getProductid();
+                    categoryName =  feederInfo.getCategoryname();
+
+
+                    SharedPreferences prefuserdata = mContext.getSharedPreferences("ProDetails", 0);
+                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                    prefeditor.putString("Proid", "" + postid);
+                    prefeditor.putString("categoryName", "" + categoryName);
+
+                    Log.e("testing","Proid  = " + postid);
+                    Log.e("testing","productid in adapter = "+postid);
+                    prefeditor.commit();
+
+
+                    Intent intent = new Intent(mContext, Activity_productdetails.class);
+                    mContext.startActivity(intent);
+
+
+                }
+            });
+
+            holder.imgdelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCallback != null) {
+                       String id = feederInfo.getId();
+                        mCallback.onClickedItem(position, id, 1);
+
+                    }
+                }
+            });
      /*   }else {
 
             Log.e("testing1","foo=====<<<<<<"+foo);

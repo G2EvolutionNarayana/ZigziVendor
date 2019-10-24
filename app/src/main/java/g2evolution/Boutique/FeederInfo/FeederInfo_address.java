@@ -18,6 +18,10 @@ public class FeederInfo_address {
     private String latitude;
     private String logitude;
     private String landMark1;
+    private String houseno;
+    private String alternatemobileno;
+    private String city;
+    private String state;
 
     public String getLandMark1() {
         return landMark1;
@@ -105,6 +109,38 @@ public class FeederInfo_address {
 
     public void setTextpincode(String textpincode) {
         this.textpincode = textpincode;
+    }
+
+    public String getHouseno() {
+        return houseno;
+    }
+
+    public void setHouseno(String houseno) {
+        this.houseno = houseno;
+    }
+
+    public String getAlternatemobileno() {
+        return alternatemobileno;
+    }
+
+    public void setAlternatemobileno(String alternatemobileno) {
+        this.alternatemobileno = alternatemobileno;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
 

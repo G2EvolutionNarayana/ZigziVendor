@@ -5,13 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,17 +28,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -46,6 +43,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +53,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +64,7 @@ import g2evolution.Boutique.FeederInfo.FeederInfo_address;
 import g2evolution.Boutique.FeederInfo.WorldPopulation;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.ConnectionDetector;
+import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.Utility.JSONfunctions1;
 
 /**
@@ -82,12 +80,10 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
     private Adapter_address.OnItemClick mCallback;
 
-    String streditaddress;
+    // String streditaddress;
 
-    EditText editcross,editname,editmob,editimpnotice,updateaddress;
+    EditText editname,editmob,edithouseno,editcity, editstate, editmob1, editpincode;
 
-
-    private static final int REQUEST_SELECT_PLACE = 1000;
     //------------------searchable spinner----------------
     JSONObject jsonobject;
     JSONArray jsonarray;
@@ -96,13 +92,12 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
     Spinner spinapartment;
     String capartmentid_id;
 
-    String strname,strcross,stradd,strmob , strimpnotice;
+    String strname,stradd,strmob ,strmob1,  strhouseno, strpincode ,stremailid;
 
     String status,message,userid,Apay;
 
-
-   // TextView addcross,addname,address,addno;
-  //  String _addcross,_addname,_address,_addno, _addpincode;
+    // TextView addcross,addname,address,addno;
+    //  String _addcross,_addname,_address,_addno, _addpincode;
 
     String Username,Usermail,Usermob;
 
@@ -116,53 +111,51 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
     RecyclerView rView;
 
     String addressid;
-
     String []name =new String[]{"jana","janardhan","reddy"};
     String []saddress =new String[]{"marathalli","hsr","btm"};
     String []landmark =new String[]{"beside axis bank","beside  sfddsf","opposite watertank"};
     String []mobileno =new String[]{"8050044482","8886075422","7799944412"};
     String []pincode =new String[]{"560037","560035","560034"};
 
-    ImageView imgdialogfiltercancel;
     String edit_string_remove;
 
     TextView edit_setting_adress,edit_setting_remove;
 
-    String getid,getTextname,getTextlandmark,getTextmobileno,getTextpincode,getTextaddress,getimpnotice,getemailid;
+    String getid,getTextname,getTextlandmark,getTextmobileno,getTexthouseno,getTextcity, getTextstate,  getTextmob1, getTextpincode,getTextaddress,getimpnotice;
 
-     Dialog logindialog12,logindialog123;
+    Dialog logindialog;
 
-    TextView mAutocompleteTextView;
+    Dialog logindialog12,logindialog123;
+
+    AutoCompleteTextView mAutocompleteTextView;
     private GoogleApiClient mGoogleApiClient;
     private static final int GOOGLE_API_CLIENT_ID = 0;
-  //  private PlaceArrayAdapter mPlaceArrayAdapter;
+   // private PlaceArrayAdapter mPlaceArrayAdapter;
     private static final String LOG_TAG = "MainActivity";
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-
     String regId;
-
     double latitude;
     double longitude;
 
+    JSONParser jsonParser = new JSONParser();
     private static final int REQUEST_WRITE_PERMISSION = 786;
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
-
     String strname1, straddress, strcity,getGetTextlandmark1,
             strpostal, strcountry, strstate, strlanti, strlong, strsublocality, stradminarea, strsubadminarea;
 
     EditText editlandmark;
-
     String strlandmrk;
-    List<Place.Field> fields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.address);
 
+
         editaddress = (TextView)findViewById(R.id.editaddress);
-      //  selectadd = (TextView)findViewById(R.id.selectadd);
+        //  selectadd = (TextView)findViewById(R.id.selectadd);
         back = (ImageView)findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,17 +164,10 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             }
         });
 
-
-        if (!Places.isInitialized()) {
-            Places.initialize(Activity_address.this, getString(R.string.api_key), Locale.US);
-        }
-
-       // addcross = (TextView)findViewById(R.id.addcross);
-      //  addname = (TextView)findViewById(R.id.addname);
-      //  address = (TextView)findViewById(R.id.address);
-      //  addno = (TextView)findViewById(R.id.addno);
-
-
+        // addcross = (TextView)findViewById(R.id.addcross);
+        //  addname = (TextView)findViewById(R.id.addname);
+        //  address = (TextView)findViewById(R.id.address);
+        //  addno = (TextView)findViewById(R.id.addno);
 
         SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
         userid = prefuserdata.getString("UserId","");
@@ -195,25 +181,6 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
         mCallback=this;
 
-
-     /*   mPlaceArrayAdapter = new PlaceArrayAdapter(Activity_address.this, android.R.layout.simple_list_item_1,
-                BO                                                                      UNDS_MOUNTAIN_VIEW, null);*/
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addConnectionCallbacks(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
-                .build();
-
-
-    /*    mGoogleApiClient = new GoogleApiClient.Builder(Activity_address.this)
-              //  .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(Activity_address.this, GOOGLE_API_CLIENT_ID, Activity_address.this)
-                .addConnectionCallbacks(Activity_address.this)
-                .build();*/
-
         mFeedRecyler = (RecyclerView) findViewById(R.id.recycler_view);
         mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_address.this));
         //setUpRecycler();
@@ -225,16 +192,18 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
         //   mFeedRecyler.setLayoutManager(lLayout);
         mFeedRecyler.setHasFixedSize(true);
 
-       // setUpRecycler();
+        // setUpRecycler();
 
         ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
         if (cd.isConnectingToInternet()) {
 
-            new Address().execute();
+            new LoadAddress().execute();
 
         } else {
 
+
             Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
+
         }
 
       /*  selectadd.setOnClickListener(new View.OnClickListener() {
@@ -261,86 +230,90 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             }
         });*/
 
-      editaddress.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
 
-              final Dialog logindialog = new Dialog(Activity_address.this);
-              logindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-              LayoutInflater inflater = (LayoutInflater)Activity_address.this.getSystemService(Activity_address.this.LAYOUT_INFLATER_SERVICE);
-              View convertView = (View) inflater.inflate(R.layout.edit_address, null);
+
+
+        editaddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                logindialog = new Dialog(Activity_address.this);
+                logindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                LayoutInflater inflater = (LayoutInflater)Activity_address.this.getSystemService(Activity_address.this.LAYOUT_INFLATER_SERVICE);
+                View convertView = (View) inflater.inflate(R.layout.edit_address, null);
 
                 /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
 
-              logindialog.setContentView(convertView);
-              //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
-              // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-              logindialog.setCanceledOnTouchOutside(true);
-              WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-              lp.copyFrom(logindialog.getWindow().getAttributes());
-              lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-              lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-              lp.gravity = Gravity.CENTER;
-              logindialog.getWindow().setAttributes(lp);
-
-              editcross = (EditText)convertView.findViewById(R.id.editcross);
-              updateaddress = (EditText)convertView.findViewById(R.id.editaddress);
-              editimpnotice = (EditText)convertView.findViewById(R.id.impnotice);
-              editname = (EditText)convertView.findViewById(R.id.editname);
-              editmob = (EditText)convertView.findViewById(R.id.editmob);
-
-              editlandmark = (EditText)convertView.findViewById(R.id.editlandmark);
+                logindialog.setContentView(convertView);
+                //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
+                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
+                logindialog.setCanceledOnTouchOutside(true);
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(logindialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                lp.gravity = Gravity.CENTER;
+                logindialog.getWindow().setAttributes(lp);
 
 
-              mAutocompleteTextView = (TextView)convertView. findViewById(R.id
-                      .locationsedt);
-         /*     mAutocompleteTextView.setThreshold(2);
-              mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
+                editname = (EditText)convertView.findViewById(R.id.editname);
+                editmob = (EditText)convertView.findViewById(R.id.editmob);
+                editcity = (EditText)convertView.findViewById(R.id.editcity);
+                editstate = (EditText)convertView.findViewById(R.id.editstate);
+                editmob1 = (EditText)convertView.findViewById(R.id.editmob1);
+                editpincode = (EditText)convertView.findViewById(R.id.editpincode);
+                edithouseno = (EditText)convertView.findViewById(R.id.edithouseno);
 
-              mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);*/
+                editlandmark = (EditText)convertView.findViewById(R.id.editlandmark);
+           /*   mGoogleApiClient = new GoogleApiClient.Builder(Activity_address.this)
+                      .addApi(Places.GEO_DATA_API)
+                      .enableAutoManage(Activity_address.this, GOOGLE_API_CLIENT_ID, Activity_address.this)
+                      .addConnectionCallbacks(Activity_address.this)
+                      .build();
+*/
+                mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
+                        .locationsedt);
+            /*    mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
+                        .locationsedt);
+                mAutocompleteTextView.setThreshold(2);
+                mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);*/
+          /*      mPlaceArrayAdapter = new PlaceArrayAdapter(Activity_address.this, android.R.layout.simple_list_item_1,
+                        BOUNDS_MOUNTAIN_VIEW, null);
+                mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);*/
 
-              mAutocompleteTextView.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View view) {
 
-                      Intent intent = new Autocomplete.IntentBuilder(
-                              AutocompleteActivityMode.OVERLAY, fields)
-                              .build(Activity_address.this);
-                      startActivityForResult(intent, REQUEST_SELECT_PLACE);
+                // spinapartment = (Spinner) convertView.findViewById(R.id.spinapartment);
+                Button addsubmit = (Button)convertView.findViewById(R.id.addsubmit);
 
-                  }
-              });
-
-
-
-
-              spinapartment = (Spinner) convertView.findViewById(R.id.spinapartment);
-              Button addsubmit = (Button)convertView.findViewById(R.id.addsubmit);
-
-              ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
+             /* ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
               if (cd.isConnectingToInternet()) {
 
                   new DownloadJSON().execute();
 
               } else {
 
+
                   Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
 
-              }
+              }*/
 
-              addsubmit.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View view) {
+                addsubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                      submit();
 
-                  }
-              });
+                        submit();
 
-              logindialog.show();
 
-          }
-      });
+                    }
+                });
+
+                logindialog.show();
+
+            }
+        });
+
 
     }
 
@@ -348,17 +321,14 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
         if (!Validatename()) {
             return;
         }
-
-        if (updateaddress.getText().toString().trim() == null || updateaddress.getText().toString().trim().length() == 0){
+        /*if (updateaddress.getText().toString().trim() == null || updateaddress.getText().toString().trim().length() == 0){
 
 
         }else{
-
             if (!validateEmail()) {
                 return;
             }
-
-        }
+        }*/
 
     /*    if (strpostal.equals(capartmentid_id)){
 
@@ -372,9 +342,11 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             return;
         }
 
+
+/*
         if (!validatelandmark()) {
             return;
-        }
+        }*/
        /* if (!validatemoibile()) {
             return;
         }*/
@@ -402,76 +374,75 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
             }
         }*/
-
+/*
         if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
-
             Toast.makeText(Activity_address.this, "Please select Pincode", Toast.LENGTH_SHORT).show();
 
         }
-        else {
+        else {*/
 
-            if (capartmentid_id.equals(strpostal)){
+        //  if (capartmentid_id.equals(strpostal)){
 
-                streditaddress=updateaddress.getText().toString();
-                strname = editname.getText().toString();
-                strimpnotice = editimpnotice.getText().toString();
-                stradd = mAutocompleteTextView.getText().toString();
-                strcross = editcross.getText().toString();
-                strmob = editmob.getText().toString();
-                strlandmrk=editlandmark.getText().toString();
-                capartmentid_id = spinapartment.getSelectedItem().toString();
+        // streditaddress=updateaddress.getText().toString();
+        strname = editname.getText().toString();
+        stradd = mAutocompleteTextView.getText().toString();
+        strmob = editmob.getText().toString();
+        strhouseno = edithouseno.getText().toString();
+        strcity = editcity.getText().toString();
+        strstate = editstate.getText().toString();
+        strmob1 = editmob1.getText().toString();
+        strpincode = editpincode.getText().toString();
+        strlandmrk=editlandmark.getText().toString();
+        //  capartmentid_id = spinapartment.getSelectedItem().toString();
 
-                ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
-                if (cd.isConnectingToInternet()) {
+        ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
+        if (cd.isConnectingToInternet()) {
 
-                    //  new TopTrend().execute();
-                    new Loader().execute();
+            //  new TopTrend().execute();
+            new AddAddress().execute();
+        } else {
 
-                } else {
+            Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
+        }
 
-                }
-
-            }else {
+          /*  }else {
 
                 Toast.makeText(Activity_address.this, "Pincode and Address Mismatch", Toast.LENGTH_SHORT).show();
 
-            }
-        }
+            }*/
+        //  }
+
 
     }
 
 
-    //-----------------------Validating email--------------------
-    private boolean validateEmail() {
+    /* //-----------------------Validating email--------------------
+     private boolean validateEmail() {
 
+         String email = updateaddress.getText().toString().trim();
+         if (!isValidateEmail(email)) {
+             Toast.makeText(Activity_address.this, "Your email  is invalid. Please enter a valid emailid", Toast.LENGTH_LONG).show();
+             //edt_email.setError(getString(R.string.reg_validation_email));
+             updateaddress.requestFocus();
+             return false;
 
-        String email = updateaddress.getText().toString().trim();
+         } else {
+             // inputLayoutemail.setErrorEnabled(false);
+         }
 
-        if (!isValidateEmail(email)) {
-            Toast.makeText(Activity_address.this, "Your email  is invalid. Please enter a valid emailid", Toast.LENGTH_LONG).show();
-            //edt_email.setError(getString(R.string.reg_validation_email));
-            updateaddress.requestFocus();
-            return false;
-
-        } else {
-            // inputLayoutemail.setErrorEnabled(false);
-        }
-
-        return true;
-    }
+         return true;
+     }*/
     private static boolean isValidateEmail(String email) {
 
         return  Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-
     private void submit1() {
 
         if (!Validatename()) {
             return;
         }
-        if (updateaddress.getText().toString().trim() == null || updateaddress.getText().toString().trim().length() == 0){
+       /* if (updateaddress.getText().toString().trim() == null || updateaddress.getText().toString().trim().length() == 0){
 
 
         }else{
@@ -479,9 +450,9 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             if (!validateEmail()) {
                 return;
             }
-        }
+        }*/
 
-        if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
+      /*  if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
 
             Toast.makeText(Activity_address.this, "Please select Pincode", Toast.LENGTH_SHORT).show();
 
@@ -495,19 +466,17 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
                 Toast.makeText(Activity_address.this, "Pincode and Address Mismatch", Toast.LENGTH_SHORT).show();
 
             }
-        }
+        }*/
         if (!validateaddress()) {
             return;
         }
 
-        if (!validatelandmark()) {
+       /* if (!validatelandmark()) {
             return;
-        }
-
+        }*/
       /*  if (!validatemoibile()) {
             return;
         }*/
-
        /* if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
             Toast.makeText(Activity_address.this, "Please select Pincode", Toast.LENGTH_SHORT).show();
 
@@ -569,56 +538,53 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
         }
 
 */
-        if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
-
+      /*  if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
             Toast.makeText(Activity_address.this, "Please select Pincode", Toast.LENGTH_SHORT).show();
 
-
-        }else {
-
+        }
+        else {
 
             if (strpostal == null || strpostal.length() == 0 || strpostal.equals("null")) {
 
                 Toast.makeText(Activity_address.this, "Address Incorrect", Toast.LENGTH_SHORT).show();
 
+            } else {*/
 
-            } else {
+        // if (capartmentid_id.equals(strpostal)) {
 
+        //  streditaddress = updateaddress.getText().toString();
+        strname = editname.getText().toString();
+        stradd = mAutocompleteTextView.getText().toString();
+        strmob = editmob.getText().toString();
+        strhouseno = edithouseno.getText().toString();
+        strcity = editcity.getText().toString();
+        strstate = editstate.getText().toString();
+        strmob1 = editmob1.getText().toString();
+        strpincode = editpincode.getText().toString();
+        strlandmrk=editlandmark.getText().toString();
+        //  capartmentid_id = spinapartment.getSelectedItem().toString();
 
-                if (capartmentid_id.equals(strpostal)) {
+        ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
+        if (cd.isConnectingToInternet()) {
 
+            //  new TopTrend().execute();
+            new AddAddressUpdate().execute();
 
-                    streditaddress = updateaddress.getText().toString();
-                    strname = editname.getText().toString();
-                    strimpnotice = editimpnotice.getText().toString();
-                    stradd = mAutocompleteTextView.getText().toString();
-                    strcross = editcross.getText().toString();
-                    strmob = editmob.getText().toString();
-                    strlandmrk=editlandmark.getText().toString();
-                    capartmentid_id = spinapartment.getSelectedItem().toString();
+        } else {
 
-                    ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
-                    if (cd.isConnectingToInternet()) {
+            Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
 
-                        //  new TopTrend().execute();
-                        new UpdateAddress().execute();
+        }
 
-                    } else {
-
-                        Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
-
-                    }
-
-
-                }else {
+               /* }else {
 
                     Toast.makeText(Activity_address.this, "Pincode and Address Mismatch", Toast.LENGTH_SHORT).show();
 
-                }
+                }*/
 
 
-            }
-        }
+        //  }
+        // }
 
 
     }
@@ -683,7 +649,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
     }
 
-    private boolean validatelandmark() {
+  /*  private boolean validatelandmark() {
 
         if (editcross.getText().toString().trim().isEmpty()) {
 
@@ -698,7 +664,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
         }
 
         return true;
-    }
+    }*/
 
     private boolean validatemoibile() {
 
@@ -737,20 +703,21 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
     @Override
     public void onClickedItem(int pos, int qty, int status) {
-
-
         Log.e("DMen", "Pos:"+ pos + "Qty:"+qty);
         Log.e("testing","status  = "+status);
-          Log.e("testing","title inm  = "+mListFeederInfo.get(pos).getId());
+        Log.e("testing","title inm  = "+mListFeederInfo.get(pos).getId());
 
-         getid=mListFeederInfo.get(pos).getId();
-         getTextname=mListFeederInfo.get(pos).getTextname();
-         getTextlandmark=mListFeederInfo.get(pos).getTextlandmark();
-         getTextmobileno=mListFeederInfo.get(pos).getTextmobileno();
-         getimpnotice=mListFeederInfo.get(pos).getImpnotice();
-         getTextpincode=mListFeederInfo.get(pos).getTextpincode();
-         getTextaddress=mListFeederInfo.get(pos).getTextaddress();
-         getemailid=mListFeederInfo.get(pos).getEmailId();
+        getid=mListFeederInfo.get(pos).getId();
+        getTextname=mListFeederInfo.get(pos).getTextname();
+        getTextlandmark=mListFeederInfo.get(pos).getTextlandmark();
+        getTextmobileno=mListFeederInfo.get(pos).getTextmobileno();
+        getTexthouseno=mListFeederInfo.get(pos).getHouseno();
+        getTextcity=mListFeederInfo.get(pos).getCity();
+        getTextstate=mListFeederInfo.get(pos).getState();
+        getTextmob1=mListFeederInfo.get(pos).getAlternatemobileno();
+        getimpnotice=mListFeederInfo.get(pos).getImpnotice();
+        getTextpincode=mListFeederInfo.get(pos).getTextpincode();
+        getTextaddress=mListFeederInfo.get(pos).getTextaddress();
         strlanti=mListFeederInfo.get(pos).getLatitude();
         strlong=mListFeederInfo.get(pos).getLogitude();
         getGetTextlandmark1=mListFeederInfo.get(pos).getLandMark1();
@@ -759,7 +726,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
         Log.e("testing","testing=================quantity"+qty);
         Log.e("testing","testing=================getid"+getid);
-       // new Loader2().execute();
+        // new Loader2().execute();
 
 
         logindialog123 = new Dialog(Activity_address.this);
@@ -767,7 +734,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
         LayoutInflater inflater = (LayoutInflater)getSystemService(Activity_address.this.LAYOUT_INFLATER_SERVICE);
         View convertView = (View) inflater.inflate(R.layout.edit_setting, null);
 
-                /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
+        /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
 
         logindialog123.setContentView(convertView);
         //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
@@ -777,18 +744,11 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
         lp.copyFrom(logindialog123.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.gravity = Gravity.BOTTOM;
+        lp.gravity = Gravity.CENTER;
         logindialog123.getWindow().setAttributes(lp);
-        logindialog123.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        imgdialogfiltercancel = (ImageView) convertView.findViewById(R.id.imgcancel);
         edit_setting_adress = (TextView)convertView.findViewById(R.id.edit_setting);
         edit_setting_remove = (TextView)convertView.findViewById(R.id.remove);
-        imgdialogfiltercancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logindialog123.dismiss();
-            }
-        });
+
         edit_setting_adress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -814,53 +774,48 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
                 lp.gravity = Gravity.CENTER;
                 logindialog12.getWindow().setAttributes(lp);
 
-                editimpnotice = (EditText)convertView.findViewById(R.id.impnotice);
-                updateaddress = (EditText)convertView.findViewById(R.id.editaddress);
-                editcross = (EditText)convertView.findViewById(R.id.editcross);
                 editname = (EditText)convertView.findViewById(R.id.editname);
                 editmob = (EditText)convertView.findViewById(R.id.editmob);
+                edithouseno = (EditText)convertView.findViewById(R.id.edithouseno);
+                editstate = (EditText)convertView.findViewById(R.id.editstate);
+                editmob1 = (EditText)convertView.findViewById(R.id.editmob1);
+                editpincode = (EditText)convertView.findViewById(R.id.editpincode);
+                editcity = (EditText)convertView.findViewById(R.id.editcity);
                 editlandmark = (EditText)convertView.findViewById(R.id.editlandmark);
 
 
-            /*    mGoogleApiClient = new GoogleApiClient.Builder(Activity_address.this)
+              /*  mGoogleApiClient = new GoogleApiClient.Builder(Activity_address.this)
                         .addApi(Places.GEO_DATA_API)
                         .enableAutoManage(Activity_address.this, GOOGLE_API_CLIENT_ID, Activity_address.this)
                         .addConnectionCallbacks(Activity_address.this)
-                        .build();
-*/
+                        .build();*/
 
-                mAutocompleteTextView = (TextView)convertView. findViewById(R.id
+                mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
                         .locationsedt);
-             /*   mAutocompleteTextView.setThreshold(2);
-                mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-           *//*     mPlaceArrayAdapter = new PlaceArrayAdapter(Activity_address.this, android.R.layout.simple_list_item_1,
-                        BOUNDS_MOUNTAIN_VIEW, null);*//*
+             /*   mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
+                        .locationsedt);
+                mAutocompleteTextView.setThreshold(2);
+                mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);*/
+              /*  mPlaceArrayAdapter = new PlaceArrayAdapter(Activity_address.this, android.R.layout.simple_list_item_1,
+                        BOUNDS_MOUNTAIN_VIEW, null);
                 mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);*/
-                mAutocompleteTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
 
-                        Intent intent = new Autocomplete.IntentBuilder(
-                                AutocompleteActivityMode.OVERLAY, fields)
-                                .build(Activity_address.this);
-                        startActivityForResult(intent, REQUEST_SELECT_PLACE);
-
-                    }
-                });
 
                 mAutocompleteTextView.setText(getTextaddress);
-                updateaddress.setText(getemailid);
                 editname.setText(getTextname);
-                editcross.setText(getTextlandmark);
                 editmob.setText(getTextmobileno);
-                editimpnotice.setText(getimpnotice);
+                edithouseno.setText(getTexthouseno);
+                editcity.setText(getTextcity);
+                editstate.setText(getTextstate);
+                editmob1.setText(getTextmob1);
+                editpincode.setText(getTextpincode);
 
-                editlandmark.setText(getGetTextlandmark1);
-                spinapartment = (Spinner) convertView.findViewById(R.id.spinapartment);
+                editlandmark.setText(getTextlandmark);
+                //  spinapartment = (Spinner) convertView.findViewById(R.id.spinapartment);
                 Button addsubmit = (Button)convertView.findViewById(R.id.addsubmit);
 
 
-                ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
+              /*  ConnectionDetector cd = new ConnectionDetector(Activity_address.this);
                 if (cd.isConnectingToInternet()) {
 
                     new DownloadJSON().execute();
@@ -870,7 +825,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
                     Toast.makeText(Activity_address.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
 
-                }
+                }*/
 
                 addsubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -899,7 +854,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
                 Log.e("testing","edit==edit_setting_remove="+addressid);
 
-                new Loader2().execute();
+                new DeteleAddressUpdate().execute();
             }
         });
 
@@ -945,7 +900,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
                 if (status.equals("success")){
 
-                  //  Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
+                    //  Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(Activity_address.this, Activity_address.class);
 
@@ -960,7 +915,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
                     finish();
 
                 }else {
-                   // Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
                 }
 
             }else {
@@ -984,11 +939,8 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             object.put(EndUrl.ADDdeliveryAddress_Id,userid);
             object.put(EndUrl.ADDdeliveryAddress_name,strname);
             object.put(EndUrl.ADDdeliveryAddress_address,stradd);
-            object.put(EndUrl.ADDdeliveryAddress_landmark,strcross);
             object.put(EndUrl.ADDdeliveryAddress_mobile,strmob);
             object.put(EndUrl.ADDdeliveryAddress_pincode,strpostal);
-            object.put(EndUrl.ADDdeliveryAddress_imp_note,strimpnotice);
-            object.put(EndUrl.ADDdeliveryAddress_streditaddress,streditaddress);
 
             object.put(EndUrl.ADDdeliveryAddress_add_landmark,strlandmrk);
             //if you want to modify some value just do like this.
@@ -1083,7 +1035,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 // empId = post.getString("empId");
-              //  userid  = post.getString("userid ");
+                //  userid  = post.getString("userid ");
 
             }
 
@@ -1134,7 +1086,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
                 if (status.equals("success")){
 
-                 //   Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
+                    //   Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(Activity_address.this, Activity_address.class);
 
@@ -1153,7 +1105,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
                     logindialog12.dismiss();
 
                 }else {
-                  //  Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
+                    //  Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
                 }
 
             }else {
@@ -1178,11 +1130,8 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             object.put(EndUrl.ADDdeliveryAddress_Updte_address_Id,addressid);
             object.put(EndUrl.ADDdeliveryAddress_Updte_name,strname);
             object.put(EndUrl.ADDdeliveryAddress_Updte_address,stradd);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_landmark,strcross);
             object.put(EndUrl.ADDdeliveryAddress_Updte_pincode,strpostal);
             object.put(EndUrl.ADDdeliveryAddress_Updte_mobile,strmob);
-            object.put(EndUrl.ADDdeliveryAddress__imp_note,strimpnotice);
-            object.put(EndUrl.ADDdeliveryAddress__streditaddress,streditaddress);
 
             object.put(EndUrl.ADDdeliveryAddress__latitude,strlanti);
             object.put(EndUrl.ADDdeliveryAddress__longitude,strlong);
@@ -1290,7 +1239,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
     }
 
-  //--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
     class Address extends AsyncTask<Void, Void, JSONObject> {
 
@@ -1327,7 +1276,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
                 if (status.equals("success")){
 
-                   // logindialog12.dismiss();
+                    // logindialog12.dismiss();
                     mAdapterFeeds= new Adapter_address(Activity_address.this , mListFeederInfo, mCallback);
                     mFeedRecyler.setAdapter(mAdapterFeeds);
                  /*   addcross.setText(_addcross);
@@ -1338,11 +1287,11 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 */
 
 
-                   // Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
 
 
                 }else {
-                   // Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(Activity_address.this, ""+message, Toast.LENGTH_LONG).show();
                 }
 
             }else {
@@ -1441,7 +1390,7 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
             Log.e("testing","result in post message========="+json.getString("message"));
             status = json.getString("status");
             message = json.getString("message");
-          //  total_record = json.getString("total_record");
+            //  total_record = json.getString("total_record");
 
 
             String arrayresponce = json.getString("data");
@@ -1539,14 +1488,14 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
                 if (status.equals("success")){
 
-                  //  Toast.makeText(Activity_address.this, message, Toast.LENGTH_LONG).show();
+                    //  Toast.makeText(Activity_address.this, message, Toast.LENGTH_LONG).show();
                     logindialog123.dismiss();
-                    new Address().execute();
+                    new LoadAddress().execute();
 
-                 //   logindialog12.dismiss();
+                    //   logindialog12.dismiss();
 
                 }else {
-                  //  Toast.makeText(Activity_address.this, message, Toast.LENGTH_LONG).show();
+                    //  Toast.makeText(Activity_address.this, message, Toast.LENGTH_LONG).show();
 
                 }
 
@@ -1646,8 +1595,8 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
 
 
-           // String arrayresponce = json.getString("data");
-          //  Log.e("testing", "adapter value=" + arrayresponce);
+            // String arrayresponce = json.getString("data");
+            //  Log.e("testing", "adapter value=" + arrayresponce);
 
 
 
@@ -1773,128 +1722,8 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
 
         }
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-
-
-        if (requestCode == REQUEST_SELECT_PLACE) {
-
-            if (resultCode == android.app.Activity.RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                this.onPlaceSelected(place);
-                Log.e("testing", "Place: " + place.getName() + ", " + place.getId());
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // TODO: Handle the error.
-                Status status = Autocomplete.getStatusFromIntent(data);
-                this.onError(status);
-                Log.e("testing", status.getStatusMessage());
-            } else if (resultCode == android.app.Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-
-
-          /*  if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-                this.onPlaceSelected(place);
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                this.onError(status);
-            }*/
-        }
-
-
-        //   new UploadTaskImage().execute();
-
-
-    /*    if (requestCode == REQUEST_CAMERA)
-            onCaptureImageResult(data);*/
-
-
-    }
-    public void onError(Status status) {
-        Log.e(LOG_TAG, "onError: Status = " + status.toString());
-        Toast.makeText(Activity_address.this, "Place selection failed: " + status.getStatusMessage(),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    //-----------------------------------google places--------------------------------------
-    public void onPlaceSelected(Place place) {
-
-        LatLng latLng = place.getLatLng();
-
-        // strname = place.getName().toString();
-        // straddress = place.getAddress().toString();
-        Log.e("testing", "latitude" + latLng.latitude);
-        Log.e("testing", "longitude" + latLng.longitude);
-
-
-        Geocoder geocoder = new Geocoder(Activity_address.this, Locale.getDefault());
-        String result = null;
-        try {
-            List<android.location.Address> addressList = geocoder.getFromLocation(
-                    latLng.latitude, latLng.longitude, 1);
-            if (addressList != null && addressList.size() > 0) {
-                android.location.Address address = addressList.get(0);
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    sb.append(address.getAddressLine(i)).append("\n");
-                }
-                sb.append(address.getLocality()).append("\n");
-                sb.append(address.getPostalCode()).append("\n");
-                sb.append(address.getCountryName());
-                result = sb.toString();
-                strpostal =  address.getPostalCode();
-              /*  strcity = address.getLocality();
-                strpostal = address.getPostalCode();
-                strcountry = address.getCountryName();
-                strstate = address.getAdminArea();
-                strlocality = address.getLocality();
-                stradminarea = address.getAdminArea();
-                strsubadminarea = address.getAdminArea();
-                Double doulatitude = address.getLatitude();
-                Double doulongitude = address.getLongitude();
-
-                Log.e("testing", "location strcity" + strcity);
-                Log.e("testing", "location strpostal" + strpostal);
-                Log.e("testing", "location strcountry" + strcountry);
-                Log.e("testing", "location strstate" + strstate);
-                Log.e("testing", "location strsublocality" + strlocality);
-                Log.e("testing", "location stradminarea" + stradminarea);
-                Log.e("testing", "location strsubadminarea" + strsubadminarea);
-                Log.e("testing", "location doulongitude" + doulongitude);
-                Log.e("testing", "location strpostal" + strpostal);*/
-
-                Double doulatitude = address.getLatitude();
-                Double doulongitude = address.getLongitude();
-
-               /* String strlanti = doulatitude.toString();
-                String strlong = doulongitude.toString();*/
-                mAutocompleteTextView.setText(place.getAddress());
-
-                // strupdatelat = String.valueOf(strlanti);
-                // strupdaelong = String.valueOf(strlong);
-
-                latitude = Double.parseDouble(strlanti);
-                longitude = Double.parseDouble(strlong);
-
-                strlanti = doulatitude.toString();
-                strlong = doulongitude.toString();
-                LatLng dest = new LatLng(latitude, longitude);
-                //   mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dest, 17.0f));
-
-
-
-
-            }
-        } catch (IOException e) {
-            // Log.e(TAG, "Unable connect to Geocoder", e);
-        }
-
-
-    }
- /*   //-------------------------------Autotext------------------------------------------------------------------
+    /*//-------------------------------Autotext------------------------------------------------------------------
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener
             = new AdapterView.OnItemClickListener() {
@@ -2031,6 +1860,571 @@ public class Activity_address extends AppCompatActivity implements Adapter_addre
        // mPlaceArrayAdapter.setGoogleApiClient(null);
         Log.e(LOG_TAG, "Google Places API connection suspended.");
     }
+
+
+    class AddAddress extends AsyncTask<String, String, String> {
+        String responce;
+        JSONArray responcearccay;
+        String status;
+        String strresponse;
+        String strdata;
+        ProgressDialog mProgress;
+        String strcode, strtype, strmessage;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress = new ProgressDialog(Activity_address.this);
+            mProgress.setMessage("Fetching data...");
+            mProgress.show();
+            mProgress.setCancelable(false);
+
+           /* pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading.....");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+
+
+        }
+
+        public String doInBackground(String... args) {
+            // Create an array
+
+            // Retrieve JSON Objects from the given URL address
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_user_id, userid));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_address_type, ""));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_name, strname));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_phone, strmob));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Alternate_phone, strmob1));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_House_no, strhouseno));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Locality, stradd));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Landmark, strlandmrk));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_City, strcity));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_State, strstate));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_pin, strpincode));
+
+            Log.e("testing", "userpramas = " + userpramas);
+
+            String strurl = EndUrl.AddAddress_URL;
+            Log.e("testing", "strurl = " + strurl);
+            JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
+
+
+            Log.e("testing", "json result = " + json);
+            if (json == null) {
+
+                Log.e("testing", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing", "jon2222222222222");
+
+                try {
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                  /*  if (status.equals("success")) {
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        strdata = json.getString("data");
+
+                        JSONObject  jsonobjectdata = new JSONObject(strdata);
+                        str_user_id = jsonobjectdata.getString("user_id");
+                        Log.e("testing","userid - "+str_user_id);
+
+
+
+                    } else {
+                    }*/
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return responce;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+            mProgress.dismiss();
+            Log.e("testing","status = "+status);
+            Log.e("testing","strresponse = "+strresponse);
+            Log.e("testing","strmessage = "+strmessage);
+
+            if (status == null || status.length() == 0){
+
+            }else if (status.equals("success")) {
+                logindialog.dismiss();
+                new LoadAddress().execute();
+
+/*
+                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
+
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                startActivity(intent);*/
+
+                //  new LoadProductList().execute();
+
+              /*  Log.e("testing","status 2= "+status);
+                if (strtype == null || strtype.length() == 0){
+
+                    Log.e("testing","status 3= "+status);
+                }else if (strtype.equals("‘verify_success")){
+
+                    Log.e("testing","status 4= "+strtype);
+
+                }else{
+
+                }*/
+
+
+
+            } else if (status.equals("failure")) {
+                Toast.makeText(Activity_address.this, strmessage, Toast.LENGTH_SHORT).show();
+                //  alertdialog(strtype, strmessage);
+            }else{
+
+            }
+
+
+        }
+
+    }
+
+    class AddAddressUpdate extends AsyncTask<String, String, String> {
+        String responce;
+        JSONArray responcearccay;
+        String status;
+        String strresponse;
+        String strdata;
+        ProgressDialog mProgress;
+        String strcode, strtype, strmessage;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress = new ProgressDialog(Activity_address.this);
+            mProgress.setMessage("Fetching data...");
+            mProgress.show();
+            mProgress.setCancelable(false);
+
+           /* pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading.....");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+
+
+        }
+
+        public String doInBackground(String... args) {
+            // Create an array
+
+            // Retrieve JSON Objects from the given URL address
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_id, addressid));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_user_id, userid));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_address_type, ""));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_name, strname));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_phone, strmob));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Alternate_phone, strmob1));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_House_no, strhouseno));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Locality, stradd));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Landmark, strlandmrk));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_City, strcity));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_State, strstate));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_pin, strpincode));
+
+            Log.e("testing", "userpramas = " + userpramas);
+
+            String strurl = EndUrl.AddAddress_URL;
+            Log.e("testing", "strurl = " + strurl);
+            JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
+
+
+            Log.e("testing", "json result = " + json);
+            if (json == null) {
+
+                Log.e("testing", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing", "jon2222222222222");
+
+                try {
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                  /*  if (status.equals("success")) {
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        strdata = json.getString("data");
+
+                        JSONObject  jsonobjectdata = new JSONObject(strdata);
+                        str_user_id = jsonobjectdata.getString("user_id");
+                        Log.e("testing","userid - "+str_user_id);
+
+
+
+                    } else {
+                    }*/
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return responce;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+            mProgress.dismiss();
+            Log.e("testing","status = "+status);
+            Log.e("testing","strresponse = "+strresponse);
+            Log.e("testing","strmessage = "+strmessage);
+
+            if (status == null || status.length() == 0){
+
+            }else if (status.equals("success")) {
+                logindialog123.dismiss();
+                new LoadAddress().execute();
+/*
+                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
+
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                startActivity(intent);*/
+
+                //  new LoadProductList().execute();
+
+              /*  Log.e("testing","status 2= "+status);
+                if (strtype == null || strtype.length() == 0){
+
+                    Log.e("testing","status 3= "+status);
+                }else if (strtype.equals("‘verify_success")){
+
+                    Log.e("testing","status 4= "+strtype);
+
+                }else{
+
+                }*/
+
+
+
+            } else if (status.equals("failure")) {
+                Toast.makeText(Activity_address.this, strmessage, Toast.LENGTH_SHORT).show();
+                //  alertdialog(strtype, strmessage);
+            }else{
+
+            }
+
+
+        }
+
+    }
+    class DeteleAddressUpdate extends AsyncTask<String, String, String> {
+        String responce;
+        JSONArray responcearccay;
+        String status;
+        String strresponse;
+        String strdata;
+        ProgressDialog mProgress;
+        String strcode, strtype, strmessage;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress = new ProgressDialog(Activity_address.this);
+            mProgress.setMessage("Fetching data...");
+            mProgress.show();
+            mProgress.setCancelable(false);
+
+           /* pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading.....");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+
+
+        }
+
+        public String doInBackground(String... args) {
+            // Create an array
+
+            // Retrieve JSON Objects from the given URL address
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.DeleteAddress_id, addressid));
+
+            Log.e("testing", "userpramas = " + userpramas);
+
+            String strurl = EndUrl.DeleteAddress_URL;
+            Log.e("testing", "strurl = " + strurl);
+            JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
+
+
+            Log.e("testing", "json result = " + json);
+            if (json == null) {
+
+                Log.e("testing", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing", "jon2222222222222");
+
+                try {
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                  /*  if (status.equals("success")) {
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        strdata = json.getString("data");
+
+                        JSONObject  jsonobjectdata = new JSONObject(strdata);
+                        str_user_id = jsonobjectdata.getString("user_id");
+                        Log.e("testing","userid - "+str_user_id);
+
+
+
+                    } else {
+                    }*/
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return responce;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+            mProgress.dismiss();
+            Log.e("testing","status = "+status);
+            Log.e("testing","strresponse = "+strresponse);
+            Log.e("testing","strmessage = "+strmessage);
+
+            if (status == null || status.length() == 0){
+
+            }else if (status.equals("success")) {
+                logindialog123.dismiss();
+                new LoadAddress().execute();
+/*
+                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
+
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                startActivity(intent);*/
+
+                //  new LoadProductList().execute();
+
+              /*  Log.e("testing","status 2= "+status);
+                if (strtype == null || strtype.length() == 0){
+
+                    Log.e("testing","status 3= "+status);
+                }else if (strtype.equals("‘verify_success")){
+
+                    Log.e("testing","status 4= "+strtype);
+
+                }else{
+
+                }*/
+
+
+
+            } else if (status.equals("failure")) {
+                Toast.makeText(Activity_address.this, strmessage, Toast.LENGTH_SHORT).show();
+                //  alertdialog(strtype, strmessage);
+            }else{
+
+            }
+
+
+        }
+
+    }
+    class LoadAddress extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_address.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            mListFeederInfo =new ArrayList<FeederInfo_address>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetAddressList_user_id, userid));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetAddressList_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+                            FeederInfo_address feedInfo = new FeederInfo_address();
+
+
+                            feedInfo.setId(post.optString("id"));
+                            feedInfo.setTextname(post.optString("name"));
+                            feedInfo.setTextaddress(post.optString("locality"));
+                            feedInfo.setTextlandmark(post.optString("landmark"));
+                            feedInfo.setTextmobileno(post.optString("phone"));
+                            feedInfo.setAlternatemobileno(post.optString("alternate_phone"));
+                            feedInfo.setHouseno(post.optString("house_no"));
+                            feedInfo.setCity(post.optString("city"));
+                            feedInfo.setState(post.optString("state"));
+                            feedInfo.setTextpincode(post.optString("pin"));
+                            // feedInfo.setImpnotice(post.optString("imp_note"));
+
+                            mListFeederInfo.add(feedInfo);
+
+
+
+
+
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+
+
+                mAdapterFeeds= new Adapter_address(Activity_address.this , mListFeederInfo, mCallback);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+
+            }
+            else {
+
+
+
+
+
+                mAdapterFeeds= new Adapter_address(Activity_address.this , mListFeederInfo, mCallback);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+
 }
 
 

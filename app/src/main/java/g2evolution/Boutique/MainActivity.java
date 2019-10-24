@@ -74,6 +74,7 @@ import g2evolution.Boutique.Activity.Activity_Aboutus;
 import g2evolution.Boutique.Activity.Activity_Address_Navigation;
 import g2evolution.Boutique.Activity.Activity_ContactUs;
 import g2evolution.Boutique.Activity.Activity_TermsandConditions;
+import g2evolution.Boutique.Activity.Activity_WishList;
 import g2evolution.Boutique.Activity.Activity_cart;
 import g2evolution.Boutique.Activity.Activity_search;
 import g2evolution.Boutique.Activity.Activity_subcategory_details;
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     DrawerLayout mDrawerLayout;
 
-    TextView textmyaddress, textmycart, textmyorders, textnotifications, textmybookings, textaboutus, textcontactus, textterms;
+    TextView textmyaddress, textmycart,textmywishlist, textmyorders, textnotifications, textmybookings, textaboutus, textcontactus, textterms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -300,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         textmyaddress = (TextView) findViewById(R.id.textmyaddress);
         textmycart = (TextView) findViewById(R.id.textmycart);
+        textmywishlist = (TextView) findViewById(R.id.textmywishlist);
         textmyorders = (TextView) findViewById(R.id.textmyorders);
         textnotifications = (TextView) findViewById(R.id.textnotifications);
         textmybookings = (TextView) findViewById(R.id.textmybookings);
@@ -788,7 +790,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
-
+        textmywishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Activity_WishList.class);
+                startActivity(intent);
+            }
+        });
         textmyorders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -3,13 +3,9 @@ package g2evolution.Boutique.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -22,11 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,12 +39,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import g2evolution.Boutique.Adapter.Adapter_review;
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.FeederInfo.FeederInfo_review;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.ConnectionDetector;
+import g2evolution.Boutique.Utility.JSONParser;
 
 
 public class Activity_review extends AppCompatActivity {
@@ -59,6 +63,7 @@ public class Activity_review extends AppCompatActivity {
 
     String status,message,totalrecord;
 
+    JSONParser jsonParser = new JSONParser();
 
     RatingBar ratingBar;
     String strreviewtitle, strreviewdesc, strreviewrating;
@@ -71,12 +76,7 @@ public class Activity_review extends AppCompatActivity {
     String []price =new String[]{"A literature review is an evaluative report of information","A literature review is an evaluative report of information","A literature review is an evaluative report of information"};
 
     TextView writereview,checkout;
-
-    TextView textsubtotal,textshipping,texttax,textfinaltotal;
-
     ImageView back;
-
-
     String UserId, productId;
 
 
@@ -85,15 +85,15 @@ public class Activity_review extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
+
         SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
         UserId = prefuserdata.getString("UserId", "");
 
-        Log.e("testing","UserId = "+UserId);
 
         SharedPreferences prefuserdata2 = getSharedPreferences("reviewid", 0);
         productId = prefuserdata2.getString("reviewid", "");
 
-        Log.e("testing","productId = "+productId);
+
 
         dialogmain = new Dialog(Activity_review.this);
         dialogmain.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -108,13 +108,15 @@ public class Activity_review extends AppCompatActivity {
 
         mFeedRecyler = (RecyclerView) findViewById(R.id.recycler_view);
         mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_review.this));
+
         //setUpRecycler();
         // context = this;
-      ///  lLayout = new GridLayoutManager(Activity_cart.this,2);
+        ///  lLayout = new GridLayoutManager(Activity_cart.this,2);
+
         rView = (RecyclerView) findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
-       //  rView.setLayoutManager(lLayout);
-      //   mFeedRecyler.setLayoutManager(lLayout);
+        //  rView.setLayoutManager(lLayout);
+        //   mFeedRecyler.setLayoutManager(lLayout);
         mFeedRecyler.setHasFixedSize(true);
 
         writereview = (Button)findViewById(R.id.writereview);
@@ -126,14 +128,9 @@ public class Activity_review extends AppCompatActivity {
                 setreviewdialog();
             }
         });
-
-
-
         // setUpRecycler();
 
-        new Loader2().execute();
-
-
+        new LoadReviews().execute();
 
     }
 
@@ -153,8 +150,6 @@ public class Activity_review extends AppCompatActivity {
 
             }
         });
-
-
 
         TextView textsubmit = (TextView) dialogmain.findViewById(R.id.textsubmit);
         dialodcancel.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +183,7 @@ public class Activity_review extends AppCompatActivity {
                     ConnectionDetector cd = new ConnectionDetector(Activity_review.this);
                     if (cd.isConnectingToInternet()) {
 
-                        new Loader().execute();
+                        new PostReview().execute();
 
 
                     } else {
@@ -212,21 +207,17 @@ public class Activity_review extends AppCompatActivity {
 
         mListFeederInfo = new ArrayList<FeederInfo_review>();
 
-        for (int i = 0; i < Rating .length; i++)
+        for (int i = 0; i < Rating.length; i++)
         {
             FeederInfo_review feedInfo = new FeederInfo_review();
 
-
-
-
-              feedInfo.setTextrating(Rating[i]);
-              feedInfo.setTexttitle(details[i]);
-              feedInfo.setTextdesc(price[i]);
-
-
+            feedInfo.setTextrating(Rating[i]);
+            feedInfo.setTexttitle(details[i]);
+            feedInfo.setTextdesc(price[i]);
 
             mListFeederInfo.add(feedInfo);
         }
+
         mAdapterFeeds= new Adapter_review(this , mListFeederInfo);
         mFeedRecyler.setAdapter(mAdapterFeeds);
 
@@ -272,15 +263,12 @@ public class Activity_review extends AppCompatActivity {
                     Toast.makeText(Activity_review.this, ""+message, Toast.LENGTH_LONG).show();
                     dialogmain.dismiss();
 
-                    Intent intent=new Intent(Activity_review.this,Activity_review.class);
-                    startActivity(intent);
-                    finish();
                 }else {
                     Toast.makeText(Activity_review.this, ""+message, Toast.LENGTH_LONG).show();
                 }
 
             }else {
-               // Toast.makeText(Activity_review.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(Activity_review.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         }
@@ -293,8 +281,6 @@ public class Activity_review extends AppCompatActivity {
         //  JSONObject jobj = new JSONObject();
         JSONObject object = new JSONObject();
 
-
-
         try {
 
             object.put(EndUrl.Rating_Userid,UserId);
@@ -304,12 +290,10 @@ public class Activity_review extends AppCompatActivity {
             object.put(EndUrl.Rating_Ratingcomment,strreviewdesc);
             object.put(EndUrl.Rating_Ratingfrom,"Application");
 
-
             details.put("rating",object);
 
             Log.d("json",details.toString());
             Log.e("testing","json"+details.toString());
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -611,7 +595,301 @@ public class Activity_review extends AppCompatActivity {
     }
 
 
+    class LoadReviews extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
 
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_review.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItems1 =new ArrayList<FeederInfo_review>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetReviews_product_id, productId));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetReviews_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+
+
+                            FeederInfo_review item = new FeederInfo_review();
+
+                            item.setId(post.optString("id"));
+
+
+                            item.setTextrating(post.optString("rating"));
+                            item.setTexttitle(post.optString("title"));
+                            item.setTextdesc(post.optString("description"));
+                            item.setTexton(post.optString("date"));
+                            item.setName(post.optString("user_name"));
+
+
+
+
+
+                            allItems1.add(item);
+
+
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                //  Log.e("testing123", "allItems1===" + allItems1);
+
+
+/*
+                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                 prodcuts_recycler.setLayoutManager(mLayoutManager);
+                product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
+                prodcuts_recycler.setAdapter(product_details_adapter);*/
+
+                mAdapterFeeds= new Adapter_review(Activity_review.this , allItems1);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+
+            }
+            else {
+                mAdapterFeeds= new Adapter_review(Activity_review.this , allItems1);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+            /*    product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
+                prodcuts_recycler.setAdapter(product_details_adapter);*/
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+
+    class PostReview extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_review.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItems1 =new ArrayList<FeederInfo_review>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.PostReviews_product_id, productId));
+            userpramas.add(new BasicNameValuePair(EndUrl.PostReviews_user_id, UserId));
+            userpramas.add(new BasicNameValuePair(EndUrl.PostReviews_title, strreviewtitle));
+            userpramas.add(new BasicNameValuePair(EndUrl.PostReviews_description, strreviewdesc));
+            userpramas.add(new BasicNameValuePair(EndUrl.PostReviews_rating, strreviewrating));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.PostReviews_URL, "POST", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                   /* if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+
+
+                            FeederInfo_review item = new FeederInfo_review();
+
+                            item.setId(post.optString("id"));
+
+
+                            item.setTextrating(post.optString("rating"));
+                            item.setTexttitle(post.optString("title"));
+                            item.setTextdesc(post.optString("description"));
+                           *//* item.setTexton(post.optString("ratingOn"));
+                            item.setName(post.optString("userName"));*//*
+
+
+
+
+
+                            allItems1.add(item);
+
+
+
+
+
+
+                        }
+                    }else{
+
+                    }*/
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                //  Log.e("testing123", "allItems1===" + allItems1);
+                Toast.makeText(Activity_review.this, strmessage, Toast.LENGTH_SHORT).show();
+                dialogmain.dismiss();
+                new LoadReviews().execute();
+
+
+
+
+            }
+            else {
+
+
+                Toast.makeText(Activity_review.this, strmessage, Toast.LENGTH_SHORT).show();
+
+
+            }
+
+
+
+        }
+
+    }
 
 
 }

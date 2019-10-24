@@ -15,6 +15,22 @@ public class FeederInfo_cart {
         this.id = id;
     }
 
+    public String getProductid() {
+        return productid;
+    }
+
+    public void setProductid(String productid) {
+        this.productid = productid;
+    }
+
+    public String getStrsize() {
+        return strsize;
+    }
+
+    public void setStrsize(String strsize) {
+        this.strsize = strsize;
+    }
+
     public String getCartname() {
         return cartname;
     }
@@ -72,6 +88,8 @@ public class FeederInfo_cart {
     }
 
     private String id;
+    private String productid;
+    private String strsize;
     private String cartname;
     private String cartprodetails;
     private String cartamount;
@@ -82,7 +100,6 @@ public class FeederInfo_cart {
     private String discountvalue;
     private String afterdiscount;
     private String stockquntity;
-    private String producttotal;
 
     public String getStockquntity() {
         return stockquntity;
@@ -118,11 +135,12 @@ public class FeederInfo_cart {
 
     private String carttotalamount;
 
-    public String getProducttotal() {
-        return producttotal;
-    }
 
-    public void setProducttotal(String producttotal) {
-        this.producttotal = producttotal;
-    }
+
+
+
+
+
+
+
 }

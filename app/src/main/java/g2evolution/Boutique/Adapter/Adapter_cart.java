@@ -106,27 +106,32 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
         String feedDesc = null;
 
 
-
+        final String strrs = mContext.getResources().getString(R.string.Rs);
         holder.cartname.setText(feederInfo.getCartname());
         holder.cartprodetails.setText(feederInfo.getCartprodetails());
-       // holder.cartamount.setText(feederInfo.getCartamount());
+        holder.carttotalamount.setText(strrs+" "+feederInfo.getCarttotalamount());
         holder.cartquantity.setText(feederInfo.getCartquantity());
+        holder.textsize.setText(feederInfo.getStrsize());
 
 
-                final String strrs = mContext.getResources().getString(R.string.Rs);
 
-        holder.carttotalamount.setText(strrs+" "+feederInfo.getProducttotal());
+        //  holder.pdsubprice.setText(strrs+" "+feederInfo.getCartamount());
+        //   holder.carttotalamount.setText(strrs+" "+feederInfo.getAfterdiscount());
 
 
-        if (feederInfo.getDiscountvalue() == null ||feederInfo.getDiscountvalue().trim().equals("null")||feederInfo.getDiscountvalue().trim().length() == 0 || feederInfo.getDiscountvalue().trim().equals("NA")){
+        if (feederInfo.getDiscountvalue() == null || feederInfo.getDiscountvalue().trim().length() == 0 || feederInfo.getDiscountvalue().trim().equals("null")){
+            holder.pdprice.setVisibility(View.GONE);
             holder.pdsubprice.setText(strrs+" "+feederInfo.getCartamount());
+        }else if (feederInfo.getDiscountvalue().trim().equals("0")){
+            holder.pdprice.setVisibility(View.GONE);
         }else{
-
-            holder.pdsubprice.setText(strrs+" "+feederInfo.getAfterdiscount());
             holder.pdprice.setText(strrs+" "+feederInfo.getCartamount());
-            holder.pdprice.setVisibility(View.VISIBLE);
-            holder.pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder. pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.pdsubprice.setText(strrs+" "+feederInfo.getAfterdiscount());
+            holder. pdprice.setVisibility(View.VISIBLE);
         }
+
+
 
         if (feederInfo.getCartimage() == null || feederInfo.getCartimage().equals("0")||feederInfo.getCartimage().equals("")||feederInfo.getCartimage().equals("null")){
             holder.cartimage.setImageResource(R.drawable.car);
@@ -142,24 +147,24 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
 
 
 
-holder.butincrement.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
+        holder.butincrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        stockquantity=feederInfo.getStockquntity();
+      /*  stockquantity=feederInfo.getStockquntity();
 
-        int stockquantyi=Integer.parseInt(stockquantity);
+        int stockquantyi=Integer.parseInt(stockquantity);*/
 
 
 
-        int currentNos = Integer.parseInt(holder.cartquantity.getText().toString());
+                int currentNos = Integer.parseInt(holder.cartquantity.getText().toString());
 
-        Log.e("testing","stockquantyistockquantyistockquantyi===="+stockquantyi);
+                //  Log.e("testing","stockquantyistockquantyistockquantyi===="+stockquantyi);
 
-        Log.e("testing","stockquantity===="+stockquantity);
-        Log.e("testing","currentNoscurrentNoscurrentNoscurrentNos===="+currentNos);
+                Log.e("testing","stockquantity===="+stockquantity);
+                Log.e("testing","currentNoscurrentNoscurrentNoscurrentNos===="+currentNos);
 
-        if (currentNos >= stockquantyi){
+      /*  if (currentNos >= stockquantyi){
 
             Log.e("testing","succesddd");
 
@@ -167,36 +172,36 @@ holder.butincrement.setOnClickListener(new View.OnClickListener() {
 
 
 
-        }else {
+        }else {*/
 
-            holder.cartquantity.setText(String.valueOf(++currentNos));
+                holder.cartquantity.setText(String.valueOf(++currentNos));
 
-            feederInfo.setCartquantity(""+currentNos);
+                feederInfo.setCartquantity(""+currentNos);
 
-            qty = holder.cartquantity.getText().toString();
+                qty = holder.cartquantity.getText().toString();
 
-            rowid = feederInfo.getCartname();
+                rowid = feederInfo.getCartname();
 
-            //mSelectedItem = getAdapterPosition();
+                //mSelectedItem = getAdapterPosition();
 
-            //OnItemClick mCallback = new  OnItemClick();
-            //mCallback = new OnItemClick();
+                //OnItemClick mCallback = new  OnItemClick();
+                //mCallback = new OnItemClick();
 
-            Log.e("qty", "qty ===== " + qty);
-            //mCallback.onClick(qty);
+                Log.e("qty", "qty ===== " + qty);
+                //mCallback.onClick(qty);
 
 
-            if (mCallback!=null){
+                if (mCallback!=null){
 
-                mCallback.onClickedItem(position,Integer.parseInt(qty), 1);
+                    mCallback.onClickedItem(position,Integer.parseInt(qty), 1);
+
+                }
+
+                Log.e("testing","quantyitiy npt");
+                //  }
 
             }
-
-            Log.e("testing","quantyitiy npt");
-        }
-
-    }
-});
+        });
 
         holder.butdecrement.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,8 +249,12 @@ holder.butincrement.setOnClickListener(new View.OnClickListener() {
                 if (cd.isConnectingToInternet()) {
                     Productid = feederInfo.getId();
 
-                    new Delete().execute();
+                    //  new Delete().execute();
+                    if (mCallback != null) {
+                        String strid = feederInfo.getId();
+                        mCallback.onClickedItem(position, 1, 3);
 
+                    }
 
 
                 } else {
@@ -430,7 +439,7 @@ holder.butincrement.setOnClickListener(new View.OnClickListener() {
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 // empId = post.getString("empId");
-              //  userid  = post.getString("userid ");
+                //  userid  = post.getString("userid ");
 
             }
 
