@@ -126,7 +126,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     String multipleimages,multipleimagesid;
 
     JSONArray posts2;
-
+    Integer intsizes = null;
     ArrayList<String> images = new ArrayList<String>();
     String strpincode;
     TextView check_text;
@@ -484,11 +484,17 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                 }else{
 
-                    if (strsizeid == null || strsizeid.trim().length() == 0 || strsizeid.trim().equals("null")){
-                        Toast.makeText(Activity_productdetails.this, "Please select size", Toast.LENGTH_SHORT).show();
-                    }else{
+                    if (intsizes == null || intsizes == 0 ){
+                        strsizeid = _pid;
                         new PostAddtocart().execute();
+                    }else{
+                        if (strsizeid == null || strsizeid.trim().length() == 0 || strsizeid.trim().equals("null")){
+                            Toast.makeText(Activity_productdetails.this, "Please select size", Toast.LENGTH_SHORT).show();
+                        }else{
+                            new PostAddtocart().execute();
+                        }
                     }
+
 
 
                 }
@@ -1084,10 +1090,29 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                         _pdtitle  = post.getString("name");
                         _pdsubtitle  = post.getString("sku");
                         Log.e("testing","_pdtitle = "+_pdtitle);
-                        _pdprice  = post.getString("actual_price");
-                        _descvalue = post.getString("offer_price");
-                        _pdsubprice = post.getString("discount_price");
+
+
+
                         _totalReviewCount = post.getString("rating_count");
+
+                        if (post.has("actual_price")){
+                            _pdprice  = post.getString("actual_price");
+                        }else{
+
+                        }
+                        if (post.has("offer_price")){
+                            _descvalue = post.getString("offer_price");
+                        }else{
+
+                        }
+
+                        if (post.has("discount_price")){
+                            _pdsubprice = post.getString("discount_price");
+                        }else{
+
+                        }
+
+
                         //  _pdabout  = post.getString("description");
 
                         _pid = post.getString("id");
@@ -1100,11 +1125,13 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                         JSONObject  postaddition = new JSONObject(straddition);*/
 
+
                         JSONArray postssizes = post.optJSONArray("sizes");
 
                         if (postssizes == null || postssizes.length() == 0){
 
                         }else{
+                            intsizes = postssizes.length();
                             for (int i1 = 0; i1 < postssizes.length(); i1++) {
                                 JSONObject postsizes = postssizes.optJSONObject(i1);
 
@@ -1211,9 +1238,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 }
 
 
+                Log.e("testing","_pdprice = "+_pdprice);
                 if (_descvalue == null || _descvalue.trim().length() == 0 || _descvalue.trim().equals("NA")|| _descvalue.trim().equals("0")){
                     final String strrs = getResources().getString(R.string.Rs);
-                    pdsubprice.setText(strrs+" "+_pdsubprice);
+                    pdsubprice.setText(strrs+" "+_pdprice);
                     pdprice.setVisibility(View.GONE);
                 }else{
                     discount_price.setText("(" +"-"+  _descvalue +"%"+ ")");

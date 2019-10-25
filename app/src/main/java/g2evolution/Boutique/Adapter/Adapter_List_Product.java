@@ -121,11 +121,11 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
                 Log.e("testing","productid in adapter = "+postid);
                 prefeditor.commit();
 
-                SharedPreferences prefuserdata2 = mContext.getSharedPreferences("regId", 0);
+              /*  SharedPreferences prefuserdata2 = mContext.getSharedPreferences("regId", 0);
                 SharedPreferences.Editor prefeditor2 = prefuserdata2.edit();
                 prefeditor2.putString("UserId", "" + "2");
 
-                prefeditor2.commit();
+                prefeditor2.commit();*/
 
 
                 Intent intent = new Intent(mContext, Activity_productdetails.class);
@@ -156,7 +156,7 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
 
         if (feederInfo.getDiscountvalue() == null || feederInfo.getDiscountvalue().length() == 0 || feederInfo.getDiscountvalue().equals("NA")){
             final String strrs = mContext.getResources().getString(R.string.Rs);
-            holder.pdsubprice.setText(strrs+" "+feederInfo.getAfterdiscount());
+            holder.pdsubprice.setText(strrs+" "+feederInfo.getElectronicprice());
         }else{
             // holder.pdprice.setVisibility(View.VISIBLE);
             final String strrs = mContext.getResources().getString(R.string.Rs);

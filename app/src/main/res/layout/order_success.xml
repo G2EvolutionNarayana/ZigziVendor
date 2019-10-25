@@ -18,40 +18,39 @@
             android:padding="15dp"
             android:text=" Congratulations "
             android:textStyle="bold"
-            android:textSize="@dimen/dimen_17sp"
             android:layout_gravity="center"
             android:gravity="center"/>
 
 
-   <!--     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
+        <!--     <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+                 android:weightSum="3">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Your ORDER"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:id="@+id/orderid"
-                android:layout_marginLeft="@dimen/dimen_20dp"
-                />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
+                 <TextView
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="Your ORDER"/>
+                 <TextView
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content"
+                     android:padding="5dp"
+                     android:id="@+id/orderid"
+                     android:layout_marginLeft="@dimen/dimen_20dp"
+                     />
+                 <TextView
+                     android:layout_width="0dp"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content"
+                     android:padding="5dp"
 
-                android:layout_marginLeft="@dimen/dimen_20dp"
-                android:text="Successfully Placed " />
-        </LinearLayout>
--->
+                     android:layout_marginLeft="@dimen/dimen_20dp"
+                     android:text="Successfully Placed " />
+             </LinearLayout>
+     -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textSize="@dimen/dimen_15sp"
                 android:text="Order has been Placed  Successfully."
                 android:layout_gravity="center"
                 android:gravity="center"/>
@@ -70,15 +68,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:text="Your Order ID is"
-                android:layout_gravity="center"
-                android:gravity="end"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="Your Order ID is"
+                    android:layout_gravity="center"
+                    android:gravity="end"/>
 
                 <TextView
                     android:layout_width="0dp"
@@ -93,6 +91,35 @@
                     android:layout_gravity="center"
                     android:gravity="start"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="Your Final Amount is"
+                    android:layout_gravity="center"
+                    android:gravity="end"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/textorderamount"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:text="cfsdfffsf"
+                    android:layout_gravity="center"
+                    android:gravity="start"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -129,7 +156,7 @@
                 android:paddingLeft="0sp"
                 android:text=" ok "
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

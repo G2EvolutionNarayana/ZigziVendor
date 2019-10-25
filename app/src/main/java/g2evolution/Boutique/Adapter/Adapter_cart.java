@@ -111,9 +111,13 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
         holder.cartprodetails.setText(feederInfo.getCartprodetails());
         holder.carttotalamount.setText(strrs+" "+feederInfo.getCarttotalamount());
         holder.cartquantity.setText(feederInfo.getCartquantity());
-        holder.textsize.setText(feederInfo.getStrsize());
 
 
+        if (feederInfo.getStrsize() == null || feederInfo.getStrsize().equals("0")||feederInfo.getStrsize().equals("")||feederInfo.getStrsize().equals("null")){
+            holder.textsize.setText("");
+        }else{
+            holder.textsize.setText(feederInfo.getStrsize());
+        }
 
         //  holder.pdsubprice.setText(strrs+" "+feederInfo.getCartamount());
         //   holder.carttotalamount.setText(strrs+" "+feederInfo.getAfterdiscount());

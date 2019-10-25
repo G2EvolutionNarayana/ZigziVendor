@@ -581,14 +581,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         profileid.setText(Usermob);
 
-            if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
+           /* if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
 
                 setocationdialog();
 
             }else{
 
 
-            }
+            }*/
         //   listview = (ListView) findViewById(R.id.listView1);
 
         mFragmentManager = getSupportFragmentManager();
@@ -1903,10 +1903,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                 pDialog.dismiss();
             */
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+
 
     /**
              * Updating parsed JSON data into ListView
@@ -2603,5 +2600,22 @@ public boolean onOptionsItemSelected(MenuItem item) {
         listView.requestLayout();
 
     }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
 
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
 }

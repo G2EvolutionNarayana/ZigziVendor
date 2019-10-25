@@ -119,7 +119,7 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         mDemoSlider.addOnPageChangeListener(this);
 
 
-        if (pincode == null || pincode.length() == 0 || pincode.equals("null") || pincode.equals("0")) {
+      /*  if (pincode == null || pincode.length() == 0 || pincode.equals("null") || pincode.equals("0")) {
 
             Toast.makeText(getActivity(), "Select Pincode", Toast.LENGTH_SHORT).show();
 
@@ -129,7 +129,7 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
             if (cd.isConnectingToInternet()) {
 
                 new SliderImage().execute();
-              //  new GetCategories().execute();
+                //  new GetCategories().execute();
                 new LoadCategory().execute();
 
             } else {
@@ -138,8 +138,10 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
 
             }
 
-        }
-
+        }*/
+        new SliderImage().execute();
+        //  new GetCategories().execute();
+        new LoadCategory().execute();
         BottomNavigationView navigation = (BottomNavigationView) rootView.findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 

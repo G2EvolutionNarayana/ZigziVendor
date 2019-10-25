@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,16 +22,21 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import g2evolution.Boutique.Adapter.PersonAdapter;
+import g2evolution.Boutique.FeederInfo.Person;
+import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.ccavenue.InitialScreenActivity;
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.MainActivity;
 import g2evolution.Boutique.R;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,13 +45,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Activity_PaymentMode extends AppCompatActivity {
 
 
-    TextView amt,total,textdiscount,shippingamount;
+    TextView amt,total,textcouponprice, textcreditprice, shippingamount;
     Button pay;
     // For Radio buttons
     RadioGroup radioselGroup;
@@ -52,24 +62,34 @@ public class Activity_PaymentMode extends AppCompatActivity {
     String spstring;
     String PAmount, Productid, UserId;
 
+    String strshippingid = "";
+    String strshippingamount = "";
+
     String status, message;
-    String strsubtotal, strdiscountprice,strshipping, strfinaltotal;
+    String strsubtotal, strshipping, strfinaltotal;
     JSONArray responcearray;
     String paymentmode;
     JSONArray responcearray2;
     JSONArray responcearray3;
     String products;
     String addressid, Username, Usermail;
-
+    String strjsonsubtotal, jsongst, jsoncoupon, jsoncredits, jsongranttotal;
     String arrayresponce, strmobileno;
 
-    String strbuttonstatus, qty, _pid, afterDiscount;
+    String strbuttonstatus, coupon_id, qty, _pid, afterDiscount;
 
     String strsubtotal_booknow, strshipping_booknow, strfinaltotal_booknow, products_booknow;
 
-    String adminorderId,Usermob,strFullAddress;
+    String order_id,adminorderId, adminorderamount,Usermob,strFullAddress;
 
     Dialog logindialog123;
+
+    ArrayList<HashMap<String, String>> arraylist;
+    JSONParser jsonParser = new JSONParser();
+    private PersonAdapter adapter;
+    private List<Person> feedItemList = new ArrayList<Person>();
+    private RecyclerView mRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +115,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
         SharedPreferences prefuserdata = getSharedPreferences("regcart", 0);
 
         strbuttonstatus = prefuserdata.getString("bookstatus", "");
+        coupon_id = prefuserdata.getString("coupon_id", "");
         qty = prefuserdata.getString("qty", "");
         _pid = prefuserdata.getString("productid", "" + _pid);
 
@@ -110,7 +131,14 @@ public class Activity_PaymentMode extends AppCompatActivity {
         Log.e("testing", "addressid = " + addressid);
 
 
-        if (strbuttonstatus.equals("addtocart")) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("productadapter", 0);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.clear();
+        edit.commit();
+
+
+      /*  if (strbuttonstatus.equals("addtocart")) {
 
             Log.e("testing", "strbuttonstatus==" + strbuttonstatus);
 
@@ -122,17 +150,32 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
             new BOOK_Now().execute();
 
-        }
+        }*/
+        new LoadPaymentDetails().execute();
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.feedrecycler);
+        /*List<Person> persons = Arrays.asList(
+                new Person("Larry"),
+                new Person("Moe"),
+                new Person("Curly"));
+*/
+        //mRecyclerView.setAdapter(new PersonAdapter(this, persons));
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         amt = (TextView) findViewById(R.id.amount);
-        textdiscount = (TextView) findViewById(R.id.textdiscount);
         shippingamount = (TextView) findViewById(R.id.dcharge);
         total = (TextView) findViewById(R.id.netamount);
+        textcouponprice = (TextView) findViewById(R.id.textcouponprice);
+        textcreditprice = (TextView) findViewById(R.id.textcreditprice);
         pay = (Button) findViewById(R.id.pay);
 
         // For Radio Buttons
         radioselGroup = (RadioGroup) findViewById(R.id.radiocancel);
         spstring = "0";
+
+        new LoadShippingmethod().execute();
 
 
         radioselGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -202,18 +245,25 @@ public class Activity_PaymentMode extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                SharedPreferences prefuserdata4 = getSharedPreferences("productadapter", 0);
+                strshippingid = prefuserdata4.getString("shippingid", "");
+                strshippingamount = prefuserdata4.getString("price", "");
+
+                Log.e("testing","String strshippingid = "+strshippingid);
+                Log.e("testing","String strshippingamount = "+strshippingamount);
+
+
+
                 if (strbuttonstatus.equals("addtocart")) {
 
 
                     if (amt.getText().toString().equals("") || amt.getText().toString().equals("0") || amt.getText().toString().equals("null")) {
-
                         Toast.makeText(getApplicationContext(), "You Don't Have any Amount to Pay", Toast.LENGTH_SHORT).show();
-
                     } else {
 
                         if (spstring.equals("1")) {
 
-                            Intent intent = new Intent(getApplicationContext(), InitialScreenActivity.class);
+                           /* Intent intent = new Intent(getApplicationContext(), InitialScreenActivity.class);
                             //  Toast.makeText(Activity_PaymentMode.this, "Online Payment", Toast.LENGTH_SHORT).show();
                             SharedPreferences prefuserdata = getSharedPreferences("paymentamount", 0);
                             SharedPreferences.Editor prefeditor = prefuserdata.edit();
@@ -223,14 +273,14 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
                             prefeditor.commit();
 
-                            startActivity(intent);
+                            startActivity(intent);*/
 
                         } else if (spstring.equals("2")) {
 
                             paymentmode = "COD";
                             // Toast.makeText(Activity_PaymentMode.this, "COD", Toast.LENGTH_SHORT).show();
 
-                            new Add_to_cart_COD().execute();
+                            new PlaceOrder().execute();
 
 
                         } else {
@@ -284,7 +334,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
     }
 
-    class Add_to_cart_COD extends AsyncTask<Void, Void, JSONObject> {
+    class Loader extends AsyncTask<Void, Void, JSONObject> {
 
         ProgressDialog dialog;
 
@@ -321,7 +371,8 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
                     SharedPreferences prefuserdata = getSharedPreferences("ordersuccess", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("order_id", "" + adminorderId);
+                    prefeditor.putString("order_id", "" + order_id);
+
                     prefeditor.commit();
 
                     logindialog123 = new Dialog(Activity_PaymentMode.this);
@@ -329,7 +380,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
                     LayoutInflater inflater = (LayoutInflater) getSystemService(Activity_PaymentMode.this.LAYOUT_INFLATER_SERVICE);
                     View convertView = (View) inflater.inflate(R.layout.order_success, null);
 
-                /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
+                    /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
 
                     logindialog123.setContentView(convertView);
                     logindialog123.setCancelable(false);
@@ -386,13 +437,13 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
             JSONObject jobj = new JSONObject();
             JSONObject jobj2 = new JSONObject();
-           // JSONObject jobj4 = new JSONObject();
+            // JSONObject jobj4 = new JSONObject();
 
             jobj.put("status", "Pending");
             jobj.put("payment_mode", paymentmode);
             jobj.put("total_amount", strfinaltotal);
             jobj.put("delivery_addressId", addressid);
-        //    jobj.put("FullAddress", strFullAddress);
+            //    jobj.put("FullAddress", strFullAddress);
 
             jobj2.put("customer_id", UserId);
             jobj2.put("customer_email", Usermail);
@@ -481,7 +532,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
             Log.e("testing","result in post status========="+json.getString("status"));
             status = json.getString("status");
             message = json.getString("message");
-          String  JSON = json.getString("JSON");
+            String  JSON = json.getString("JSON");
             // data = json.getString("data");
 
             String   data = json.getString("data");
@@ -566,15 +617,6 @@ public class Activity_PaymentMode extends AppCompatActivity {
                     }else {
 
                         shippingamount.setText(strrs +" "+strshipping);
-                    }
-                    if (strdiscountprice==null||strdiscountprice.length()==0||strdiscountprice.equals("")){
-
-
-                        textdiscount.setText(strrs +" "+" N.A");
-
-                    }else {
-
-                        textdiscount.setText(strrs +" "+strdiscountprice);
                     }
                 }else{
 
@@ -688,9 +730,8 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
 
                 strsubtotal = post.getString("total");
-                strdiscountprice = post.getString("discount_price");
                 strshipping = post.getString("shipppingAmount");
-           //     strtax = post.getString("tax");
+                //     strtax = post.getString("tax");
                 strfinaltotal = post.getString("subTotal");
                 products = post.getString("products");
 
@@ -775,20 +816,10 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
                             shippingamount.setText(strrs +" "+strshipping_booknow);
                         }
-
-                        if (strdiscountprice==null||strdiscountprice.length()==0||strdiscountprice.equals("")){
-
-
-                            textdiscount.setText(strrs +" "+"N.A");
-                        }else {
-
-                            textdiscount.setText(strrs +" "+strdiscountprice);
-                        }
                     }else {
                         final String strrs = getResources().getString(R.string.Rs);
                         amt.setText(strrs+" "+strsubtotal_booknow);
                         shippingamount.setText(strrs +" "+strshipping_booknow);
-                        textdiscount.setText(strrs +" "+strdiscountprice);
                         total.setText(strrs +" "+strfinaltotal_booknow);
                     }
 
@@ -911,9 +942,8 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
 
                 strsubtotal_booknow = post.getString("subTotal");
-                strdiscountprice = post.getString("shipppingAmount");
                 strshipping_booknow = post.getString("shipppingAmount");
-              //  strtax_booknow = post.getString("tax");
+                //  strtax_booknow = post.getString("tax");
                 strfinaltotal_booknow = post.getString("total");
                 products_booknow = post.getString("products");
 
@@ -968,27 +998,25 @@ public class Activity_PaymentMode extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
 
-
+            if (result != null) {
                 dialog.dismiss();
 
-                Log.e("testing111123", "result in post execute=========" + result);
+                Log.e("testing", "result in post execute=========" + result);
 
                 if (status.equals("success")) {
 
                     SharedPreferences prefuserdata = getSharedPreferences("ordersuccess", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("order_id", "" + adminorderId);
+                    prefeditor.putString("order_id", "" + order_id);
 
                     prefeditor.commit();
-
-
 
                     logindialog123 = new Dialog(Activity_PaymentMode.this);
                     logindialog123.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     LayoutInflater inflater = (LayoutInflater) getSystemService(Activity_PaymentMode.this.LAYOUT_INFLATER_SERVICE);
                     View convertView = (View) inflater.inflate(R.layout.order_success, null);
 
-                /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
+                    /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
 
                     logindialog123.setContentView(convertView);
                     //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
@@ -1025,7 +1053,10 @@ public class Activity_PaymentMode extends AppCompatActivity {
                     Toast.makeText(Activity_PaymentMode.this, "no data found", Toast.LENGTH_LONG).show();
                 }
 
-
+            } else {
+                Toast.makeText(Activity_PaymentMode.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
         }
 
     }
@@ -1060,20 +1091,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
             jobj3.put("customer", jobj2);
             jobj3.put("items", responcearray3);
 
-
-            Log.e("testing","status = ==="+status);
-            Log.e("testing","paymentmode = ==="+paymentmode);
-            Log.e("testing","strsubtotal_booknow = ==="+strsubtotal_booknow);
-            Log.e("testing","addressid = ==="+addressid);
-            Log.e("testing","UserId = ==="+UserId);
-            Log.e("testing","Usermail = ==="+Usermail);
-            Log.e("testing","Username = ==="+Username);
-            Log.e("testing","Usermob = ==="+Usermob);
-            Log.e("testing","strFullAddress = ==="+strFullAddress);
-            Log.e("testing","strfinaltotal_booknow = ==="+strfinaltotal_booknow);
-            Log.e("testing","strshipping_booknow = ==="+strshipping_booknow);
-
-          //  jobj4.put("FullAddress", strFullAddress);
+            //  jobj4.put("FullAddress", strFullAddress);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1146,14 +1164,14 @@ public class Activity_PaymentMode extends AppCompatActivity {
             status = json.getString("status");
             message = json.getString("message");
             String  JSON = json.getString("JSON");
-          String   data = json.getString("data");
+            String   data = json.getString("data");
 
-               JSONArray jsonarray =new JSONArray(data);
+            JSONArray jsonarray =new JSONArray(data);
 
 
             for (int i = 0; i < jsonarray.length(); i++) {
 
-              JSONObject jsonObject=jsonarray.getJSONObject(i);
+                JSONObject jsonObject=jsonarray.getJSONObject(i);
 
                 adminorderId =jsonObject.optString("adminorderId");
 
@@ -1167,6 +1185,459 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
     }
 
+
+
+
+    class LoadShippingmethod extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_PaymentMode.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            feedItemList =new ArrayList<Person>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            //  userpramas.add(new BasicNameValuePair(EndUrl.GetShippingMethod_user_id, "2"));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetShippingMethod_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+                            Person item = new Person();
+                            item.setMpid(post.optString("id"));
+                            item.setmName(post.optString("name"));
+                            item.setMprice(post.optString("price"));
+
+
+                            feedItemList.add(item);
+
+
+
+
+
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+
+                adapter = new PersonAdapter(Activity_PaymentMode.this, feedItemList);
+                mRecyclerView.setAdapter(adapter);
+
+
+
+
+
+
+            }
+            else {
+
+
+                adapter = new PersonAdapter(Activity_PaymentMode.this, feedItemList);
+                mRecyclerView.setAdapter(adapter);
+
+
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+
+
+
+
+    class LoadPaymentDetails extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_PaymentMode.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            feedItemList =new ArrayList<Person>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetPaymentDetails_user_id,  UserId));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetPaymentDetails_coupon_price,  coupon_id));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetPaymentDetails_credits_price,  ""));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetPaymentDetails_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+                        JSONObject  jsonobjectdata = new JSONObject(arrayresponse);
+
+
+
+                        strjsonsubtotal = jsonobjectdata.getString("sub_total");
+                        jsongst = jsonobjectdata.getString("gst");
+                        jsoncoupon = jsonobjectdata.getString("coupon_amount");
+                        jsoncredits = jsonobjectdata.getString("credits_amount");
+                        jsongranttotal = jsonobjectdata.getString("grand_total");
+
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+
+                final String strrs = getResources().getString(R.string.Rs);
+
+
+                if (strjsonsubtotal == null || strjsonsubtotal.trim().length() == 0 || strjsonsubtotal.trim().equals("null")){
+
+                }else{
+                    total.setText(strrs +" "+strjsonsubtotal);
+                }
+
+
+                if (jsongst == null || jsongst.trim().length() == 0 || jsongst.trim().equals("null")){
+
+                }else{
+                    textcouponprice.setText(strrs +" "+jsongst);
+                }
+
+                if (jsoncoupon == null || jsoncoupon.trim().length() == 0 || jsoncoupon.trim().equals("null")){
+
+                }else{
+                    textcreditprice.setText(strrs +" "+jsoncoupon);
+                }
+
+                if (jsoncredits == null || jsoncredits.trim().length() == 0 || jsoncredits.trim().equals("null")){
+
+                }else{
+                    shippingamount.setText(strrs +" "+jsoncredits);
+                }
+
+                if (jsongranttotal == null || jsongranttotal.trim().length() == 0 || jsongranttotal.trim().equals("null")){
+
+                }else{
+                    amt.setText(strrs +" "+jsongranttotal);
+                }
+            }
+            else {
+
+
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+
+
+    class PlaceOrder extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_PaymentMode.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            feedItemList =new ArrayList<Person>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_user_id,  UserId));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_coupon_id,  coupon_id));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_coupon_price, jsoncoupon));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_shipping_method_id, strshippingid));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_shipping_price,  strshippingamount));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_payment_mode_id,  "1"));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_credits_id,  ""));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_credits_price,  jsoncredits));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_delivery_address_id,  addressid));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_gst,  jsongst));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.PlaceOrder_URL, "POST", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+                        JSONObject  jsonobjectdata = new JSONObject(arrayresponse);
+
+
+
+
+                        adminorderId =jsonobjectdata.optString("order_id");
+                        adminorderamount =jsonobjectdata.optString("amount");
+
+
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+
+                ordersuccess();
+
+            }
+            else {
+
+
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+
+    private void ordersuccess() {
+        logindialog123 = new Dialog(Activity_PaymentMode.this);
+        logindialog123.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Activity_PaymentMode.this.LAYOUT_INFLATER_SERVICE);
+        View convertView = (View) inflater.inflate(R.layout.order_success, null);
+
+        /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
+
+        logindialog123.setContentView(convertView);
+        logindialog123.setCancelable(false);
+        //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
+        // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
+        logindialog123.setCanceledOnTouchOutside(false);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(logindialog123.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.CENTER;
+        logindialog123.getWindow().setAttributes(lp);
+
+        TextView order_success=(TextView)convertView.findViewById(R.id.orderid);
+        TextView textorderamount=(TextView)convertView.findViewById(R.id.textorderamount);
+        order_success.setText(adminorderId);
+        textorderamount.setText(adminorderamount);
+        Button addsubmit=(Button)convertView.findViewById(R.id.addsubmit);
+
+        addsubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logindialog123.dismiss();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+            }
+        });
+
+        logindialog123.show();
+
+
+    }
 
 
 }

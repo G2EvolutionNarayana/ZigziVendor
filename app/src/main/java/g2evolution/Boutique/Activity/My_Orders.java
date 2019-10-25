@@ -21,10 +21,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import g2evolution.Boutique.Adapter.Adapter_orderhistory;
 import g2evolution.Boutique.EndUrl;
@@ -44,7 +47,6 @@ import g2evolution.Boutique.Utility.JSONParser;
 
 public class My_Orders extends AppCompatActivity  implements Adapter_orderhistory.OnItemClick {
 
-    JSONParser jsonParser = new JSONParser();
     ArrayList<HashMap<String, String>> arraylist1;
     private ArrayList<FeederInfo_orderhistory> allItems1 = new ArrayList<FeederInfo_orderhistory>();
     private RecyclerView mFeedRecyler;
@@ -55,6 +57,8 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
     String orderitemid;
 
     String UserId;
+
+    JSONParser jsonParser = new JSONParser();
 
     String status,message,order_date,ordersInfo;
     Dialog dialog1; // cancel dialog
@@ -101,12 +105,13 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
         mFeedRecyler.setHasFixedSize(true);
 
         mCallback = this;
+        //   setUpRecycler();
 
 
         SharedPreferences prefuserdata1 = getSharedPreferences("regId", 0);
         UserId = prefuserdata1.getString("UserId", "");
 
-        new Loader().execute();
+        new LoadOrderList().execute();
 
         dialog1 = new Dialog(My_Orders.this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -344,7 +349,7 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
 
                     strreason = editreason.getText().toString();
 
-                    new DeleteItem().execute();
+                    new OrderCancel().execute();
                 }
             }
         });
@@ -551,6 +556,249 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
 
         inputStream.close();
         return result;
+    }
+
+
+
+    class LoadOrderList extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(My_Orders.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItems1 = new ArrayList<FeederInfo_orderhistory>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetOrderList_user_id, UserId));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetOrderList_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+
+                            FeederInfo_orderhistory item = new FeederInfo_orderhistory();
+
+                            // item.s(post.optString("id"));
+
+                            item.setDeliverystatus(post.optString("order_status"));
+                            item.setOrderdate(post.optString("order_date"));
+                            item.setOrderid(post.optString("order_number"));
+                            item.setOrderID(post.optString("id"));
+                            item.setTotalprice(post.optString("grand_total"));
+                            // item.setShippingadress(post.optString("shipping_address"));
+                            item.setPaymentmode(post.optString("payment_mode"));
+
+                            allItems1.add(item);
+
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                mAdapterFeeds = new Adapter_orderhistory(My_Orders.this, allItems1, mCallback);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+
+
+            }
+            else {
+
+
+                mAdapterFeeds = new Adapter_orderhistory(My_Orders.this, allItems1, mCallback);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+
+
+
+    class OrderCancel extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(My_Orders.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItems1 = new ArrayList<FeederInfo_orderhistory>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_order_id, orderitemid));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_user_id, UserId));
+         //   userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_order_status, "canceled"));
+          //  userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_order_status_id, "7"));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_reason, strreason));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetOrderCancel_URL, "POST", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+
+
+                dialog1.dismiss();
+                new LoadOrderList().execute();
+
+
+            }
+            else {
+
+
+
+
+            }
+
+
+
+        }
+
     }
 
 

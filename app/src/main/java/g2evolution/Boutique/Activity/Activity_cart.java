@@ -1340,7 +1340,6 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
                     Intent intent = new Intent(Activity_cart.this,Activity_address.class);
 
-
                     SharedPreferences prefuserdata2 = getSharedPreferences("regcart", 0);
                     SharedPreferences.Editor prefeditor2 = prefuserdata2.edit();
                     prefeditor2.putString("bookstatus", "" + "addtocart");

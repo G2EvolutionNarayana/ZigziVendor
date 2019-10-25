@@ -19,10 +19,12 @@ import android.widget.Toast;
 
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,11 +35,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import g2evolution.Boutique.Adapter.Adapter_orderdetails;
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.FeederInfo.FeederInfo_orderdetails;
 import g2evolution.Boutique.R;
+import g2evolution.Boutique.Utility.JSONParser;
 
 /**
  * Created by G2e Android on 06-02-2018.
@@ -45,17 +49,27 @@ import g2evolution.Boutique.R;
 
 public class Activity_orderdetails extends AppCompatActivity implements Adapter_orderdetails.OnItemClick {
 
+
+
     ArrayList<HashMap<String, String>> arraylist1;
     private ArrayList<FeederInfo_orderdetails> allItems1 = new ArrayList<FeederInfo_orderdetails>();
     private RecyclerView mFeedRecyler;
     private ArrayList<FeederInfo_orderdetails> mListFeederInfo;
     Adapter_orderdetails mAdapterFeeds;
     RecyclerView rView;
+
     String strorderid;
+
     String orderitemid;
+
+    JSONParser jsonParser = new JSONParser();
+
     private Adapter_orderdetails.OnItemClick mCallback;
     String userid,pid;
+
+
     String status,message,orderid,products;
+
     ImageView back;
     String strreason;
     Dialog dialog; // cancel dialog
@@ -77,11 +91,11 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
         mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_orderdetails.this));
         //setUpRecycler();
         // context = this;
-      //  lLayout = new GridLayoutManager(Activity_orderdetails.this,2);
+        //  lLayout = new GridLayoutManager(Activity_orderdetails.this,2);
         rView = (RecyclerView) findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
-       // rView.setLayoutManager(lLayout);
-     //   mFeedRecyler.setLayoutManager(lLayout);
+        // rView.setLayoutManager(lLayout);
+        //   mFeedRecyler.setLayoutManager(lLayout);
         mFeedRecyler.setHasFixedSize(true);
 
         mCallback = this;
@@ -95,9 +109,9 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
             }
         });
 
-       // setUpRecycler();
+        // setUpRecycler();
 
-        new Loader().execute();
+        new LoadOrderDetails().execute();
 
 
 
@@ -308,17 +322,14 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
                 FeederInfo_orderdetails item = new FeederInfo_orderdetails();
 
-                 item.setId(post.optString("productId"));
-                 item.setOrderimage(post.optString("image"));
+                item.setId(post.optString("productId"));
+                item.setOrderimage(post.optString("image"));
                 item.setOrderdate(post.optString("postedOn"));
                 item.setOrdername(post.optString("title"));
                 item.setOrderprodetails(post.optString("subTitle"));
                 item.setOrderpriceamount(post.optString("price"));
-                item.setAfterdiscount(post.optString("afterDiscount"));
-                item.setDiscountamount(post.optString("discount_amount"));
-              //  item.setDiscountvalue(post.optString("discountValue"));
                 item.setQuantity_ordertext(post.optString("qty"));
-                item.setOrdertotalamount(post.optString("net_amount"));
+                item.setOrdertotalamount(post.optString("totalAmount"));
 
 
 
@@ -535,6 +546,150 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
         inputStream.close();
         return result;
+    }
+
+
+    class LoadOrderDetails extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(Activity_orderdetails.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItems1 = new ArrayList<FeederInfo_orderdetails>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetOrderDetails_order_id, orderid));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetOrderDetails_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+
+                            FeederInfo_orderdetails item = new FeederInfo_orderdetails();
+
+                            item.setId(post.optString("product_id"));
+                            item.setOrderimage(post.optString("image"));
+                            item.setOrderdate(post.optString("order_date"));
+                            item.setOrdername(post.optString("name"));
+                            item.setOrderprodetails(post.optString("sku"));
+                            item.setOrderpriceamount(post.optString("actual_price"));
+                            item.setQuantity_ordertext(post.optString("quantity"));
+                            item.setOrdertotalamount(post.optString("total_price"));
+
+
+
+                            allItems1.add(item);
+
+
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                mAdapterFeeds = new Adapter_orderdetails(Activity_orderdetails.this, allItems1, mCallback);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+
+
+            }
+            else {
+
+
+                mAdapterFeeds = new Adapter_orderdetails(Activity_orderdetails.this, allItems1, mCallback);
+                mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+
+
+
+            }
+
+
+
+        }
+
     }
 }
 

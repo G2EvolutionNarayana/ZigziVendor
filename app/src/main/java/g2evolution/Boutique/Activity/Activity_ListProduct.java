@@ -514,8 +514,8 @@ public class Activity_ListProduct extends AppCompatActivity {
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
-           // userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, "6"));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
+          //  userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, "6"));
 
 
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductst_URL, "GET", userpramas);
@@ -559,11 +559,27 @@ public class Activity_ListProduct extends AppCompatActivity {
                             item.setCategoryname(post.optString("name"));
                             item.setElectronicname(post.optString("name"));
                             item.setElectronicdetail1(post.optString("sku"));
-                            item.setElectronicprice(post.optString("actual_price"));
+
                             item.setElectronicimage(post.optString("image"));
                             //  item.setStockQuantity(post.optString("stockQuantity"));
-                            item.setDiscountvalue(post.optString("offers"));
-                            item.setAfterdiscount(post.optString("offer_price"));
+
+
+
+                            if (post.has("actual_price")){
+                                item.setElectronicprice(post.optString("actual_price"));
+                            }else{
+
+                            }
+                            if (post.has("offers")){
+                                item.setDiscountvalue(post.optString("offers"));
+                            }else{
+
+                            }
+                            if (post.has("offer_price")){
+                                item.setAfterdiscount(post.optString("offer_price"));
+                            }else{
+
+                            }
 
 
                             allItems3.add(item);

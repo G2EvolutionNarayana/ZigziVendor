@@ -278,7 +278,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_toRightOf="@id/pdprice"
-                                            android:text="discount price"
+                                            android:text=""
                                             android:textSize="12sp"
                                             android:layout_marginLeft="@dimen/dimen_10dp"
                                             android:layout_marginTop="7dp"

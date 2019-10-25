@@ -73,22 +73,21 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
 
         String feedDesc = null;
 
-        if (feederInfo.getDeliverystatus().equals("Pending")){
-            holder.deliverystatus.setText(feederInfo.getDeliverystatus());
-        }else if (feederInfo.getDeliverystatus().equals("Cancelled")){
-            holder.deliverystatus.setText(feederInfo.getDeliverystatus());
+        if (feederInfo.getDeliverystatus().equals("In_transit")){
+            holder.deliverystatus.setText("Pending");
+        }else if (feederInfo.getDeliverystatus().equals("Canceled")){
+            holder.deliverystatus.setText("Cancelled");
             holder.imgdelete.setVisibility(View.GONE);
         }else if (feederInfo.getDeliverystatus().equals("Delivered")){
-            holder.deliverystatus.setText(feederInfo.getDeliverystatus());
-            holder.imgdelete.setVisibility(View.GONE);
+            holder.deliverystatus.setText("Delivered");
         }else{
-
+            holder.deliverystatus.setText("Pending");
         }
 
         holder.orderdate.setText(feederInfo.getOrderdate());
         holder.orderid.setText(feederInfo.getOrderid());
         holder.totalprice.setText(feederInfo.getTotalprice());
-       // holder.shippingaddress.setText(feederInfo.getShippingadress());
+        // holder.shippingaddress.setText(feederInfo.getShippingadress());
         holder.paymentmode.setText(feederInfo.getPaymentmode());
 
         ORDERID =  feederInfo.getOrderID();
@@ -126,7 +125,7 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
 
 
 
-                if (feederInfo.getDeliverystatus().equals("Cancelled")){
+                if (feederInfo.getDeliverystatus().equals("Canceled")){
 
 
                 }else{

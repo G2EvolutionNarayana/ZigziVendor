@@ -547,7 +547,7 @@ public class EndUrl {
 
 //--------------------------------Get Products--------------------
 
- public static final String GetProductst_URL = APIURLMaintest + "api/rest/product/list";
+ public static final String GetProductst_URL = APIURLMain + "api/rest/product/list";
 
  public static final String GetProducts_id = "id";
 
@@ -555,14 +555,14 @@ public class EndUrl {
 
 //--------------------------------Get Products Details--------------------
 
- public static final String GetProductstDetails_URL = APIURLMaintest + "api/rest/product/detail";
+ public static final String GetProductstDetails_URL = APIURLMain + "api/rest/product/detail";
 
  public static final String GetProductsDetails_id = "product_id";
 
 
 //-------------------------------Post Whishlist--------------------
 
- public static final String PostWhishlist_URL = APIURLMaintest + "api/rest/wishlist/store";
+ public static final String PostWhishlist_URL = APIURLMain + "api/rest/wishlist/store";
 
  public static final String PostWhishlist_User_id = "user_id";
  public static final String PostWhishlist_product_id = "product_id";
@@ -571,13 +571,13 @@ public class EndUrl {
 
 //-------------------------------CheckPincode--------------------
 
- public static final String CheckPincode_URL = APIURLMaintest + "api/rest/pin";
+ public static final String CheckPincode_URL = APIURLMain + "api/rest/pin";
 
  public static final String CheckPincode_pincode = "pincode";
 
 //-------------------------------Add To Cart--------------------
 
- public static final String AddToCart_URL = APIURLMaintest + "api/rest/cart/store";
+ public static final String AddToCart_URL = APIURLMain + "api/rest/cart/store";
 
  public static final String AddToCart_product_id = "product_id";
  public static final String AddToCart_product_name = "size";
@@ -588,14 +588,14 @@ public class EndUrl {
 
 //-------------------------------Get Whishlist--------------------
 
- public static final String GetWhishlist_URL = APIURLMaintest + "api/rest/wishlist/list";
+ public static final String GetWhishlist_URL = APIURLMain + "api/rest/wishlist/list";
 
  public static final String GetWhishlist_User_id = "user_id";
 
 
 //-------------------------------Delete Whishlist--------------------
 
- public static final String DeleteWhishlist_URL = APIURLMaintest + "api/rest/wishlist/remove";
+ public static final String DeleteWhishlist_URL = APIURLMain + "api/rest/wishlist/remove";
 
  public static final String DeleteWhishlist_User_id = "user_id";
  public static final String DeleteWhishlist_id = "id";
@@ -604,14 +604,14 @@ public class EndUrl {
 
 //-------------------------------Get Reviews--------------------
 
- public static final String GetReviews_URL = APIURLMaintest + "api/rest/review/list";
+ public static final String GetReviews_URL = APIURLMain + "api/rest/review/list";
 
  public static final String GetReviews_product_id = "product_id";
 
 
 //-------------------------------Post Reviews--------------------
 
- public static final String PostReviews_URL = APIURLMaintest + "api/rest/review/store";
+ public static final String PostReviews_URL = APIURLMain + "api/rest/review/store";
 
  public static final String PostReviews_product_id = "product_id";
  public static final String PostReviews_user_id = "user_id";
@@ -622,7 +622,7 @@ public class EndUrl {
 
 //-------------------------------Add Address--------------------
 
- public static final String AddAddress_URL = APIURLMaintest + "api/user/address/store";
+ public static final String AddAddress_URL = APIURLMain + "api/user/address/store";
 
  public static final String AddAddress_id = "id";
  public static final String AddAddress_user_id = "user_id";
@@ -640,26 +640,26 @@ public class EndUrl {
 
 //-------------------------------Delete Address--------------------
 
- public static final String DeleteAddress_URL = APIURLMaintest + "api/user/address/remove";
+ public static final String DeleteAddress_URL = APIURLMain + "api/user/address/remove";
 
  public static final String DeleteAddress_id = "id";
 //-------------------------------Get Address List--------------------
 
- public static final String GetAddressList_URL = APIURLMaintest + "api/user/address/list";
+ public static final String GetAddressList_URL = APIURLMain + "api/user/address/list";
 
  public static final String GetAddressList_user_id = "user_id";
 
 
 //-------------------------------Cart List--------------------
 
- public static final String CartList_URL = APIURLMaintest + "api/rest/cart/list";
+ public static final String CartList_URL = APIURLMain + "api/rest/cart/list";
 
  public static final String CartList_user_id = "user_id";
 
 
 //-------------------------------Cart Delete--------------------
 
- public static final String CartDelete_URL = APIURLMaintest + "api/rest/cart/remove";
+ public static final String CartDelete_URL = APIURLMain + "api/rest/cart/remove";
 
  public static final String CartDelete_id = "id";
 
@@ -667,7 +667,7 @@ public class EndUrl {
 
 //-------------------------------Cart Update--------------------
 
- public static final String PostCartUpdate_URL = APIURLMaintest + "api/rest/cart/store";
+ public static final String PostCartUpdate_URL = APIURLMain + "api/rest/cart/store";
 
  public static final String PostCartUpdate_product_id = "product_id";
  public static final String PostCartUpdate_product_name = "size";
@@ -678,9 +678,67 @@ public class EndUrl {
 
 //-------------------------------CheckCoupon--------------------
 
- public static final String CheckCoupon_URL = APIURLMaintest + "api/rest/coupon/list";
+ public static final String CheckCoupon_URL = APIURLMain + "api/rest/coupon/list";
 
  public static final String CheckCoupon_coupon_code = "coupon_code";
+
+
+//-------------------------------Get Payment Details--------------------
+
+ public static final String GetPaymentDetails_URL = APIURLMain + "api/rest/place_order/list";
+
+ public static final String GetPaymentDetails_user_id = "user_id";
+ public static final String GetPaymentDetails_coupon_price = "coupon_price";
+ public static final String GetPaymentDetails_credits_price = "credits_price";
+
+
+//-------------------------------Get Shipping Method--------------------
+
+ public static final String GetShippingMethod_URL = APIURLMain + "api/rest/shipping_method/list";
+
+
+
+//-------------------------------Place Order--------------------
+
+ public static final String PlaceOrder_URL = APIURLMain + "api/rest/order/store";
+
+ public static final String PlaceOrder_user_id = "user_id";
+ public static final String PlaceOrder_coupon_id = "coupon_id";
+ public static final String PlaceOrder_shipping_method_id = "shipping_method_id";
+ public static final String PlaceOrder_shipping_price = "shipping_price";
+ public static final String PlaceOrder_payment_mode_id = "payment_mode_id";
+ public static final String PlaceOrder_coupon_price = "coupon_price";
+ public static final String PlaceOrder_credits_price = "credits_price";
+ public static final String PlaceOrder_delivery_address_id = "delivery_address_id";
+ public static final String PlaceOrder_credits_id = "credits_id";
+ public static final String PlaceOrder_gst = "gst";
+
+
+//-------------------------------Get Order List--------------------
+
+ public static final String GetOrderList_URL = APIURLMain + "api/rest/order/list";
+
+ public static final String GetOrderList_user_id = "user_id";
+
+
+
+//-------------------------------Get Order Details--------------------
+
+ public static final String GetOrderDetails_URL = APIURLMain + "api/rest/order/order_detail";
+
+ public static final String GetOrderDetails_order_id = "order_id";
+
+
+
+//-------------------------------Get Order Cancel--------------------
+
+ public static final String GetOrderCancel_URL = APIURLMain + "api/rest/order/cancel";
+
+ public static final String GetOrderCancel_order_id = "id";
+ public static final String GetOrderCancel_user_id = "user_id";
+ public static final String GetOrderCancel_order_status = "order_status";
+ public static final String GetOrderCancel_order_status_id = "order_status_id";
+ public static final String GetOrderCancel_reason = "reason";
 
 
 }
