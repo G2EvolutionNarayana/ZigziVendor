@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_margin="10dp">
+        android:layout_margin="3dp">
      <!--   <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fedderthumbnail"
             android:layout_width="80dp"
@@ -28,11 +28,12 @@
 
         <ImageView
             android:id="@+id/fedderthumbnail"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             app:civ_border_color="@color/colorWhite"
             app:civ_border_width="0.5dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/feedername"
@@ -43,6 +44,8 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:gravity="center"
+            android:minLines="2"
+            android:maxLines="2"
             android:layout_marginTop="10dp"
             />
 

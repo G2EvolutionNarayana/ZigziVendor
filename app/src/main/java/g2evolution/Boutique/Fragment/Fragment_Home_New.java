@@ -100,7 +100,7 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         //mFeedRecyler.setLayoutManager(new LinearLayoutManager(getActivity()));
         //setUpRecycler();
         // context = this;
-        lLayout = new GridLayoutManager(getActivity(), 3);
+        lLayout = new GridLayoutManager(getActivity(), 2);
         //  rView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         //  rView.setHasFixedSize(true);
         //  rView.setLayoutManager(lLayout);
