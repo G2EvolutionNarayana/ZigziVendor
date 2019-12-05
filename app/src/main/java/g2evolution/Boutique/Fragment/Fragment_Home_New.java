@@ -40,6 +40,7 @@ import g2evolution.Boutique.Activity.Activity_productdetails;
 import g2evolution.Boutique.Activity.Login;
 import g2evolution.Boutique.Activity.My_Orders;
 import g2evolution.Boutique.Adapter.Adapter_Category;
+import g2evolution.Boutique.Adapter.Adapter_CategoryBlog;
 import g2evolution.Boutique.Adapter.Adapter_home_category;
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.FeederInfo.FeederInfo_home_category;
@@ -50,6 +51,7 @@ import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.HttpHandler;
 import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.entit.Entity_Category;
+import g2evolution.Boutique.entit.Entity_CategoryBlog;
 
 public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageChangeListener,BaseSliderView.OnSliderClickListener{
 
@@ -67,6 +69,10 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
     RecyclerView rView;
     GridLayoutManager lLayout;
     String status,pincode;
+
+    private ArrayList<Entity_CategoryBlog> allItemsgridblog = new ArrayList<Entity_CategoryBlog>();
+    private RecyclerView mFeedRecylerblog;
+    Adapter_CategoryBlog mAdaptergridblog;
 
     ProgressDialog pDialog;
 
@@ -107,6 +113,16 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         mFeedRecyler.setLayoutManager(lLayout);
         //  mFeedRecyler.setHasFixedSize(true);
 
+        mFeedRecylerblog = (RecyclerView) rootView.findViewById(R.id.recycler_view2);
+        //mFeedRecyler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //setUpRecycler();
+        // context = this;
+        lLayout = new GridLayoutManager(getActivity(), 2);
+        //  rView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        //  rView.setHasFixedSize(true);
+        //  rView.setLayoutManager(lLayout);
+        mFeedRecylerblog.setLayoutManager(lLayout);
+        //  mFeedRecyler.setHasFixedSize(true);
 
         mDemoSlider = (SliderLayout) rootView.findViewById(R.id.slider);
 
@@ -142,6 +158,7 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         new SliderImage().execute();
         //  new GetCategories().execute();
         new LoadCategory().execute();
+        new LoadCategoryBlog().execute();
         BottomNavigationView navigation = (BottomNavigationView) rootView.findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -793,5 +810,147 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         }
 
     }
+    class LoadCategoryBlog extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
 
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItemsgridblog =new ArrayList<Entity_CategoryBlog>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            // userpramas.add(new BasicNameValuePair(EndUrls.GetBookLaterList_URL_user_id, registeruserid));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.Get_Category_URL, "GET", userpramas);
+
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+
+
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+                            HashMap<String, String> map = new HashMap<String, String>();
+
+
+
+
+                            Entity_CategoryBlog item = new Entity_CategoryBlog();
+                            item.setId(post.optString("id"));
+                            item.setTitle(post.optString("name"));
+                            item.setImage(post.optString("image"));
+
+
+
+
+
+                            allItemsgridblog.add(item);
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                Log.e("testing123", "allItems1===" + allItemsgridblog);
+
+
+/*
+                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                 prodcuts_recycler.setLayoutManager(mLayoutManager);
+                product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
+                prodcuts_recycler.setAdapter(product_details_adapter);*/
+
+                mAdaptergridblog = new Adapter_CategoryBlog(getActivity(),allItemsgridblog);
+                mFeedRecylerblog.setAdapter(mAdaptergridblog);
+
+
+
+
+
+
+            }
+            else {
+
+
+            /*    product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
+                prodcuts_recycler.setAdapter(product_details_adapter);*/
+
+
+
+
+            }
+
+
+
+        }
+
+    }
 }
