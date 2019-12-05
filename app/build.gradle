@@ -4,7 +4,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('E:\\Jana\\GMT Credentials\\gmt.jks')
+            storeFile file('D:\\ProjectsAndroid\\G2E\\GMTCredentials\\gmt.jks')
             storePassword 'GMT123'
             keyAlias = 'GMT123'
             keyPassword 'GMT123'

@@ -143,7 +143,7 @@ public class fragment_home extends Fragment implements RecyclerViewDataAdapter.O
         my_recycler_view = (RecyclerView) rootView.findViewById(R.id.recycler_view1);
         my_recycler_view.setHasFixedSize(true);
         my_recycler_view.setVisibility(View.VISIBLE);
-
+        my_recycler_view.setNestedScrollingEnabled(false);
 
         //mFeedRecyler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         //mFeedRecyler.setLayoutManager(new LinearLayoutManager(getActivity()));

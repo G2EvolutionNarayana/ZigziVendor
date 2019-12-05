@@ -20,13 +20,13 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.Activity_WishList"></activity>
+        <activity android:name=".Activity.Activity_WishList" />
         <activity android:name=".Activity.Activity_ForgotOTP" />
         <activity android:name=".Activity.Activity_ListProduct" />
         <activity android:name=".Activity.Activity_SubSactegory" />
         <activity android:name=".Activity.Activity_ResourcesList" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".Activity.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

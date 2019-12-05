@@ -5,7 +5,8 @@ public class EndUrl {
 
 
 
-    public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
+   // public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
+    public static final String APIURLMain = "http://Zigzi.g2evolution.com/";
     public static final String APIURLMaintest = "http://casual365.sutures.ind.in/";
 
 
