@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.Activity_CategorySelect">
+    <include
+        android:id="@+id/include1"
+        layout="@layout/actionicons"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view1"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/include1"
+        android:layout_above="@+id/butsubmit"/>
+
+    <Button
+        android:id="@+id/butsubmit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green"
+        android:textColor="@color/white"
+        android:text="Continue"
+        android:layout_alignParentBottom="true"/>
+
+
+
+</RelativeLayout>

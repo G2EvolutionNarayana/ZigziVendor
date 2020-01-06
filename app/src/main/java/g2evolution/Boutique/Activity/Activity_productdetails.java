@@ -1142,7 +1142,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                             }
                         }
 
-                        JSONArray posts2 = post.optJSONArray("images");
+                            JSONArray posts2 = post.optJSONArray("images");
                         imagelength = posts2.length();
                         for (int i1 = 0; i1 < posts2.length(); i1++) {
                             JSONObject post2 = posts2.optJSONObject(i1);
@@ -1154,7 +1154,19 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                             //groupPosition = deptList.indexOf(headerInfo);
 
                         }
+                        JSONArray postsflat = post.optJSONArray("product_flat");
 
+                        for (int i1 = 0; i1 < postsflat.length(); i1++) {
+                            JSONObject postproductflat = postsflat.optJSONObject(i1);
+
+                            if (_pdprice == null || _pdprice.trim().length() == 0 || _pdprice.trim().equals("null")){
+
+                            }else{
+                                _pdprice = postproductflat.getString("price");
+                            }
+
+
+                        }
 
 
 

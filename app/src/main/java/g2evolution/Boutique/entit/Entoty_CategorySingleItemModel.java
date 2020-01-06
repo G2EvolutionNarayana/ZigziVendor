@@ -14,6 +14,15 @@ public class Entoty_CategorySingleItemModel {
     private String description;
     private String subcatname;
     private String stockQuantity;
+    private String strType;
+
+    public String getStrType() {
+        return strType;
+    }
+
+    public void setStrType(String strType) {
+        this.strType = strType;
+    }
 
     public String getStockQuantity() {
         return stockQuantity;
@@ -56,12 +65,13 @@ public class Entoty_CategorySingleItemModel {
     private String discvalue;
 
 
-    public Entoty_CategorySingleItemModel(String id, String categoryName , String name, String productdetails , String phoprice, String discvalue , String discprice , String url, String stockQuantity ) {
+    public Entoty_CategorySingleItemModel(String id, String categoryName , String name, String productdetails , String phoprice, String discvalue , String discprice , String url, String stockQuantity, String strtype ) {
         this.id = id;
         this.categoryName = categoryName;
         this.name = name;
         this.url = url;
         this.stockQuantity = stockQuantity;
+        this.strType = strtype;
 
         this.productdetails = productdetails;
         this.phoprice = phoprice;

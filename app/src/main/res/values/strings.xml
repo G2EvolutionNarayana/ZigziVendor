@@ -19,6 +19,8 @@
 
     <string name="api_key">AIzaSyCUP7tH5YrzhKpWaYT3SURSqrtPaKeTqyg</string>
 
+    <string name="custom_select"><u>Custom Select</u></string>
+
 
     <string-array name="spinner_category">
         <item>Tailor</item>

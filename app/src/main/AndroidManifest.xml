@@ -20,7 +20,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.Activity_CategoryBlog"></activity>
+        <activity android:name=".Activity.Activity_CategorySelect"
+            android:windowSoftInputMode="stateHidden" ></activity>
+        <activity android:name=".Activity.Activity_CategoryBlog" />
         <activity android:name=".Activity.Activity_WishList" />
         <activity android:name=".Activity.Activity_ForgotOTP" />
         <activity android:name=".Activity.Activity_ListProduct" />

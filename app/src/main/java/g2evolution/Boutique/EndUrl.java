@@ -6,7 +6,8 @@ public class EndUrl {
 
 
    // public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
-    public static final String APIURLMain = "http://Zigzi.g2evolution.com/";
+  //  public static final String APIURLMain = "http://Zigzi.g2evolution.com/";
+    public static final String APIURLMain = "http://new-zigzi.g2evolution.com/";
     public static final String APIURLMaintest = "http://casual365.sutures.ind.in/";
 
 
@@ -15,6 +16,7 @@ public class EndUrl {
 
    // public static final String APIURLgrocerry = "http://g2evolution.in/gmt/admin/rest/";
     public static final String APIURLgrocerry = "http://g2evolution.in/boutique/admin/rest/";
+  //  public static final String APIURLgrocerry = "http://new-zigzi.g2evolution.com/api/";
 
 
     public static final String straccessCode = "AVQB78FE28CH17BQHC";
@@ -740,6 +742,58 @@ public class EndUrl {
  public static final String GetOrderCancel_order_status = "order_status";
  public static final String GetOrderCancel_order_status_id = "order_status_id";
  public static final String GetOrderCancel_reason = "reason";
+
+
+
+//-------------------------------CategoryList URL--------------------
+
+ public static final String CategoryList_URL = APIURLMain + "api/resource/listing/packages-category";
+
+ public static final String CategoryList_CategoryId = "resource_packages_id";
+
+
+//-------------------------------Qualification URL--------------------
+
+ public static final String Qualification_URL = APIURLMain + "api/resource/listing/education";
+
+
+//-------------------------------Language URL--------------------
+
+ public static final String Language_URL = APIURLMain + "api/resource/listing/languages";
+
+
+
+//-------------------------------UploadResource URL--------------------
+
+ public static final String UploadResource_URL = APIURLMain + "api/resource/subscription/manage/store";
+
+ public static final String UploadResource_resource_packages_id = "resource_packages_id";
+ public static final String UploadResource_user_id = "user_id";
+ public static final String UploadResource_price = "price";
+ public static final String UploadResource_order_number = "order_number";
+ public static final String UploadResource_transaction_id = "transaction_id";
+ public static final String UploadResource_payment_status = "payment_status";
+ public static final String UploadResource_description = "description";
+ public static final String UploadResource_category_id = "category_id";
+ public static final String UploadResource_cv_count = "cv_count";
+
+
+
+
+
+//-------------------------------GetResourceList URL--------------------
+
+ public static final String GetResourceList_URL = APIURLMain + "api/resource/listing/resumes";
+
+ public static final String GetResourceList_subscription_id = "subscription_id";
+ public static final String GetResourceList_category_id = "category_id";
+ public static final String GetResourceList_education_id = "education_id";
+ public static final String GetResourceList_language_id = "language_id";
+ public static final String GetResourceList_min_salary = "min_salary";
+ public static final String GetResourceList_max_salary = "max_salary";
+ public static final String GetResourceList_sort_by = "sort_by";
+
+
 
 
 }

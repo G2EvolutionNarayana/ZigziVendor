@@ -3,6 +3,7 @@ package g2evolution.Boutique.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import g2evolution.Boutique.Activity.Activity_ResourcesList;
@@ -62,12 +67,61 @@ public class Adapter_resourselist extends RecyclerView.Adapter<Adapter_resoursel
 
         String strs =  mCtx.getResources().getString(R.string.Rs);
 
-        holder.designation_text.setText(follow.getTextdesignation());
+        holder.designation_text.setText(follow.getTextcategory());
         holder.education_text.setText(follow.getTexteducation());
         holder.expected_salary_text.setText(strs+follow.getTextexpectedsalary());
         holder.description_text.setText(follow.getTextdesc());
-        holder.posted_days.setText(follow.getTextdaysago());
+      //  holder.posted_days.setText(follow.getTextdaysago());
 
+        Date date = null;
+        Date date1 = null;
+        Date date2 = null;
+
+        String strstartdate = follow.getTextdaysago();
+        SimpleDateFormat mdformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        SimpleDateFormat mdformat1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Log.e("testing","start on create = "+strstartdate);
+
+        Calendar calendar = Calendar.getInstance();
+        String strcurrenctdate = mdformat1.format(calendar.getTime());
+        try {
+            date = mdformat.parse(strstartdate);
+
+            String str = mdformat1.format(date);
+            date1 = mdformat1.parse(strcurrenctdate);
+            date2 = mdformat1.parse(str);
+
+            Log.e("testing","year on create = "+str);
+
+//in milliseconds
+            long diff = date1.getTime() - date2.getTime();
+
+            long diffSeconds = diff / 1000 % 60;
+
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+
+            Log.e("testing","difference days = "+diffDays+"-"+diffHours+"-"+diffMinutes+"-"+diffSeconds);
+
+            System.out.print(diffDays + " days, ");
+            System.out.print(diffHours + " hours, ");
+            System.out.print(diffMinutes + " minutes, ");
+            System.out.print(diffSeconds + " seconds.");
+
+            if (diffDays < 0){
+
+            }else if (diffDays == 0){
+
+
+                holder.posted_days.setText(diffDays+"Days Ago ");
+            }else{
+                holder.posted_days.setText(diffDays+"Days Ago ");
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         holder.cardview1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +150,33 @@ public class Adapter_resourselist extends RecyclerView.Adapter<Adapter_resoursel
         });
 
 
+        holder.textresume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse(follow.getTextresume()));
+                mCtx.startActivity(browserIntent);
+            }
+        });
+        holder.textphone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strcall = follow.getTextmobileno();
+                Uri number = Uri.parse("tel:"+strcall);
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                mCtx.startActivity(callIntent);
+            }
+        });
+        holder.textemailid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strmail = follow.getTextemailid();
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", strmail, null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+                mCtx.startActivity(Intent.createChooser(emailIntent, "Send email..."));
+            }
+        });
 
     }
 
@@ -107,7 +188,7 @@ public class Adapter_resourselist extends RecyclerView.Adapter<Adapter_resoursel
 
     public class Title_List_ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView designation_text, education_text, expected_salary_text, description_text, posted_days;
+        TextView designation_text, education_text, expected_salary_text, description_text, posted_days, textresume, textphone, textemailid;
 
         CardView cardview1;
 
@@ -122,6 +203,9 @@ public class Adapter_resourselist extends RecyclerView.Adapter<Adapter_resoursel
             description_text = itemView.findViewById(R.id.description_text);
             posted_days = itemView.findViewById(R.id.posted_days);
             cardview1 = itemView.findViewById(R.id.cardview1);
+            textresume = itemView.findViewById(R.id.textresume);
+            textphone = itemView.findViewById(R.id.textphone);
+            textemailid = itemView.findViewById(R.id.textemailid);
 
 
         }

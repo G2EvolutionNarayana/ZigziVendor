@@ -63,17 +63,34 @@
                 android:layout_marginTop="10dp"/>
 
 
-            <TextView
-                android:id="@+id/textprice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rs 100"
-                android:textSize="18dp"
-                android:textColor="@color/theme"
-                android:textStyle="bold"
-                android:layout_gravity="right"
-                android:padding="5dp"
-                android:layout_marginRight="10dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/butbuy"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="BUY"
+                    android:textSize="18dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/green"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/textprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rs 100"
+                    android:textSize="18dp"
+                    android:textColor="@color/theme"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"/>
+            </RelativeLayout>
+
 
         </LinearLayout>
 

@@ -8,6 +8,10 @@ public class Entity_ResourseList {
     String textexpectedsalary;
     String textdesc;
     String textdaysago;
+    String textmobileno;
+    String textemailid;
+    String textresume;
+    String textcategory;
 
     public String getId() {
         return id;
@@ -55,5 +59,37 @@ public class Entity_ResourseList {
 
     public void setTextdaysago(String textdaysago) {
         this.textdaysago = textdaysago;
+    }
+
+    public String getTextmobileno() {
+        return textmobileno;
+    }
+
+    public void setTextmobileno(String textmobileno) {
+        this.textmobileno = textmobileno;
+    }
+
+    public String getTextemailid() {
+        return textemailid;
+    }
+
+    public void setTextemailid(String textemailid) {
+        this.textemailid = textemailid;
+    }
+
+    public String getTextresume() {
+        return textresume;
+    }
+
+    public void setTextresume(String textresume) {
+        this.textresume = textresume;
+    }
+
+    public String getTextcategory() {
+        return textcategory;
+    }
+
+    public void setTextcategory(String textcategory) {
+        this.textcategory = textcategory;
     }
 }
