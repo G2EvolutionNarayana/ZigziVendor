@@ -844,7 +844,7 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
             // userpramas.add(new BasicNameValuePair(EndUrls.GetBookLaterList_URL_user_id, registeruserid));
 
 
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.Get_Category_URL, "GET", userpramas);
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.Get_CategoryBlog_URL, "GET", userpramas);
 
             Log.e("testing", "json result = " + json);
 

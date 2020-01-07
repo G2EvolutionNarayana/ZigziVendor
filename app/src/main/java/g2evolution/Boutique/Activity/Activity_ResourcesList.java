@@ -169,9 +169,9 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
        // setUpReccyler();
 
         new LoadResourceList().execute();
-      //  new DownloadCategory().execute();
-      //  new DownloadEducation().execute();
-       // new DownloadLanguage().execute();
+        new DownloadCategory().execute();
+        new DownloadEducation().execute();
+        new DownloadLanguage().execute();
 
     }
 
@@ -1050,12 +1050,16 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
 
                 }else{
                     Toast.makeText(Activity_ResourcesList.this, strmessage, Toast.LENGTH_SHORT).show();
+                    openings_adapter = new Adapter_resourselist(Activity_ResourcesList.this, openings_entity, mCallbackcropnames);
+                    dashboard_reccyler.setAdapter(openings_adapter);
                 }
 
 
 
             }else{
                 Toast.makeText(Activity_ResourcesList.this, strmessage, Toast.LENGTH_SHORT).show();
+                openings_adapter = new Adapter_resourselist(Activity_ResourcesList.this, openings_entity, mCallbackcropnames);
+                dashboard_reccyler.setAdapter(openings_adapter);
             }
 
 

@@ -794,6 +794,17 @@ public class EndUrl {
  public static final String GetResourceList_sort_by = "sort_by";
 
 
+ //-----------------------------------Category Blog-----------------------
+
+ public  static  final  String Get_CategoryBlog_URL = APIURLMain+"api/blog/listing/category";
+
+
+
+ //-----------------------------------Sliding Image Blog-----------------------
+
+ public static final String SliderImgBlog_URL = APIURLMain + "api/blog/listing/category-transc";
+
+ public static final String SliderImgBlog_category_id = "category_id";
 
 
 }
