@@ -824,7 +824,7 @@ public class Activity_Profile extends AppCompatActivity {
             if (strResult.equals("success")) {
 
 
-                Toast.makeText(Activity_Profile.this, strMessage, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(Activity_Profile.this, strMessage, Toast.LENGTH_SHORT).show();
                 new LoadProfile().execute();
             }else if (strResult.equals("failure")){
                 Toast.makeText(Activity_Profile.this,

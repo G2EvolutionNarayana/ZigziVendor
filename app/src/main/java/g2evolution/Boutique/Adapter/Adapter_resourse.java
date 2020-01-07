@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -79,12 +80,13 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
 
                 qty= String.valueOf(follow.getResourcePackagesId());
 
-                if (mCallbackcropnames != null) {
+            /*    if (mCallbackcropnames != null) {
                     mCallbackcropnames.OnItemClickcropNames(position, qty, 1);
                     Log.e("testing", "qtyadapter" + qty);
 
-                }
+                }*/
 
+            if (follow.getSubscribed().trim().equals("yes")){
                 SharedPreferences prefuserdata =mCtx.getSharedPreferences("ProductIDDetails", 0);
                 SharedPreferences.Editor prefeditor = prefuserdata.edit();
                 prefeditor.putString("ProductId", "" + qty);
@@ -93,6 +95,11 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
 
                 Intent intent=new Intent(mCtx, Activity_ResourcesList.class);
                 mCtx.startActivity(intent);
+            }else{
+                Toast.makeText(mCtx, "Please Buy this plan", Toast.LENGTH_SHORT).show();
+            }
+
+
 
 
                 Log.e("testing","subcatid===child========"+qty);
@@ -134,6 +141,7 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
                         qty = String.valueOf(follow.getResourcePackagesId());
                         if (mCallbackcropnames!=null){
                             mCallbackcropnames.OnItemClickcropNames(position,qty,  2);
+                            logindialog.dismiss();
                         }
                     }
                 });

@@ -261,8 +261,8 @@ public class Resource_Management_Fragment extends Fragment implements Adapter_re
             userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_resource_packages_id, strorderid));
             userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_user_id, UserId));
             userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_price, strorderprice));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_order_number, "123"));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_transaction_id, "12345"));
+            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_order_number, "124"));
+            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_transaction_id, "12346"));
             userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_payment_status, "paid"));
             userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_description, strorderdesc));
             userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_category_id, ""));

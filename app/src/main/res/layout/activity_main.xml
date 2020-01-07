@@ -79,7 +79,7 @@
                         android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
                         android:background="@drawable/white_grey_border"
-                        android:hint="Search grocery products in Boutique"
+                        android:hint="Search grocery products in Zigzi"
                         android:textCursorDrawable="@color/black"
                         android:textColorHint="@color/grey"/>
 

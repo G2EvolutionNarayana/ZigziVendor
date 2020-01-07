@@ -195,7 +195,7 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
 
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_phone, strmobileno));
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_name, strusername));
-            userpramas.add(new BasicNameValuePair(EndUrl.Signup_email, strmobileno));
+            userpramas.add(new BasicNameValuePair(EndUrl.Signup_email, stremailid));
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_password, strpassword));
 
             Log.e("testing", "userpramas = " + userpramas);

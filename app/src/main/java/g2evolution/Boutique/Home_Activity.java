@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -29,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import g2evolution.Boutique.Activity.Activity_Profile;
 import g2evolution.Boutique.Adap.Bottom_Navigation_Adapter;
 import g2evolution.Boutique.entit.Bottom_Navigation_List;
 import g2evolution.Boutique.frag.Contact_Us_Fragment;
@@ -64,8 +66,10 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
     String[]Id= new String[]{"1",   "2",  "3","4"};
 
     LinearLayout linearbottom;
-
+    ActionBar actionBar;
     boolean doubleBackToExitPressedOnce = false;
+
+    TextView textzigzi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,8 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
 
 
         Hidesoftkeyboard();
+
+        textzigzi = (TextView) findViewById(R.id.textzigzi);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -91,7 +97,7 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
 
 
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -135,12 +141,15 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
         else  if (id == R.id.profile) {
 
 
-            linearbottom.setVisibility(View.GONE);
-      Profile_Fragment fragment2 = new Profile_Fragment();
+          //  linearbottom.setVisibility(View.GONE);
+            Intent intent = new Intent(Home_Activity.this, Activity_Profile.class);
+            startActivity(intent);
+
+          /*  Profile_Fragment fragment2 = new Profile_Fragment();
             FragmentTransaction fragmentTransaction2 =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction2.replace(R.id.fragment_container, fragment2);
-            fragmentTransaction2.commit();
+            fragmentTransaction2.commit();*/
 
         }
         else  if (id == R.id.ecommerce) {
@@ -158,6 +167,7 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
 
         else if(id==R.id.lisense)
         {
+            textzigzi.setText("Resource Management");
             linearbottom.setVisibility(View.GONE);
             Resource_Management_Fragment fragment2 = new Resource_Management_Fragment();
             FragmentTransaction fragmentTransaction2 =

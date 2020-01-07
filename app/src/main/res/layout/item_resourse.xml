@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:layout_marginBottom="@dimen/dimen_15dp"
-        android:layout_marginRight="@dimen/dimen_15dp"
-        android:layout_marginLeft="15dp">
+        android:layout_margin="5dp"
+        app:cardBackgroundColor="#E0E0E0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,17 +21,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_name"
                     android:visibility="visible"
-                    android:gravity="fill"
+                    android:gravity="center"
                     android:text="dfdsfdfdfdsf"
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textSize="18sp"
-                    android:textAppearance="@style/fontStyle"
-                    android:textColor="@color/theme" />
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@color/theme"
+                    android:layout_toLeftOf="@+id/title_count"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,33 +63,35 @@
                 android:layout_marginTop="10dp"/>
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="40dp"
+                android:weightSum="2">
                 <TextView
                     android:id="@+id/butbuy"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="BUY"
                     android:textSize="18dp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:padding="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:background="@color/green"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:layout_weight="1"/>
                 <TextView
                     android:id="@+id/textprice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:text="Rs 100"
                     android:textSize="18dp"
-                    android:textColor="@color/theme"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:padding="5dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"/>
-            </RelativeLayout>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="#BDBDBD"/>
+            </LinearLayout>
 
 
         </LinearLayout>
