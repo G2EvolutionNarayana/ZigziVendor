@@ -626,10 +626,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         if (cd.isConnectingToInternet()) {
 
             //  new Loader().execute();
-            new LoadProductList().execute();
+          //  new LoadProductList().execute();
 
             //---------offer products-----------
-            //  new Getproducts().execute();
+              new Getproducts().execute();
         } else {
 
 
@@ -1073,26 +1073,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                         strresponse = json.getString("response");
                         String arrayresponse = json.getString("data");
                         Log.e("testing", "adapter value=" + arrayresponse);
-
                         JSONObject  post = new JSONObject(arrayresponse);
-                        //  JSONArray responcearray = new JSONArray(arrayresponse);
-                        //  Log.e("testing", "responcearray value=" + responcearray);
-
-                     /*   for (int i = 0; i < responcearray.length(); i++) {
-
-                            JSONObject post = responcearray.getJSONObject(i);
-                            HashMap<String, String> map = new HashMap<String, String>();*/
-
-
-
-
-                        _pdimage = post.getString("image");
                         _pdtitle  = post.getString("name");
                         _pdsubtitle  = post.getString("sku");
-                        Log.e("testing","_pdtitle = "+_pdtitle);
-
-
-
+                        _pdimage = post.getString("image");
                         _totalReviewCount = post.getString("rating_count");
 
                         if (post.has("actual_price")){
@@ -1113,17 +1097,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                         }
 
 
-                        //  _pdabout  = post.getString("description");
-
                         _pid = post.getString("id");
-                          /*  _totalReviewCount = post.getString("totalReviewCount");
-                            _avgRating = post.getString("avgRating");*/
-
-
-                   /*     String straddition = json.getString("additional_information");
-                        Log.e("testing", "adapter value=" + arrayresponse);
-
-                        JSONObject  postaddition = new JSONObject(straddition);*/
 
 
                         JSONArray postssizes = post.optJSONArray("sizes");
@@ -1494,28 +1468,28 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
+        //    HttpHandler sh = new HttpHandler();
+
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+           // userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
 
             // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(EndUrl.Offer_Products_URL);
+         //   String jsonStr = sh.makeServiceCall(EndUrl.Offer_Products_URL);
+            JSONObject jsonObj = jsonParser.makeHttpRequest(EndUrl.Offer_Products_URL, "GET", userpramas);
 
-
-            if (jsonStr != null) {
+            if (jsonObj != null) {
 
                 try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
 
-                    // Getting JSON Array node
 
                     Log.e("testing12", "jsonObj = " + jsonObj);
 
-                    JSONObject response = new JSONObject(jsonObj.toString());
+                 //   JSONObject response = new JSONObject(jsonObj.toString());
 
-                    Log.e("testing", "jsonParser2222" + jsonObj);
 
-                    //JSONObject jsonArray1 = new JSONObject(json.toString());
-                    //  Result = response.getString("status");
-                    JSONArray posts = response.optJSONArray("data");
+                    JSONArray posts = jsonObj.optJSONArray("data");
                     Log.e("testing", "jsonParser3333" + posts);
 
                     if (posts == null) {
@@ -1527,30 +1501,19 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                         Log.e("testing", "jon122222211");
                         Log.e("testing", "jsonParser4444" + posts);
 
-                        for (int i = 0; i < posts.length(); i++) {
+
                             Log.e("testing", "" + posts);
 
-                            Log.e("testing", "" + i);
-                            JSONObject post = posts.optJSONObject(i);
-                            // JSONArray posts2 = response.optJSONArray("categories");
-                            Log.e("testng", "" + post);
-                            headers = post.getString("OfferProduct");
 
-                            Log.e("testing", "name is 11= " + post.getString("OfferProduct"));
+                            headers = "Offer Products";
 
-
-                            String Title = post.getString("OfferProduct");
 
                             SectionDataModel dm = new SectionDataModel();
-
-
-                            dm.setHeaderTitle(post.getString("OfferProduct"));
+                            dm.setHeaderTitle("Offer Products");
                             // dm.setHeaderid(post.getString("categoryId"));
-
-                            JSONArray posts2 = post.optJSONArray("Products");
                             ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
-                            for (int i1 = 0; i1 < posts2.length(); i1++) {
-                                JSONObject post2 = posts2.optJSONObject(i1);
+                            for (int i1 = 0; i1 < posts.length(); i1++) {
+                                JSONObject post2 = posts.optJSONObject(i1);
 
 
                                /*
@@ -1566,6 +1529,13 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                                 finalimg = post2.getString("image");
 
 
+                                Log.e("testing","product_id"+post2.getString("product_id"));
+                                Log.e("testing","name"+post2.getString("name"));
+                                Log.e("testing","brand"+post2.getString("name"));
+                                Log.e("testing","price"+post2.getString("price"));
+                                Log.e("testing","offer"+post2.getString("offer"));
+                                Log.e("testing","discount_price"+post2.getString("discount_price"));
+
                               /*  JSONArray posts3 = post2.optJSONArray("multipleImages");
                                 for (int i2 = 0; i2 < posts3.length(); i2++) {
                                     JSONObject post3 = posts3.optJSONObject(i2);
@@ -1577,7 +1547,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                                     //groupPosition = deptList.indexOf(headerInfo);
                                 }*/
 
-                                singleItem.add(new SingleItemModel(post2.getString("productId"), post2.getString("categoryName"), post2.getString("brandName"), post2.getString("title"), post2.getString("price"), post2.getString("discountValue"), post2.getString("afterDiscount"), finalimg, post2.getString("stockQuantity")));
+                                singleItem.add(new SingleItemModel(post2.getString("product_id"), post2.getString("name"), post2.getString("name"), post2.getString("name"), post2.getString("price"), post2.getString("offer"), post2.getString("discount_price"), finalimg, "stockquantity"));
 
 
                             }
@@ -1586,7 +1556,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                             allSampleData.add(dm);
 
-                        }
+
 
                     }
 
@@ -1595,10 +1565,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     Activity_productdetails.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText( Activity_productdetails.this,
+                          /*  Toast.makeText( Activity_productdetails.this,
                                     "Json parsing error: " + e.getMessage(),
                                     Toast.LENGTH_LONG)
-                                    .show();
+                                    .show();*/
                         }
                     });
 
@@ -1607,10 +1577,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 Activity_productdetails.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText( Activity_productdetails.this,
+                      /*  Toast.makeText( Activity_productdetails.this,
                                 "Couldn't get json from server. Check LogCat for possible errors!",
                                 Toast.LENGTH_LONG)
-                                .show();
+                                .show();*/
                     }
                 });
 
@@ -1629,6 +1599,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
              * Updating parsed JSON data into ListView
              * *//*
             pDialog.dismiss();*/
+            Log.e("testing","allSampleData = "+allSampleData);
+
+
             adapter = new RecyclerViewDataAdapter( Activity_productdetails.this, allSampleData, mCallback);
 
             my_recycler_view.setLayoutManager(new LinearLayoutManager( Activity_productdetails.this, LinearLayoutManager.VERTICAL, false));

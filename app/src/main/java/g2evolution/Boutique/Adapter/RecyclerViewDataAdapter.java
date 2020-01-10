@@ -9,6 +9,7 @@ import android.content.Context;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,13 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
         final String sectionid = dataList.get(i).getHeaderid();
         final String sectionName = dataList.get(i).getHeaderTitle();
 
+
+
+
+
+
+
+        Log.e("testing","gethearderid = "+dataList.get(i).getHeaderid());
         ArrayList singleSectionItems = dataList.get(i).getAllItemsInSection();
 
         itemRowHolder.itemTitle.setText(sectionName);

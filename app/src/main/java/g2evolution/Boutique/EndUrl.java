@@ -270,9 +270,6 @@ public class EndUrl {
     public static final String Search_subcategoryname = "sub_category_id";
     public static final String Search_child = "child_category_id";
 
-    //---------------------------------Search Products------------------------
-
-    public static final String Offer_Products_URL = APIURLgrocerry + "getOfferProducts";
 
 
 
@@ -805,6 +802,11 @@ public class EndUrl {
  public static final String SliderImgBlog_URL = APIURLMain + "api/blog/listing/category-transc";
 
  public static final String SliderImgBlog_category_id = "category_id";
+
+
+ //---------------------------------Search Products------------------------
+
+ public static final String Offer_Products_URL = APIURLMain + "api/rest_api/offer/list";
 
 
 }

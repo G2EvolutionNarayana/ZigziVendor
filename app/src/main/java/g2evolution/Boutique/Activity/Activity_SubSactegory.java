@@ -163,24 +163,29 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
 
                                 JSONArray posts2 = post.optJSONArray("child_category");
                                 ArrayList<Entoty_CategorySingleItemModel> singleItem = new ArrayList<Entoty_CategorySingleItemModel>();
-                                if (posts2 == null) {
-                                    JSONArray posts3 = post.optJSONArray("products");
-                                    if (posts3 == null) {
+                                if (posts2 == null || posts2.length() == 0) {
+                                    if (post.has("products")){
+                                        JSONArray posts3 = post.optJSONArray("products");
+                                        if (posts3 == null) {
 
-                                    }else {
-                                        for (int i1 = 0; i1 < posts3.length(); i1++) {
-                                            JSONObject post3 = posts3.optJSONObject(i1);
+                                        }else {
+                                            for (int i1 = 0; i1 < posts3.length(); i1++) {
+                                                JSONObject post3 = posts3.optJSONObject(i1);
 
-                                            String finalimg = null;
+                                                String finalimg = null;
 
-                                            finalimg = post3.getString("image");
-
-
-                                            singleItem.add(new Entoty_CategorySingleItemModel(post3.getString("id"), post3.getString("name"), post3.getString("name"), post3.getString("name"), "2", "3", "1", finalimg, "1", "childcategory"));
+                                                finalimg = post3.getString("image");
 
 
+                                                singleItem.add(new Entoty_CategorySingleItemModel(post3.getString("product_id"), post3.getString("name"), post3.getString("name"), post3.getString("name"), "2", "3", "1", finalimg, "1", "productcategory"));
+
+
+                                            }
                                         }
+                                    }else{
+
                                     }
+
                                 } else{
                                     for (int i1 = 0; i1 < posts2.length(); i1++) {
                                         JSONObject post2 = posts2.optJSONObject(i1);

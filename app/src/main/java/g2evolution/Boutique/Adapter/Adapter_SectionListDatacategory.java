@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import g2evolution.Boutique.Activity.Activity_ListProduct;
+import g2evolution.Boutique.Activity.Activity_productdetails;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.entit.Entoty_CategorySingleItemModel;
@@ -113,8 +114,17 @@ public class Adapter_SectionListDatacategory extends RecyclerView.Adapter<Adapte
                 Log.e("testing","productid in adapter = "+postid);
                 prefeditor.commit();
 */
-                    Intent i = new Intent(mContext, Activity_ListProduct.class);
-                    mContext.startActivity(i);
+
+             if (singleItem.getStrType().equals("productcategory")){
+                 Intent intent = new Intent(mContext, Activity_productdetails.class);
+                 mContext.startActivity(intent);
+             }else if (singleItem.getStrType().equals("childcategory")){
+                 Intent i = new Intent(mContext, Activity_ListProduct.class);
+                 mContext.startActivity(i);
+             }else{
+
+             }
+
                     // new userdata().execute();
 
                 }
