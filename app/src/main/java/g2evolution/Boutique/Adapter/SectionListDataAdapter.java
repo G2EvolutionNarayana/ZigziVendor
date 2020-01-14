@@ -60,22 +60,28 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
         final SingleItemModel singleItem = itemsList.get(i);
 
-        _descvalue=singleItem.getDiscvalue();
-     // String subcatnme   =singleItem.getSubcatname();
-      String StockQuantity   =singleItem.getStockQuantity();
+        _descvalue = singleItem.getDiscvalue();
+        // String subcatnme   =singleItem.getSubcatname();
+        String StockQuantity = singleItem.getStockQuantity();
 
 
-      Log.e("testing","testing+StockQuantity==="+StockQuantity);
+        Log.e("testing", "testing+StockQuantity===" + StockQuantity);
 
-        int foo = Integer.parseInt(StockQuantity);
 
-        if (foo>0){
+        if (StockQuantity == null || StockQuantity.trim().length() == 0 || StockQuantity.trim().equals("")) {
 
-            if (singleItem.getUrl() == null || singleItem.getUrl().equals("0")||singleItem.getUrl().equals("")||singleItem.getUrl().equals("null")){
+        } else {
+            int foo = Integer.parseInt(StockQuantity);
+
+
+
+        if (foo > 0) {
+
+            if (singleItem.getUrl() == null || singleItem.getUrl().equals("0") || singleItem.getUrl().equals("") || singleItem.getUrl().equals("null")) {
 
                 holder.itemImage.setImageResource(R.drawable.car);
 
-            }else{
+            } else {
 
                 Glide.with(mContext)
                         .load(Uri.parse(singleItem.getUrl()))
@@ -91,10 +97,10 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 @Override
                 public void onClick(View v) {
 
-                    postid =  singleItem.getId();
-                    categoryName =  singleItem.getCategoryName();
+                    postid = singleItem.getId();
+                    categoryName = singleItem.getCategoryName();
 
-                    Log.e("testing","testing image = "+singleItem.getId());
+                    Log.e("testing", "testing image = " + singleItem.getId());
 
                     SharedPreferences prefuserdata = mContext.getSharedPreferences("ProDetails", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
@@ -102,9 +108,9 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                     prefeditor.putString("categoryName", "" + categoryName);
                     prefeditor.putString("subcategoryname", "" + subcategoryname);
 
-                    Log.e("testing","Proid  = " + postid);
+                    Log.e("testing", "Proid  = " + postid);
 
-                    Log.e("testing","productid in adapter = "+postid);
+                    Log.e("testing", "productid in adapter = " + postid);
                     prefeditor.commit();
 
              /*   SharedPreferences prefuserdata = mContext.getSharedPreferences("category", 0);
@@ -124,13 +130,12 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 }
             });
 
-            Log.e("testing1","foo====>>>>>>>>="+foo);
+            Log.e("testing1", "foo====>>>>>>>>=" + foo);
 
 
+        } else {
 
-        }else {
-
-            Log.e("testing1","foo=====<<<<<<"+foo);
+            Log.e("testing1", "foo=====<<<<<<" + foo);
 
             holder.itemImage.setImageResource(R.drawable.outofstock);
 
@@ -142,6 +147,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 }
             });
         }
+    }
 
 if (singleItem.getName()==null||singleItem.getName().length()==0||singleItem.getName().equals("0")){
 

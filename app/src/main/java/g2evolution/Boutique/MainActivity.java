@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -857,8 +858,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textcontactus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentc = new Intent(MainActivity.this, Activity_ContactUs.class);
-                startActivity(intentc);
+
+                String qty = "7799944412";
+                String toNumber = "+91"+qty; // Replace with mobile phone number without +Sign or leading zeros.
+                String text = "This is for product list testing";// Replace with your message.
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+toNumber +"&text="+text));
+                startActivity(intent);
+
+              /*  Intent intentc = new Intent(MainActivity.this, Activity_ContactUs.class);
+                startActivity(intentc);*/
             }
         });
 

@@ -549,7 +549,7 @@ public class EndUrl {
 
  public static final String GetProductst_URL = APIURLMain + "api/rest/product/list";
 
- public static final String GetProducts_id = "id";
+ public static final String GetProducts_id = "category_id";
 
 
 

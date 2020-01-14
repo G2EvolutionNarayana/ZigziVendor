@@ -626,7 +626,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         if (cd.isConnectingToInternet()) {
 
             //  new Loader().execute();
-          //  new LoadProductList().execute();
+            new LoadProductList().execute();
 
             //---------offer products-----------
               new Getproducts().execute();
@@ -1076,9 +1076,22 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                         JSONObject  post = new JSONObject(arrayresponse);
                         _pdtitle  = post.getString("name");
                         _pdsubtitle  = post.getString("sku");
-                        _pdimage = post.getString("image");
+                      //  _pdimage = post.getString("image");
                         _totalReviewCount = post.getString("rating_count");
 
+                        JSONArray posts2 = post.optJSONArray("images");
+                        imagelength = posts2.length();
+                        for (int i1 = 0; i1 < posts2.length(); i1++) {
+                            JSONObject post2 = posts2.optJSONObject(i1);
+                            _pdimage = post2.getString("url");
+                            multipleimages=post2.getString("id");
+                            images.add(post2.getString("url"));
+                            Log.e("testing12", "multipleimagesid value=" + multipleimagesid);
+                            XMENArray.add(post2.getString("url"));
+                            //find the group position inside the list
+                            //groupPosition = deptList.indexOf(headerInfo);
+
+                        }
                         if (post.has("actual_price")){
                             _pdprice  = post.getString("actual_price");
                         }else{
@@ -1116,31 +1129,25 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                             }
                         }
 
-                            JSONArray posts2 = post.optJSONArray("images");
-                        imagelength = posts2.length();
-                        for (int i1 = 0; i1 < posts2.length(); i1++) {
-                            JSONObject post2 = posts2.optJSONObject(i1);
-                            multipleimages=post2.getString("id");
-                            images.add(post2.getString("url"));
-                            Log.e("testing12", "multipleimagesid value=" + multipleimagesid);
-                            XMENArray.add(post2.getString("url"));
-                            //find the group position inside the list
-                            //groupPosition = deptList.indexOf(headerInfo);
 
-                        }
                         JSONArray postsflat = post.optJSONArray("product_flat");
 
-                        for (int i1 = 0; i1 < postsflat.length(); i1++) {
-                            JSONObject postproductflat = postsflat.optJSONObject(i1);
+                        if (postssizes == null || postssizes.length() == 0){
 
-                            if (_pdprice == null || _pdprice.trim().length() == 0 || _pdprice.trim().equals("null")){
+                        }else{
+                            for (int i1 = 0; i1 < postsflat.length(); i1++) {
+                                JSONObject postproductflat = postsflat.optJSONObject(i1);
 
-                            }else{
-                                _pdprice = postproductflat.getString("price");
+                                if (_pdprice == null || _pdprice.trim().length() == 0 || _pdprice.trim().equals("null")){
+
+                                }else{
+                                    _pdprice = postproductflat.getString("price");
+                                }
+
+
                             }
-
-
                         }
+
 
 
 
@@ -1547,7 +1554,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                                     //groupPosition = deptList.indexOf(headerInfo);
                                 }*/
 
-                                singleItem.add(new SingleItemModel(post2.getString("product_id"), post2.getString("name"), post2.getString("name"), post2.getString("name"), post2.getString("price"), post2.getString("offer"), post2.getString("discount_price"), finalimg, "stockquantity"));
+                                singleItem.add(new SingleItemModel(post2.getString("product_id"), post2.getString("name"), post2.getString("name"), post2.getString("sku"), post2.getString("price"), post2.getString("offer"), post2.getString("discount_price"), finalimg, "2"));
 
 
                             }

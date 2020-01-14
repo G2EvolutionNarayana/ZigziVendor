@@ -565,8 +565,8 @@ public class Activity_ListProduct extends AppCompatActivity {
 
 
 
-                            if (post.has("actual_price")){
-                                item.setElectronicprice(post.optString("actual_price"));
+                            if (post.has("price")){
+                                item.setElectronicprice(post.optString("price"));
                             }else{
 
                             }

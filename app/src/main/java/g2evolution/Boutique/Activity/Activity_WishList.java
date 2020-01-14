@@ -392,14 +392,14 @@ public class Activity_WishList extends AppCompatActivity implements Adapter_Whis
                             FeederInfo_Whishlist_List item = new FeederInfo_Whishlist_List();
 
                             item.setId(post.optString("id"));
-                            item.setProductid(post.optString("product_id"));
+                            item.setProductid(post.optString("id"));
                             item.setCategoryname(post.optString("name"));
                             item.setElectronicname(post.optString("name"));
                             item.setElectronicdetail1(post.optString("sku"));
                             item.setElectronicimage(post.optString("image"));
-                            item.setElectronicprice(post.optString("actual_price"));
+                            item.setElectronicprice(post.optString("price"));
                             //  item.setStockQuantity(post.optString("stockQuantity"));
-                            item.setDiscountvalue(post.optString("offer_price"));
+                            item.setDiscountvalue(post.optString("offer"));
                             item.setAfterdiscount(post.optString("discount_price"));
 
 
