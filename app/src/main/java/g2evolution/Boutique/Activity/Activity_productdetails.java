@@ -39,6 +39,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -51,10 +52,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import g2evolution.Boutique.Adapter.Adapter_ProductVariations;
+import g2evolution.Boutique.Adapter.Adapter_Productdescription;
 import g2evolution.Boutique.Adapter.Adapter_Sizes;
 import g2evolution.Boutique.Adapter.Image_Slider_Adapter;
 import g2evolution.Boutique.Adapter.RecyclerViewDataAdapter;
@@ -68,6 +72,10 @@ import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.HttpHandler;
 import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.entit.Entity_Sizes;
+import g2evolution.Boutique.entit.Entity_descriptionchild;
+import g2evolution.Boutique.entit.Entity_descriptionheader;
+import g2evolution.Boutique.entit.Entity_weightchild;
+import g2evolution.Boutique.entit.Entity_weightheader;
 import me.relex.circleindicator.CircleIndicator;
 
 
@@ -75,6 +83,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
     RecyclerView my_recycler_view;
     ArrayList<SectionDataModel> allSampleData;
+    ArrayList<Entity_weightheader> allSampleDatavariables;
+    ArrayList<Entity_descriptionheader> allSampleDatadescription;
     private RecyclerViewDataAdapter.OnItemClick mCallback;
     RecyclerViewDataAdapter adapter;
 
@@ -153,6 +163,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     TextView wishlist;
 
     RecyclerView recyclercoursesoffered;
+    RecyclerView recyclerviewdescription;
     String [] strtitle = new String[]{"Bangalore", "Lucknow","Pune","Trivandrum","Kochi"};
     Adapter_Sizes courses_Adapter;
     Adapter_Sizes.OnItemClickcourses mCallback2;
@@ -161,7 +172,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
     String strsizeid, strsizename;
 
-
+    List<String> arrayListkey = new ArrayList<String>();
+    List<String> arrayListvalue = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +182,19 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         text = (TextView) findViewById(R.id.text);
 
 
+        Bundle bundle = this.getIntent().getExtras();
+        HashMap hashMap = (HashMap) bundle.getSerializable("HashMap");
+        arrayListkey = new ArrayList<String>();
+        arrayListvalue = new ArrayList<String>();
+        Iterator myVeryOwnIterator = hashMap.keySet().iterator();
+        while(myVeryOwnIterator.hasNext()) {
+            String key=(String)myVeryOwnIterator.next();
+            String value=(String)hashMap.get(key);
+            Log.e("testing","Key: "+key+" Value: "+value);
+            arrayListkey.add(key);
+            arrayListvalue.add(value);
+            //Toast.makeText(Activity_productdetails.this, "Key: "+key+" Value: "+value, Toast.LENGTH_LONG).show();
+        }
 
         wishlist=(TextView)findViewById(R.id.wishlist);
         wishlist.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +214,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
         mCallback=this;
         allSampleData = new ArrayList<SectionDataModel>();
+        allSampleDatavariables = new ArrayList<Entity_weightheader>();
+        allSampleDatadescription = new ArrayList<Entity_descriptionheader>();
         my_recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         my_recycler_view.setHasFixedSize(true);
         my_recycler_view.setVisibility(View.VISIBLE);
@@ -241,12 +268,16 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
         recyclercoursesoffered = (RecyclerView) findViewById(R.id.recyclerviewsizes);
         recyclercoursesoffered.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.HORIZONTAL,false);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL,false);
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false);
         recyclercoursesoffered.setLayoutManager(mLayoutManager);
         mCallback2 = this;
 
+        recyclerviewdescription = (RecyclerView) findViewById(R.id.recyclerviewdescription);
+        recyclerviewdescription.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager3 = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL,false);
 
+        recyclerviewdescription.setLayoutManager(mLayoutManager3);
 
     /*    SharedPreferences prefuserdata1 = this.getSharedPreferences("ProDetails", 0);
         category = prefuserdata1.getString("category", "");
@@ -354,116 +385,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
         SharedPreferences prefuserdata5 = getSharedPreferences("regId", 0);
         UserId = prefuserdata5.getString("UserId", "");
-
-
-        // mDemoSlider = (SliderLayout)findViewById(R.id.slider);
-
-        //  sliderLayout = (SliderLayout)findViewById(R.id.slider);
-
-      /*  HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
-        file_maps.put("Honey",R.drawable.bg);
-        file_maps.put("Furnishing",R.drawable.bg);
-        file_maps.put("Beauty and Health",R.drawable.bg);
-        file_maps.put("Dry Fruits", R.drawable.bg);
-
-        for(String name : url_maps.keySet()){
-            TextSliderView textSliderView = new TextSliderView(Activity_productdetails.this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(Activity_productdetails.this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra",name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }
-*/
-
-
-/*
-        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.setDuration(2000);
-        mDemoSlider.addOnPageChangeListener(this);*/
-
-        // new Images().execute();
-
-
-       /* spinnerAdapter adapter = new spinnerAdapter(Activity_productdetails.this, R.layout.spinner_item);
-        adapter.addAll(Name);
-        adapter.add("Select Pincode");
-        spinapartment.setAdapter(adapter);
-        spinapartment.setSelection(adapter.getCount());
-
-            *//*CurrentLocation
-                    .setAdapter(new ArrayAdapter<String>(Signup_Tutor.this,
-                            R.layout.spinner_item,
-                            worldlist));*//*
-
-        // Spinner on item click listener
-        spinapartment
-                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0,
-                                               View arg1, int position, long arg3) {
-                        // TODO Auto-generated method stub
-                        // Locate the textviews in activity_main.xml
-                        if(spinapartment.getSelectedItem() == "Select Pincode")
-                        {
-                            //Do nothing.
-                        }
-                        else{
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> arg0) {
-                        // TODO Auto-generated method stub
-                    }
-                });
-*/
-
-
-        TextView size_guide_text = (TextView) findViewById(R.id.size_guide_text);
-        size_guide_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final Dialog logoutdialog = new Dialog(Activity_productdetails.this);
-                logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                logoutdialog.setCancelable(true);
-                logoutdialog.setCanceledOnTouchOutside(true);
-
-                LayoutInflater inflater = (LayoutInflater) Activity_productdetails.this.getSystemService(Activity_productdetails.this.LAYOUT_INFLATER_SERVICE);
-                View convertView = (View) inflater.inflate(R.layout.size_guide_custom_layout, null);
-                //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
-
-                logoutdialog.setContentView(convertView);
-                // LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                lp.copyFrom(logoutdialog.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                lp.gravity = Gravity.CENTER;
-                logoutdialog.getWindow().setAttributes(lp);
-                logoutdialog.show();
-
-            }
-        });
-
-
-
         addcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -527,7 +448,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 }
                 else{
 
-                    new BOOK_Now().execute();
+                   // new BOOK_Now().execute();
 
                 }
 
@@ -617,6 +538,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         });
 
         allSampleData = new ArrayList<SectionDataModel>();
+        allSampleDatavariables = new ArrayList<Entity_weightheader>();
+        allSampleDatadescription = new ArrayList<Entity_descriptionheader>();
         my_recycler = (RecyclerView)findViewById(R.id.recycler_view);
         my_recycler.setHasFixedSize(true);
 
@@ -726,294 +649,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     }
 
 
-    class Loader extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_productdetails.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_productdetails.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject(EndUrl.Product_details_URL, makingJson());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-                    relativemain.setVisibility(View.VISIBLE);
-                    textdiscount.setVisibility(View.GONE);
-
-
-
-                    if (_descvalue == null || _descvalue.length() == 0 || _descvalue.equals("NA")){
-
-                        textdiscount.setVisibility(View.INVISIBLE);
-
-                    }else{
-                        textdiscount.setVisibility(View.VISIBLE);
-                        textdiscount.setText((_descvalue+"%"));
-                    }
-
-
-                    pdtitle.setText(_pdtitle);
-                    pdsubtitle.setText(_pdsubtitle);
-                    //    pdprice.setText(_pdprice);
-                    //    pdsubprice.setText(_pdsubprice);
-                    // pdabout.setText(_pdabout);
-                    final String mimeType = "text/html";
-                    final String encoding = "UTF-8";
-                    webviewdesc.loadDataWithBaseURL("", _pdabout, mimeType, encoding, "");
-                    //  webviewdesc.loadUrl(_pdabout);
-                    //   pdusedfor.setText(_pdusedfor);
-                    // pdProcessing.setText(_pdProcessing);
-
-                    textrating.setText(_avgRating);
-
-                    if (_totalReviewCount==null||_totalReviewCount.length()==0||_totalReviewCount.equals("null")){
-
-                        textreviews.setText("0"+ " Rating and Reviews");
-                    }else {
-
-                        textreviews.setText(_totalReviewCount+ " Rating and Reviews");
-
-                    }
-
-
-                    if (_pdimage == null || _pdimage.length() == 0 || _pdimage.equals("null")){
-
-                    }else{
-                        Glide.with(Activity_productdetails.this)
-                                .load(Uri.parse(_pdimage))
-                                // .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                //.skipMemoryCache(true)
-                                .error(R.drawable.car)
-                                .into(details_image);
-
-                    }
-
-
-                    if (_descvalue == null || _descvalue.length() == 0 || _descvalue.equals("NA")){
-                        final String strrs = getResources().getString(R.string.Rs);
-                        pdsubprice.setText(strrs+" "+_pdsubprice);
-                    }else{
-
-                        // pdprice.setVisibility(View.VISIBLE);
-                        final String strrs = getResources().getString(R.string.Rs);
-                        pdsubprice.setText(strrs+" "+_pdsubprice);
-
-
-                        //  pdprice.setText(strrs+" "+_pdprice);
-                        //  pdprice.setPaintFlags(pdprice.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
-
-                    }
-
-
-                    //  Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-
-
-                }else {
-
-                    Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-                Toast.makeText(Activity_productdetails.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
-
-    public JSONObject makingJson() {
-
-
-        JSONObject jobj = new JSONObject();
-        // user_id = edt_mobileno.getText().toString();
-
-        try {
-
-            jobj.put(EndUrl.Product_details_Id,Productid);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.e("testing","json object "+jobj);
-        return jobj;
-
-    }
-
-
-
-    public JSONObject postJsonObject(String url, JSONObject loginJobj){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
-            status = json.getString("status");
-            message = json.getString("message");
-            total_record = json.getString("total_record");
-
-
-            String arrayresponce = json.getString("data");
-
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-                // empId = post.getString("empId");
-
-                _pdimage = post.getString("image");
-                _pdtitle  = post.getString("title");
-                _pdsubtitle  = post.getString("subTitle");
-                _pdprice  = post.getString("price");
-                _descvalue = post.getString("discountValue");
-                _pdsubprice = post.getString("afterDiscount");
-                _pdabout  = post.getString("description");
-                //  _pdusedfor  = post.getString("usedFor");
-                //  _pdProcessing  = post.getString("processingType");
-
-                //  _shipppingAmount =post.getString("shipppingAmount");
-                //   _TaxandPrice =post.getString("TaxandPrice");
-                // _NetAmount =post.getString("NetAmount");
-                _pid = post.getString("productId");
-                _totalReviewCount = post.getString("totalReviewCount");
-                _avgRating = post.getString("avgRating");
-
-                String strgallery = post.getString("gallery");
-                JSONArray arraygallery = new JSONArray(strgallery);
-                Log.e("testing12", "responcearray==strgallery value=" + strgallery);
-
-
-                for (int i1 = 0; i1 < arraygallery.length(); i1++) {
-
-                    JSONObject post2 = arraygallery.getJSONObject(i1);
-
-                    multipleimages=post2.getString("gId");
-                    multipleimagesid=post2.getString("prodcutImage");
-                    Log.e("testing12", "multipleimagesid value=" + multipleimagesid);
-
-                    //    url_maps.put(post2.getString("gId"), post2.getString("prodcutImage"));
-
-                }
-
-                JSONArray posts2 = post.optJSONArray("gallery");
-
-                for (int i1 = 0; i1 < posts2.length(); i1++) {
-                    JSONObject post2 = posts2.optJSONObject(i1);
-                    multipleimages=post2.getString("gId");
-                    images.add(post2.getString("prodcutImage"));
-                    Log.e("testing12", "multipleimagesid value=" + multipleimagesid);
-
-                    //find the group position inside the list
-                    //groupPosition = deptList.indexOf(headerInfo);
-
-                }
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
-
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-    class LoadProductList extends AsyncTask<String, String, String>
+       class LoadProductList extends AsyncTask<String, String, String>
             //implements RemoveClickListner
     {
 
@@ -1046,8 +682,12 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
-            userpramas.add(new BasicNameValuePair(EndUrl.GetProductsDetails_id, Productid));
-
+           // userpramas.add(new BasicNameValuePair(EndUrl.GetProductsDetails_id, Productid));
+            if (arrayListkey.size()!=0) {
+                for (int i = 0; i < arrayListkey.size(); i++) {
+                    userpramas.add(new BasicNameValuePair(arrayListkey.get(i), arrayListvalue.get(i)));
+                }
+            }
 
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductstDetails_URL, "GET", userpramas);
 
@@ -1075,30 +715,35 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                         Log.e("testing", "adapter value=" + arrayresponse);
                         JSONObject  post = new JSONObject(arrayresponse);
                         _pdtitle  = post.getString("name");
-                        _pdsubtitle  = post.getString("sku");
+                       // _pdsubtitle  = post.getString("sku");
                       //  _pdimage = post.getString("image");
-                        _totalReviewCount = post.getString("rating_count");
+                     //   _totalReviewCount = post.getString("rating_count");
 
                         JSONArray posts2 = post.optJSONArray("images");
-                        imagelength = posts2.length();
-                        for (int i1 = 0; i1 < posts2.length(); i1++) {
-                            JSONObject post2 = posts2.optJSONObject(i1);
-                            _pdimage = post2.getString("url");
-                            multipleimages=post2.getString("id");
-                            images.add(post2.getString("url"));
-                            Log.e("testing12", "multipleimagesid value=" + multipleimagesid);
-                            XMENArray.add(post2.getString("url"));
-                            //find the group position inside the list
-                            //groupPosition = deptList.indexOf(headerInfo);
+                        if (posts2 == null){
 
+                        }else{
+                            imagelength = posts2.length();
+                            for (int i1 = 0; i1 < posts2.length(); i1++) {
+                                JSONObject post2 = posts2.optJSONObject(i1);
+                                _pdimage = post2.getString("url");
+                                multipleimages=post2.getString("id");
+                                images.add(post2.getString("url"));
+                                Log.e("testing12", "multipleimagesid value=" + multipleimagesid);
+                                XMENArray.add(post2.getString("url"));
+                                //find the group position inside the list
+                                //groupPosition = deptList.indexOf(headerInfo);
+
+                            }
                         }
+
                         if (post.has("actual_price")){
                             _pdprice  = post.getString("actual_price");
                         }else{
 
                         }
-                        if (post.has("offer_price")){
-                            _descvalue = post.getString("offer_price");
+                        if (post.has("offer_value")){
+                            _descvalue = post.getString("offer_value");
                         }else{
 
                         }
@@ -1109,49 +754,91 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                         }
 
+                        if (post.has("variant_id")){
 
-                        _pid = post.getString("id");
-
-
-                        JSONArray postssizes = post.optJSONArray("sizes");
-
-                        if (postssizes == null || postssizes.length() == 0){
+                            String strvariantid = post.getString("variant_id").trim();
+                            if (strvariantid == null || strvariantid.trim().length() == 0 || strvariantid.trim().equals("")){
+                                _pid = post.getString("id");
+                            }else{
+                                _pid = strvariantid;
+                            }
 
                         }else{
-                            intsizes = postssizes.length();
-                            for (int i1 = 0; i1 < postssizes.length(); i1++) {
-                                JSONObject postsizes = postssizes.optJSONObject(i1);
-
-                                Entity_Sizes feedInfo = new Entity_Sizes();
-                                feedInfo.setId(postsizes.getString("id"));
-                                feedInfo.setProductName(postsizes.getString("size"));
-                                allItemscourses.add(feedInfo);
-                            }
+                            _pid = post.getString("id");
                         }
 
 
-                        JSONArray postsflat = post.optJSONArray("product_flat");
 
-                        if (postssizes == null || postssizes.length() == 0){
+                        JSONArray postsvariants = post.optJSONArray("variations");
+                        if (postsvariants == null){
 
-                        }else{
-                            for (int i1 = 0; i1 < postsflat.length(); i1++) {
-                                JSONObject postproductflat = postsflat.optJSONObject(i1);
+                        }else {
+                            for (int i2 = 0; i2 < postsvariants.length(); i2++) {
 
-                                if (_pdprice == null || _pdprice.trim().length() == 0 || _pdprice.trim().equals("null")){
+                                Entity_weightheader dm = new Entity_weightheader();
+                                JSONObject postvariants = postsvariants.optJSONObject(i2);
 
-                                }else{
-                                    _pdprice = postproductflat.getString("price");
+                                dm.setHeaderTitle(postvariants.getString("name"));
+                                dm.setHeadervalue(postvariants.getString("code"));
+                                JSONArray postsproducts = postvariants.optJSONArray("options");
+                                ArrayList<Entity_weightchild> singleItem = new ArrayList<Entity_weightchild>();
+
+                                if (postsproducts == null) {
+
+                                } else{
+                                    for (int i1 = 0; i1 < postsproducts.length(); i1++) {
+                                        JSONObject post2 = postsproducts.optJSONObject(i1);
+
+                                        if (i1 == 0){
+
+                                        }else{
+
+                                        }
+                                        singleItem.add(new Entity_weightchild(postvariants.getString("code"), post2.getString("name"), post2.getString("value"), post2.getString("is_selected")));
+
+                                    }
                                 }
-
-
+                                dm.setAllItemsInSection(singleItem);
+                                allSampleDatavariables.add(dm);
                             }
+
+                        }
+
+                        JSONArray postsdescription = post.optJSONArray("description");
+                        if (postsdescription == null){
+
+                        }else {
+                            for (int i2 = 0; i2 < postsdescription.length(); i2++) {
+
+                                Entity_descriptionheader dm = new Entity_descriptionheader();
+                                JSONObject postvariants = postsdescription.optJSONObject(i2);
+
+                                dm.setHeaderTitle(postvariants.getString("name"));
+                                JSONArray postsproducts = postvariants.optJSONArray("attributes");
+                                ArrayList<Entity_descriptionchild> singleItem = new ArrayList<Entity_descriptionchild>();
+
+                                if (postsproducts == null) {
+
+                                } else{
+                                    for (int i1 = 0; i1 < postsproducts.length(); i1++) {
+                                        JSONObject post2 = postsproducts.optJSONObject(i1);
+
+                                        if (i1 == 0){
+
+                                        }else{
+
+                                        }
+                                        singleItem.add(new Entity_descriptionchild(post2.getString("key"), post2.getString("value")));
+
+                                    }
+                                }
+                                dm.setAllItemsInSection(singleItem);
+                                allSampleDatadescription.add(dm);
+                            }
+
                         }
 
 
-
-
-                        // }
                     }else{
 
                     }
@@ -1253,8 +940,22 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 indicator.setViewPager(mPager);
 
 
-                courses_Adapter = new Adapter_Sizes(Activity_productdetails.this,allItemscourses, mCallback2);
+               /* courses_Adapter = new Adapter_Sizes(Activity_productdetails.this,allItemscourses, mCallback2);
                 recyclercoursesoffered.setAdapter(courses_Adapter);
+*/
+                Log.e("testing","allSampleDatavariables = "+allSampleDatavariables);
+                Adapter_ProductVariations adapter = new Adapter_ProductVariations(Activity_productdetails.this, allSampleDatavariables);
+
+                recyclercoursesoffered.setLayoutManager(new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false));
+
+                recyclercoursesoffered.setAdapter(adapter);
+
+                Adapter_Productdescription adapter2 = new Adapter_Productdescription(Activity_productdetails.this, allSampleDatadescription);
+
+                recyclerviewdescription.setLayoutManager(new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false));
+
+                recyclerviewdescription.setAdapter(adapter2);
+
 
 
                /* // Auto start of viewpager
@@ -1615,382 +1316,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             my_recycler_view.setAdapter(adapter);
         }
-
-    }
-
-
-    private class Addtocart extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_productdetails.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_productdetails.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject1(EndUrl.Addtocart_URL, makingJson1());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-
-                    if (strbuttonstatus.equals("addtocart")){
-                        //Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(Activity_productdetails.this, Activity_cart.class);
-
-                        SharedPreferences prefuserdata = getSharedPreferences("regcart", 0);
-                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                        prefeditor.putString("userid", "" + UserId);
-                        prefeditor.putString("productid", "" + _pid);
-                        prefeditor.putString("addtocart", "" + strbuttonstatus);
-
-                        prefeditor.commit();
-                        startActivity(intent);
-
-
-                    }else if (strbuttonstatus.equals("booknow")){
-
-                        //   Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-
-
-                        Intent intent = new Intent(Activity_productdetails.this, Activity_address.class);
-
-                        SharedPreferences prefuserdata = getSharedPreferences("regcart", 0);
-                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                        prefeditor.putString("userid", "" + UserId);
-                        prefeditor.putString("productid", "" + _pid);
-                        prefeditor.putString("bookstatus", "" + strbuttonstatus);
-
-                        prefeditor.commit();
-                        startActivity(intent);
-
-                    }
-
-                }else {
-
-                    // Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-                Toast.makeText(Activity_productdetails.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
-
-    public JSONObject makingJson1() {
-
-        JSONObject details = new JSONObject();
-        //  JSONObject jobj = new JSONObject();
-        JSONObject object = new JSONObject();
-
-        try {
-
-            object.put(EndUrl.Addtocart_userId,UserId);
-            object.put(EndUrl.Addtocart_productId,Productid);
-            object.put(EndUrl.Addtocart_quantity,qty);
-
-            //if you want to modify some value just do like this.
-
-            details.put(EndUrl.Addtocart_outside_otp,object);
-            Log.d("json",details.toString());
-            Log.d("json",object.toString());
-            Log.e("testing","json"+details.toString());
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return details;
-
-    }
-
-    public JSONObject postJsonObject1(String url, JSONObject loginJobj){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
-            status = json.getString("status");
-            message = json.getString("message");
-
-            String arrayresponce = json.getString("data");
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-                // empId = post.getString("empId");
-                cart_id  = post.getString("cart_id ");
-
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
-
-    }
-
-
-    private class BOOK_Now extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_productdetails.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_productdetails.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject3(EndUrl.BOOK_NOW_URL, makingJson3());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-
-                    //    Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(Activity_productdetails.this, Activity_address.class);
-
-                    SharedPreferences prefuserdata = getSharedPreferences("regcart", 0);
-                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("userid", "" + UserId);
-                    prefeditor.putString("productid", "" + _pid);
-                    prefeditor.putString("qty", "" + qty);
-                    prefeditor.putString("bookstatus", "" + strbuttonstatus);
-
-                    prefeditor.commit();
-                    startActivity(intent);
-
-
-
-                }else {
-                    Toast.makeText(Activity_productdetails.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-                Toast.makeText(Activity_productdetails.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
-
-    public JSONObject makingJson3() {
-
-        JSONObject details = new JSONObject();
-        //  JSONObject jobj = new JSONObject();
-        JSONObject object = new JSONObject();
-
-        try {
-
-            // object.put(EndUrl.Addtocart_userId,UserId);
-            details.put(EndUrl.BOOK_NOW_productId,Productid);
-            details.put(EndUrl.BOOK_NOW_quantity,qty);
-
-
-            //if you want to modify some value just do like this.
-
-            // details.put(EndUrl.Addtocart_outside_otp,object);
-            Log.d("json",details.toString());
-            //   Log.d("json",object.toString());
-            Log.e("testing","json====book_now"+details.toString());
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return details;
-
-    }
-
-    public JSONObject postJsonObject3(String url, JSONObject loginJobj){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
-            status = json.getString("status");
-            message = json.getString("message");
-
-            String arrayresponce = json.getString("data");
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-                // empId = post.getString("empId");
-
-                String price  = post.getString("price ");
-
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
 
     }
 

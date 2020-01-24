@@ -220,6 +220,7 @@
                                 android:text="Special Price"
                                 android:textColor="@color/green"
                                 android:textSize="15sp"
+                                android:visibility="gone"
                                 android:padding="5dp"
                                 />
 
@@ -307,7 +308,8 @@
                                 android:orientation="vertical">
                                 <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone">
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -334,7 +336,6 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:weightSum="6"
                                     android:layout_marginTop="@dimen/dimen_5dp"
                                     android:orientation="horizontal">
 
@@ -346,54 +347,6 @@
 
                                     </androidx.recyclerview.widget.RecyclerView>
 
-                                    <!--  <Button
-                                          android:id="@+id/s_button"
-                                          android:layout_width="match_parent"
-                                          android:layout_weight="1"
-                                          android:text="S"
-                                          android:background="@drawable/circle_shape"
-                                          android:layout_height="30dp" />
-                                      <Button
-                                          android:id="@+id/m_button"
-                                          android:layout_width="match_parent"
-                                          android:text="M"
-                                          android:layout_marginLeft="@dimen/dimen_5dp"
-                                          android:layout_height="30dp"
-                                          android:background="@drawable/circle_shape"
-                                          android:layout_weight="1"/>
-                                      <Button
-                                          android:id="@+id/l_button"
-                                          android:layout_width="match_parent"
-                                          android:layout_marginLeft="@dimen/dimen_5dp"
-                                          android:layout_height="30dp"
-                                          android:background="@drawable/circle_shape"
-                                          android:text="L"
-                                          android:layout_weight="1"/>
-                                      <Button
-                                          android:id="@+id/xl_button"
-                                          android:layout_width="match_parent"
-                                          android:layout_marginLeft="@dimen/dimen_5dp"
-                                          android:layout_height="30dp"
-                                          android:background="@drawable/circle_shape"
-                                          android:text="XL"
-                                          android:layout_weight="1"/>
-                                      <Button
-                                          android:id="@+id/xs_button"
-                                          android:layout_width="match_parent"
-                                          android:layout_marginLeft="@dimen/dimen_5dp"
-                                          android:layout_height="30dp"
-                                          android:background="@drawable/circle_shape"
-                                          android:text="XS"
-                                          android:layout_weight="1"/>
-                                      <Button
-                                          android:id="@+id/xxl_button"
-                                          android:layout_width="match_parent"
-                                          android:layout_marginLeft="@dimen/dimen_5dp"
-                                          android:layout_height="30dp"
-                                          android:background="@drawable/circle_shape"
-                                          android:text="XXL"
-                                          android:layout_weight="1" />
-  -->
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -611,7 +564,8 @@
                         android:layout_marginLeft="15dp"
                         android:orientation="vertical"
                         android:layout_marginRight="@dimen/dimen_10dp"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -687,6 +641,7 @@
                         android:layout_marginTop="10dp"
                         android:text="About"
                         android:textColor="@color/black"
+                        android:visibility="gone"
                         android:textSize="15sp"
                         />
 
@@ -696,6 +651,7 @@
                         android:layout_marginLeft="10dp"
                         android:orientation="vertical"
                         android:layout_marginBottom="10dp"
+                        android:visibility="gone"
                         android:weightSum="1">
 
                         <WebView
@@ -717,6 +673,16 @@
               -->
 
                     </LinearLayout>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+
+                        android:id="@+id/recyclerviewdescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
 
                     <View
                         android:layout_width="match_parent"

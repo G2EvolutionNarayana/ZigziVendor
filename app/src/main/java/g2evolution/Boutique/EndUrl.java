@@ -547,7 +547,7 @@ public class EndUrl {
 
 //--------------------------------Get Products--------------------
 
- public static final String GetProductst_URL = APIURLMain + "api/rest/product/list";
+ public static final String GetProductst_URL = APIURLMain + "api/rest_api/product/list";
 
  public static final String GetProducts_id = "category_id";
 
@@ -555,7 +555,7 @@ public class EndUrl {
 
 //--------------------------------Get Products Details--------------------
 
- public static final String GetProductstDetails_URL = APIURLMain + "api/rest/product/detail";
+ public static final String GetProductstDetails_URL = APIURLMain + "api/rest_api/product/detail";
 
  public static final String GetProductsDetails_id = "product_id";
 

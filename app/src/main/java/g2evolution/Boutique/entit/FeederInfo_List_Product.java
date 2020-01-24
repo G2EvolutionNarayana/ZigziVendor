@@ -1,5 +1,7 @@
 package g2evolution.Boutique.entit;
 
+import java.util.Map;
+
 public class FeederInfo_List_Product {
 
     public String getId() {
@@ -74,6 +76,14 @@ public class FeederInfo_List_Product {
         this.afterdiscount = afterdiscount;
     }
 
+    public String getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(String stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
+
     private String id;
     private String categoryname;
     private String electronicname;
@@ -84,13 +94,15 @@ public class FeederInfo_List_Product {
     private String discountvalue;
     private String afterdiscount;
     private String stockQuantity;
+    private Map<String,String> mapparameters;
 
-    public String getStockQuantity() {
-        return stockQuantity;
+
+    public Map<String, String> getMapparameters() {
+        return mapparameters;
     }
 
-    public void setStockQuantity(String stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setMapparameters(Map<String, String> mapparameters) {
+        this.mapparameters = mapparameters;
     }
 }
 

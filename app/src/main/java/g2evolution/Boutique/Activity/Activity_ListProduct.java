@@ -41,7 +41,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import g2evolution.Boutique.Adapter.Adapter_List_Product;
 import g2evolution.Boutique.Adapter.Adapter_Subcategory_list;
@@ -555,28 +557,53 @@ public class Activity_ListProduct extends AppCompatActivity {
 
                             FeederInfo_List_Product item = new FeederInfo_List_Product();
 
-                            item.setId(post.optString("product_id"));
+                           // item.setId(post.optString("product_id"));
                             item.setCategoryname(post.optString("name"));
                             item.setElectronicname(post.optString("name"));
-                            item.setElectronicdetail1(post.optString("sku"));
+                          //  item.setElectronicdetail1(post.optString("sku"));
 
                             item.setElectronicimage(post.optString("image"));
                             //  item.setStockQuantity(post.optString("stockQuantity"));
 
 
+                            String strresponseparameters = post.getString("parameters");
+                            JSONArray responcearrayparameters = new JSONArray(strresponseparameters);
+                            Log.e("testing", "responcearray value=" + responcearrayparameters);
 
-                            if (post.has("price")){
-                                item.setElectronicprice(post.optString("price"));
+                            for (int i2 = 0; i2 < responcearrayparameters.length(); i2++) {
+                                JSONObject postparameters = responcearrayparameters.getJSONObject(i2);
+
+
+                                Map<String,String> map2 = new HashMap<String,String>();
+                                Iterator iter = postparameters.keys();
+                                while(iter.hasNext()){
+                                    String key = (String)iter.next();
+                                    String value = postparameters.getString(key);
+
+                                    Log.e("testing","Key :" + key + "  Value :" + value);
+                                    map2.put(key,value);
+                                }
+
+                                item.setMapparameters(map2);
+
+
+                            }
+
+
+
+
+                            if (post.has("actual_price")){
+                                item.setElectronicprice(post.optString("actual_price"));
                             }else{
 
                             }
-                            if (post.has("offers")){
-                                item.setDiscountvalue(post.optString("offers"));
+                            if (post.has("offer_value")){
+                                item.setDiscountvalue(post.optString("offer_value"));
                             }else{
 
                             }
-                            if (post.has("offer_price")){
-                                item.setAfterdiscount(post.optString("offer_price"));
+                            if (post.has("discount_price")){
+                                item.setAfterdiscount(post.optString("discount_price"));
                             }else{
 
                             }
