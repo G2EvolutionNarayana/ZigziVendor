@@ -185,6 +185,7 @@
                 android:layout_height="1dp"
                 android:background="@color/grey1"
                 android:layout_marginTop="5dp"
+                android:visibility="gone"
                 />
 
 
@@ -194,7 +195,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="1"
-                android:layout_marginBottom="2dp">
+                android:layout_marginBottom="2dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/carttotal"

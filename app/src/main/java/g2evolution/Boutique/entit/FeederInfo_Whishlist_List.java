@@ -1,5 +1,7 @@
 package g2evolution.Boutique.entit;
 
+import java.util.Map;
+
 /**
  * Created by G2e Android on 17-05-2017.
  */
@@ -98,6 +100,7 @@ public class FeederInfo_Whishlist_List {
     private String discountvalue;
     private String afterdiscount;
     private String stockQuantity;
+    private Map<String,String> mapparameters;
 
     public String getStockQuantity() {
         return stockQuantity;
@@ -105,5 +108,13 @@ public class FeederInfo_Whishlist_List {
 
     public void setStockQuantity(String stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public Map<String, String> getMapparameters() {
+        return mapparameters;
+    }
+
+    public void setMapparameters(Map<String, String> mapparameters) {
+        this.mapparameters = mapparameters;
     }
 }

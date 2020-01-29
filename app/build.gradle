@@ -79,6 +79,7 @@ allprojects {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -133,6 +134,11 @@ dependencies {
     //otp box
     implementation 'com.chaos.view:pinview:1.4.2'
 
+
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-identity:16.0.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     implementation 'org.apache.httpcomponents:httpcore:4.2.4'
     implementation 'org.apache.httpcomponents:httpmime:4.3'

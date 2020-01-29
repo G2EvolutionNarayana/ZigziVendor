@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import g2evolution.Boutique.Activity.Activity_productdetails;
@@ -129,6 +131,9 @@ public class Adapter_Whishlist_List extends RecyclerView.Adapter<ViewHolder_Whis
 
 
                     Intent intent = new Intent(mContext, Activity_productdetails.class);
+                    Bundle extras = new Bundle();
+                    extras.putSerializable("HashMap", (Serializable) feederInfo.getMapparameters());
+                    intent.putExtras(extras);
                     mContext.startActivity(intent);
 
 

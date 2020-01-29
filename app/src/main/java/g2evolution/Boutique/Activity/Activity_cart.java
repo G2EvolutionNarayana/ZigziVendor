@@ -369,7 +369,7 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
         if (status == 3){
 
-            new PostWhislist().execute();
+            new CartDelete().execute();
 
         }else{
             new UpdateCart().execute();
@@ -842,55 +842,63 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
                         strresponse = json.getString("response");
                         String arrayresponse = json.getString("data");
                         Log.e("testing", "adapter value=" + arrayresponse);
-
-
-
-
                         JSONArray responcearray = new JSONArray(arrayresponse);
                         Log.e("testing", "responcearray value=" + responcearray);
                         intcartcount = responcearray.length();
                         for (int i = 0; i < responcearray.length(); i++) {
 
                             JSONObject post = responcearray.getJSONObject(i);
-                            HashMap<String, String> map = new HashMap<String, String>();
-                            FeederInfo_cart item = new FeederInfo_cart();
 
-                            item.setId(post.optString("id"));
-                            item.setProductid(post.optString("product_id"));
-                            item.setStrsize(post.optString("size"));
-                            item.setCartimage(post.optString("image"));
-                            item.setCartname(post.optString("name"));
-                            item.setCartprodetails(post.optString("sku"));
-                            item.setCartamount(post.optString("actual_price"));
+                            String arrayresponseproducts = post.getString("products");
+                            Log.e("testing", "adapter value=" + arrayresponseproducts);
+                            JSONArray responcearrayproducts = new JSONArray(arrayresponseproducts);
+                            Log.e("testing", "responcearrayproducts value=" + responcearrayproducts);
+
+                            for (int i1 = 0; i1 < responcearrayproducts.length(); i1++) {
+
+                                JSONObject postproducts = responcearrayproducts.getJSONObject(i1);
+
+                                FeederInfo_cart item = new FeederInfo_cart();
+
+                                item.setId(postproducts.optString("cart_id"));
+                                item.setProductid(postproducts.optString("variant_id"));
+                                //  item.setStrsize(postproducts.optString("size"));
+                                item.setCartimage(postproducts.optString("image"));
+                                item.setCartname(postproducts.optString("name"));
+                              //  item.setCartprodetails(postproducts.optString("sku"));
+                                item.setCartamount(postproducts.optString("actual_price"));
 
 
 
-                            if (post.has("quantity")){
-                                item.setCartquantity(post.optString("quantity"));
-                            }else{
+                                if (postproducts.has("quantity")){
+                                    item.setCartquantity(postproducts.optString("quantity"));
+                                }else{
+
+                                }
+
+
+                                if (postproducts.has("discount_price")){
+                                    item.setDiscountvalue(postproducts.optString("discount_price"));
+                                }else{
+
+                                }
+                                if (postproducts.has("final_price")){
+                                    item.setAfterdiscount(postproducts.optString("final_price"));
+                                }else{
+
+                                }
+
+                                if (postproducts.has("total_price")){
+                                    item.setCarttotalamount(postproducts.optString("total_price"));
+                                }else{
+
+                                }
+
+
+                                allItems1.add(item);
 
                             }
 
-
-                            if (post.has("offer_price")){
-                                item.setDiscountvalue(post.optString("offer_price"));
-                            }else{
-
-                            }
-                            if (post.has("discount_price")){
-                                item.setAfterdiscount(post.optString("discount_price"));
-                            }else{
-
-                            }
-
-                            if (post.has("total_price")){
-                                item.setCarttotalamount(post.optString("total_price"));
-                            }else{
-
-                            }
-
-
-                            allItems1.add(item);
 
 
 
@@ -963,7 +971,7 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
         }
 
     }
-    class PostWhislist extends AsyncTask<String, String, String> {
+    class CartDelete extends AsyncTask<String, String, String> {
         String responce;
         JSONArray responcearccay;
         String status;
@@ -1128,7 +1136,7 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
 
             userpramas.add(new BasicNameValuePair(EndUrl.PostCartUpdate_product_id, strprodcutid));
-            userpramas.add(new BasicNameValuePair(EndUrl.PostCartUpdate_product_name, strprodcutsize));
+         //   userpramas.add(new BasicNameValuePair(EndUrl.PostCartUpdate_product_name, strprodcutsize));
             userpramas.add(new BasicNameValuePair(EndUrl.PostCartUpdate_user_id, userid));
             userpramas.add(new BasicNameValuePair(EndUrl.PostCartUpdate_quantity, strquantity));
 

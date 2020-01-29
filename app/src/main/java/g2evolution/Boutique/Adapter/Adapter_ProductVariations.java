@@ -32,7 +32,7 @@ public class Adapter_ProductVariations extends RecyclerView.Adapter<Adapter_Prod
 
     @Override
     public ItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_productdescription, null);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_productvariations, null);
         ItemRowHolder mh = new ItemRowHolder(v);
         return mh;
     }

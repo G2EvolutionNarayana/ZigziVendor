@@ -33,7 +33,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import g2evolution.Boutique.Adapter.Adapter_Whishlist_List;
 import g2evolution.Boutique.EndUrl;
@@ -391,16 +393,40 @@ public class Activity_WishList extends AppCompatActivity implements Adapter_Whis
 
                             FeederInfo_Whishlist_List item = new FeederInfo_Whishlist_List();
 
-                            item.setId(post.optString("id"));
-                            item.setProductid(post.optString("id"));
+                            item.setId(post.optString("wish_list_id"));
+                            item.setProductid(post.optString("wish_list_id"));
                             item.setCategoryname(post.optString("name"));
                             item.setElectronicname(post.optString("name"));
-                            item.setElectronicdetail1(post.optString("sku"));
+                          //  item.setElectronicdetail1(post.optString("sku"));
                             item.setElectronicimage(post.optString("image"));
-                            item.setElectronicprice(post.optString("price"));
+                            item.setElectronicprice(post.optString("actual_price"));
                             //  item.setStockQuantity(post.optString("stockQuantity"));
-                            item.setDiscountvalue(post.optString("offer"));
-                            item.setAfterdiscount(post.optString("discount_price"));
+                            item.setDiscountvalue(post.optString("discount_price"));
+                            item.setAfterdiscount(post.optString("final_price"));
+
+
+                            String strresponseparameters = post.getString("parameters");
+                            JSONArray responcearrayparameters = new JSONArray(strresponseparameters);
+                            Log.e("testing", "responcearray value=" + responcearrayparameters);
+
+                            for (int i2 = 0; i2 < responcearrayparameters.length(); i2++) {
+                                JSONObject postparameters = responcearrayparameters.getJSONObject(i2);
+
+
+                                Map<String,String> map2 = new HashMap<String,String>();
+                                Iterator iter = postparameters.keys();
+                                while(iter.hasNext()){
+                                    String key = (String)iter.next();
+                                    String value = postparameters.getString(key);
+
+                                    Log.e("testing","Key :" + key + "  Value :" + value);
+                                    map2.put(key,value);
+                                }
+
+                                item.setMapparameters(map2);
+
+
+                            }
 
 
                             allItems3.add(item);

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="@color/green">
-        <include layout="@layout/actionbar_layout"/>
+        <include layout="@layout/actionicons"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -24,7 +24,7 @@
         android:layout_below="@+id/linearlayoutmain">
 
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -203,6 +203,33 @@
                                     android:visibility="gone"/>
 
                             </LinearLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="General Info"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:background="@color/grey"
+                                android:padding="0.5dp">
+                                <androidx.recyclerview.widget.RecyclerView
+
+                                    android:id="@+id/recyclergeneralinfo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white">
+
+                                </androidx.recyclerview.widget.RecyclerView>
+                            </LinearLayout>
+
+
                             <TextView
                                 android:id="@+id/pdsubtitle"
                                 android:layout_width="match_parent"
@@ -210,6 +237,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:padding="5dp"
                                 android:text="(kachi Ghani, 1ltr Bottle)"
+                                android:visibility="gone"
                                 android:textColor="@color/black"
                                 />
 
@@ -227,7 +255,8 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginTop="5dp">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -691,12 +720,13 @@
                         android:background="@color/grey1" />
 
                     <TextView
+                        android:id="@+id/textratingreviews"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="Review and Rating "
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/green"
                         android:textSize="15sp"
                         />
 
@@ -706,7 +736,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="5dp"
-                        android:layout_marginLeft="5dp">
+                        android:layout_marginLeft="5dp"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -860,7 +891,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/linerend"

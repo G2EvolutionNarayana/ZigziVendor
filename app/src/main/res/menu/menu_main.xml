@@ -14,6 +14,9 @@
             android:id="@+id/profile"
             android:title="Profile" />
 
+        <item
+            android:id="@+id/bookdelivery"
+            android:title="Book Delivery" />
 
         <item
             android:id="@+id/ecommerce"

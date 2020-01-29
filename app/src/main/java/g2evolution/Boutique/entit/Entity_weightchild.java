@@ -1,6 +1,7 @@
 package g2evolution.Boutique.entit;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Entity_weightchild {
 
@@ -9,17 +10,19 @@ public class Entity_weightchild {
     private String name;
     private String value;
     private String isselected;
+    private Map<String,String> mapparameters;
 
 
     public Entity_weightchild() {
     }
 
-    public Entity_weightchild(String headercode,String name,String value, String isselected) {
+    public Entity_weightchild(String headercode,String name,String value, String isselected, Map<String,String> mapparameters) {
 
         this.headercode = headercode;
         this.name = name;
         this.value = value;
         this.isselected = isselected;
+        this.mapparameters = mapparameters;
     }
 
     public String getHeadercode() {
@@ -52,5 +55,13 @@ public class Entity_weightchild {
 
     public void setIsselected(String isselected) {
         this.isselected = isselected;
+    }
+
+    public Map<String, String> getMapparameters() {
+        return mapparameters;
+    }
+
+    public void setMapparameters(Map<String, String> mapparameters) {
+        this.mapparameters = mapparameters;
     }
 }

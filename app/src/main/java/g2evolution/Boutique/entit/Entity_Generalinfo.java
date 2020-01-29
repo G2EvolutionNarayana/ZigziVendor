@@ -1,9 +1,10 @@
 package g2evolution.Boutique.entit;
 
-public class Entity_Sizes {
+public class Entity_Generalinfo {
 
     String Id;
     String productName;
+    String productValue;
     Integer ProductImage;
 
     public String getId() {
@@ -18,9 +19,16 @@ public class Entity_Sizes {
         return productName;
     }
 
-
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getProductValue() {
+        return productValue;
+    }
+
+    public void setProductValue(String productValue) {
+        this.productValue = productValue;
     }
 
     public Integer getProductImage() {

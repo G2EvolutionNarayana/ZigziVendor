@@ -41,5 +41,6 @@
         <item>Hindi</item>
         <item>Kannada</item>
     </string-array>
+    <string name="title_activity__map">Map</string>
 
 </resources>

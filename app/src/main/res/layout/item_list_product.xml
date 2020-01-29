@@ -64,8 +64,10 @@
                 android:padding="10dp"
                 android:text="Sample title"
                 android:textStyle="bold"
-                android:singleLine="true"
                 android:textSize="15dp"
+                android:minLines="2"
+                android:maxLines="2"
+                android:gravity="center_vertical"
                 android:textColor="@android:color/black" />
 
             <TextView
@@ -74,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="(Black,32 GB)"
+                android:visibility="gone"
                 android:textSize="12dp" />
 
             <RelativeLayout

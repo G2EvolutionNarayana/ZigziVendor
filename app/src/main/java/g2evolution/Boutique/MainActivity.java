@@ -58,6 +58,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,12 +84,14 @@ import g2evolution.Boutique.Activity.Login;
 import g2evolution.Boutique.Activity.My_Bookings_Activity;
 import g2evolution.Boutique.Activity.My_Orders;
 import g2evolution.Boutique.Activity.Notifications_Activity;
+import g2evolution.Boutique.Adapter.Adapter_cart;
 import g2evolution.Boutique.Adapter.Adapter_main;
 import g2evolution.Boutique.Adapter.MyListAdapter_MainActivity;
 import g2evolution.Boutique.Adapter.spinnerAdapter;
 import g2evolution.Boutique.FeederInfo.DetailInfo;
 import g2evolution.Boutique.FeederInfo.FeedDetail;
 import g2evolution.Boutique.FeederInfo.FeedHeader;
+import g2evolution.Boutique.FeederInfo.FeederInfo_cart;
 import g2evolution.Boutique.FeederInfo.FeederInfo_main;
 import g2evolution.Boutique.FeederInfo.HeaderInfo;
 import g2evolution.Boutique.FeederInfo.Info_MyCart;
@@ -676,10 +679,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 Log.e("testing","pincode,,,,,search-----"+pincode);
 
-                if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
+               /* if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
                     Toast.makeText(MainActivity.this, "Select Pincode", Toast.LENGTH_SHORT).show();
                     setocationdialog();
-                }else{
+                }else{*/
                     Intent i = new Intent(MainActivity.this, Activity_search.class);
 
                     SharedPreferences prefuserdata = getSharedPreferences("searchparam", 0);
@@ -693,7 +696,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                     startActivity(i);
-                }
+              //  }
             }
         });
 
@@ -1614,8 +1617,137 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
 //-------------------------------------------------------------------------------------------------------------
 
+    class cartcount extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
 
-    public static class cartcount extends AsyncTask<Void, Void, JSONObject> {
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+        Integer intcartcount;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+
+
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.CartList_user_id, UserId));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.CartList_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+
+                        for (int i = 0; i < responcearray.length(); i++) {
+
+                            JSONObject post = responcearray.getJSONObject(i);
+
+                            String arrayresponseproducts = post.getString("products");
+                            Log.e("testing", "adapter value=" + arrayresponseproducts);
+                            JSONArray responcearrayproducts = new JSONArray(arrayresponseproducts);
+                            Log.e("testing", "responcearrayproducts value=" + responcearrayproducts);
+
+
+                            intcartcount = responcearrayproducts.length();
+
+
+
+
+
+                        }
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                Log.e("testing123", "allItems1===" + allItems1);
+
+
+                if (intcartcount == null){
+
+                }else{
+                    Log.e("testing","intcartcount = "+intcartcount);
+                    menuItemcart.setIcon(buildCounterDrawable1(intcartcount,R.drawable.cart));
+                }
+
+
+            }
+            else {
+
+
+
+
+
+
+            }
+
+
+
+        }
+
+    }
+    public static class cartcount2 extends AsyncTask<Void, Void, JSONObject> {
 
       //  ProgressDialog dialog;
 

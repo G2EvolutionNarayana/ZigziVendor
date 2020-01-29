@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/green"
+        android:padding="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
+            android:src="@drawable/back"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Book Delivery"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingLeft="5dp"/>
+
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pick Date and Time"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/green"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+
+
+        <TextView
+            android:id="@+id/textpickdatetime"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/grey"
+            android:text="Select Date and Time"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Delivery Mode"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/green"
+        android:textStyle="bold"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/grey"
+        android:layout_margin="20dp"
+        android:padding="10dp">
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Normal Delivery"
+            android:textColor="@color/black"
+            android:padding="5dp"
+            android:layout_margin="10dp"
+            android:textSize="15dp"/>
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delivery with Altration"
+            android:textColor="@color/black"
+            android:padding="5dp"
+            android:layout_margin="10dp"
+            android:textSize="15dp"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textcontinue"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Continue"
+        android:background="@drawable/bg_circle"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"/>
+
+</LinearLayout>

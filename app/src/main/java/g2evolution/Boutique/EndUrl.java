@@ -577,12 +577,12 @@ public class EndUrl {
 
 //-------------------------------Add To Cart--------------------
 
- public static final String AddToCart_URL = APIURLMain + "api/rest/cart/store";
+ public static final String AddToCart_URL = APIURLMain + "api/rest_api/cart/store";
 
  public static final String AddToCart_product_id = "product_id";
- public static final String AddToCart_product_name = "size";
  public static final String AddToCart_user_id = "user_id";
  public static final String AddToCart_quantity = "quantity";
+ public static final String AddToCart_product_name = "size";
  public static final String AddToCart_price = "price";
 
 
@@ -652,14 +652,14 @@ public class EndUrl {
 
 //-------------------------------Cart List--------------------
 
- public static final String CartList_URL = APIURLMain + "api/rest/cart/list";
+ public static final String CartList_URL = APIURLMain + "api/rest_api/cart/list";
 
  public static final String CartList_user_id = "user_id";
 
 
 //-------------------------------Cart Delete--------------------
 
- public static final String CartDelete_URL = APIURLMain + "api/rest/cart/remove";
+ public static final String CartDelete_URL = APIURLMain + "api/rest_api/cart/remove";
 
  public static final String CartDelete_id = "id";
 
@@ -667,12 +667,12 @@ public class EndUrl {
 
 //-------------------------------Cart Update--------------------
 
- public static final String PostCartUpdate_URL = APIURLMain + "api/rest/cart/store";
+ public static final String PostCartUpdate_URL = APIURLMain + "api/rest_api/cart/store";
 
  public static final String PostCartUpdate_product_id = "product_id";
- public static final String PostCartUpdate_product_name = "size";
  public static final String PostCartUpdate_user_id = "user_id";
  public static final String PostCartUpdate_quantity = "quantity";
+ public static final String PostCartUpdate_product_name = "size";
  public static final String PostCartUpdate_price = "price";
 
 

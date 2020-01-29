@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +22,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import g2evolution.Boutique.Activity.Activity_productdetails;
 import g2evolution.Boutique.R;
@@ -77,11 +82,26 @@ public class Adapter_ProductVariationsSelection extends RecyclerView.Adapter<Ada
         }
 
         holder.linearlayout1.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
 
                 String strheadercode = singleItem.getHeadercode();
                 String strvalue = singleItem.getValue();
+
+                HashMap hashMap = (HashMap) singleItem.getMapparameters();
+
+                hashMap.replace(strheadercode,strvalue);
+
+                Log.e("testing","strheadercode = "+strheadercode);
+                Log.e("testing","strvalue = "+strvalue);
+
+                Intent intent = new Intent(mContext, Activity_productdetails.class);
+                Bundle extras = new Bundle();
+                extras.putSerializable("HashMap", (Serializable) hashMap);
+                intent.putExtras(extras);
+                mContext.startActivity(intent);
+
 
             }
         });

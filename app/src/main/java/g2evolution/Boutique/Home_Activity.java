@@ -1,7 +1,14 @@
 package g2evolution.Boutique;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +26,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -30,6 +39,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import g2evolution.Boutique.Activity.Activity_BookDelivery;
 import g2evolution.Boutique.Activity.Activity_Profile;
 import g2evolution.Boutique.Adap.Bottom_Navigation_Adapter;
 import g2evolution.Boutique.entit.Bottom_Navigation_List;
@@ -48,6 +58,10 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
         Resource_Management_Fragment.OnFragmentInteractionListener,
         Bottom_Navigation_Adapter.OnItemlevelsinside{
 
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    LocationManager locationManager;
+    String provider;
 
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
@@ -117,11 +131,34 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
 
         navigationView.setNavigationItemSelectedListener(this);
 
+       /* locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        provider = locationManager.getBestProvider(new Criteria(), false);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+
+
+        checkLocationPermission();*/
+
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.replace(R.id.fragment_container, new View_Pager_Fragment()).commit();
 
         setUpReccyler2();
+
+
+        checkLocationPermission();
+
     }
 
 
@@ -145,12 +182,25 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
             Intent intent = new Intent(Home_Activity.this, Activity_Profile.class);
             startActivity(intent);
 
+
           /*  Profile_Fragment fragment2 = new Profile_Fragment();
             FragmentTransaction fragmentTransaction2 =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction2.replace(R.id.fragment_container, fragment2);
             fragmentTransaction2.commit();*/
 
+        }
+        else  if (id == R.id.bookdelivery) {
+
+            linearbottom.setVisibility(View.GONE);
+          /*  E_Commerce_Fragment fragment2 = new E_Commerce_Fragment();
+            FragmentTransaction fragmentTransaction2 =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction2.replace(R.id.fragment_container, fragment2);
+            fragmentTransaction2.commit();*/
+
+          Intent intent = new Intent(Home_Activity.this, Activity_BookDelivery.class);
+          startActivity(intent);
         }
         else  if (id == R.id.ecommerce) {
 
@@ -161,10 +211,9 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
             fragmentTransaction2.replace(R.id.fragment_container, fragment2);
             fragmentTransaction2.commit();*/
 
-          Intent intent = new Intent(Home_Activity.this, MainActivity.class);
-          startActivity(intent);
+            Intent intent = new Intent(Home_Activity.this, MainActivity.class);
+            startActivity(intent);
         }
-
         else if(id==R.id.lisense)
         {
             textzigzi.setText("Resource Management");
@@ -251,5 +300,79 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
             }
         }, 2000);
     }
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("Location Permission nedded")
+                        .setMessage("Location Permission nedded")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(Home_Activity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                      //  locationManager.requestLocationUpdates(provider, 400, 1, (android.location.LocationListener) this);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                return;
+            }
+
+
+        }
+    }
+
 
 }

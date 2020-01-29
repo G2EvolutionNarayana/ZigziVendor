@@ -344,6 +344,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
 
                 startActivity(intent);
+                finish();
 
               /*  Log.e("testing","status 2= "+status);
                 if (strtype == null || strtype.length() == 0){

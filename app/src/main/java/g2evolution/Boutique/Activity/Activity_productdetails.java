@@ -45,6 +45,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,9 +55,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import g2evolution.Boutique.Adapter.Adapter_Generalinfo;
 import g2evolution.Boutique.Adapter.Adapter_ProductVariations;
 import g2evolution.Boutique.Adapter.Adapter_Productdescription;
 import g2evolution.Boutique.Adapter.Adapter_Sizes;
@@ -64,6 +67,7 @@ import g2evolution.Boutique.Adapter.Image_Slider_Adapter;
 import g2evolution.Boutique.Adapter.RecyclerViewDataAdapter;
 import g2evolution.Boutique.Adapter.RecyclerViewDataAdapter2;
 import g2evolution.Boutique.EndUrl;
+import g2evolution.Boutique.FeederInfo.FeederInfo_orderdetails;
 import g2evolution.Boutique.FeederInfo.SectionDataModel;
 import g2evolution.Boutique.FeederInfo.SingleItemModel;
 import g2evolution.Boutique.MainActivity;
@@ -71,6 +75,7 @@ import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.HttpHandler;
 import g2evolution.Boutique.Utility.JSONParser;
+import g2evolution.Boutique.entit.Entity_Generalinfo;
 import g2evolution.Boutique.entit.Entity_Sizes;
 import g2evolution.Boutique.entit.Entity_descriptionchild;
 import g2evolution.Boutique.entit.Entity_descriptionheader;
@@ -79,11 +84,12 @@ import g2evolution.Boutique.entit.Entity_weightheader;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class Activity_productdetails extends AppCompatActivity implements RecyclerViewDataAdapter.OnItemClick, Adapter_Sizes.OnItemClickcourses{
+public class Activity_productdetails extends AppCompatActivity implements RecyclerViewDataAdapter.OnItemClick, Adapter_Generalinfo.OnItemClickcourses{
 
     RecyclerView my_recycler_view;
     ArrayList<SectionDataModel> allSampleData;
     ArrayList<Entity_weightheader> allSampleDatavariables;
+    ArrayList<Entity_Generalinfo> allSampleDataGeneralInfo;
     ArrayList<Entity_descriptionheader> allSampleDatadescription;
     private RecyclerViewDataAdapter.OnItemClick mCallback;
     RecyclerViewDataAdapter adapter;
@@ -110,7 +116,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     //  String pdusedfor,_pdProcessing;
 
     // LinearLayout linearlayout1;
-    TextView textrating, textreviews;
+    TextView textrating, textreviews, textratingreviews;
 
     JSONParser jsonParser = new JSONParser();
     RecyclerView my_recycler;
@@ -148,8 +154,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     String capartmentid_id;
     String pincode;
     Dialog dialog; // apartment dialog
-    TextView text;
-    ImageView cartImage,wishlistImage,searchImage;
+   // ImageView cartImage,wishlistImage,searchImage;
 
     TextView discount_price;
 
@@ -162,11 +167,14 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
     TextView wishlist;
 
+    RecyclerView recyclergeneralinfo;
     RecyclerView recyclercoursesoffered;
     RecyclerView recyclerviewdescription;
     String [] strtitle = new String[]{"Bangalore", "Lucknow","Pune","Trivandrum","Kochi"};
-    Adapter_Sizes courses_Adapter;
-    Adapter_Sizes.OnItemClickcourses mCallback2;
+    Adapter_Generalinfo courses_Adapter;
+    Adapter_Generalinfo.OnItemClickcourses mCallback2;
+
+    String strvariantid;
 
     private ArrayList<Entity_Sizes> allItemscourses = new ArrayList<Entity_Sizes>();
 
@@ -179,7 +187,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_details);
-        text = (TextView) findViewById(R.id.text);
 
 
         Bundle bundle = this.getIntent().getExtras();
@@ -200,15 +207,14 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         wishlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.e("testing","strvariantid = "+strvariantid);
                 new PostWhislist().execute();
                 //Toast.makeText(Activity_productdetails.this, "Added to WishList", Toast.LENGTH_SHORT).show();
             }
         });
-        cartImage = (ImageView) findViewById(R.id.cart_image);
+       /* cartImage = (ImageView) findViewById(R.id.cart_image);
         wishlistImage = (ImageView) findViewById(R.id.wish_list_image);
-        searchImage = (ImageView) findViewById(R.id.search_image);
-        text.setText("Product Details");
+        searchImage = (ImageView) findViewById(R.id.search_image);*/
 
         strbuttonstatus = "";
 
@@ -223,6 +229,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
         SharedPreferences prefuserdata23 = getSharedPreferences("regId", 0);
         viewUserId = prefuserdata23.getString("UserId", "");
+        Log.e("testing","viewUserId = "+viewUserId);
 
         SharedPreferences prefuserdata = this.getSharedPreferences("category", 0);
         category = prefuserdata.getString("category", "");
@@ -266,12 +273,19 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
             }
         });
 
+        recyclergeneralinfo = (RecyclerView) findViewById(R.id.recyclergeneralinfo);
+        recyclergeneralinfo.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager11 = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager mLayoutManager12 = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false);
+        recyclergeneralinfo.setLayoutManager(mLayoutManager11);
+        mCallback2 = this;
+
+
         recyclercoursesoffered = (RecyclerView) findViewById(R.id.recyclerviewsizes);
         recyclercoursesoffered.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL,false);
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false);
         recyclercoursesoffered.setLayoutManager(mLayoutManager);
-        mCallback2 = this;
 
         recyclerviewdescription = (RecyclerView) findViewById(R.id.recyclerviewdescription);
         recyclerviewdescription.setHasFixedSize(true);
@@ -288,7 +302,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
         // linearlayout1 = (LinearLayout) findViewById(R.id.linearlayout1);
 
-        cartImage.setOnClickListener(new View.OnClickListener() {
+       /* cartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -296,18 +310,18 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 startActivity(intent);
 
             }
-        });
+        });*/
 
-        wishlistImage.setOnClickListener(new View.OnClickListener() {
+       /* wishlistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* Intent intent =new Intent(Activity_productdetails.this,Activity_WishList.class);
-                startActivity(intent);*/
+               *//* Intent intent =new Intent(Activity_productdetails.this,Activity_WishList.class);
+                startActivity(intent);*//*
 
             }
-        });
+        });*/
 
-        searchImage.setOnClickListener(new View.OnClickListener() {
+      /*  searchImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(Activity_productdetails.this,Activity_search.class);
@@ -315,9 +329,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             }
         });
-
+*/
         textrating = (TextView) findViewById(R.id.textrating);
         textreviews = (TextView) findViewById(R.id.textreviews);
+        textratingreviews = (TextView) findViewById(R.id.textratingreviews);
 
         butdecrement = (ImageView)findViewById(R.id.butdecrement);
         butincrement = (ImageView)findViewById(R.id.butincrement);
@@ -353,6 +368,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 onBackPressed();
             }
         });
+        TextView textview_title1 = (TextView) findViewById(R.id.textview_title1);
+        textview_title1.setText("Product Details");
 
 
         quantity = (TextView) findViewById(R.id.quantity);
@@ -392,6 +409,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 strbuttonstatus = "addtocart";
                 qty = quantity.getText().toString();
 
+                Log.e("testing","strvariantid = "+strvariantid);
 
                 if(qty == null || qty.equals("0")  || qty.length() == 0){
 
@@ -404,8 +422,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     finish();
 
                 }else{
-
-                    if (intsizes == null || intsizes == 0 ){
+                    new PostAddtocart().execute();
+                   /* if (intsizes == null || intsizes == 0 ){
                         strsizeid = _pid;
                         new PostAddtocart().execute();
                     }else{
@@ -415,7 +433,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                             new PostAddtocart().execute();
                         }
                     }
-
+*/
 
 
                 }
@@ -462,7 +480,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         });
 
 
-        textreviews.setOnClickListener(new View.OnClickListener() {
+        textratingreviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -477,7 +495,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                     SharedPreferences prefuserdata = getSharedPreferences("reviewid", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("reviewid", "" + Productid);
+                    prefeditor.putString("reviewid", "" + strvariantid);
 
                     prefeditor.commit();
 
@@ -675,8 +693,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         }
 
         public String doInBackground(String... args) {
-
+            Map<String,String> map2 = null;
             //  product_details_lists = new ArrayList<Product_list>();
+              allSampleDataGeneralInfo = new ArrayList<Entity_Generalinfo>();
 
 
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
@@ -718,6 +737,62 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                        // _pdsubtitle  = post.getString("sku");
                       //  _pdimage = post.getString("image");
                      //   _totalReviewCount = post.getString("rating_count");
+                        JSONArray postsgeneralinfo = post.optJSONArray("general_info");
+                        if (postsgeneralinfo == null){
+
+                        }else{
+                            for (int i = 0; i < postsgeneralinfo.length(); i++) {
+                                JSONObject postgeneralinfo = postsgeneralinfo.optJSONObject(i);
+
+                                Map<String,String> map3 = new HashMap<String,String>();
+                                Iterator iter = postgeneralinfo.keys();
+                                while(iter.hasNext()){
+                                    String key = (String)iter.next();
+                                    String value = postgeneralinfo.getString(key);
+
+                                    Log.e("testing","Key :" + key + "  Value :" + value);
+                                    Entity_Generalinfo item = new Entity_Generalinfo();
+
+                                    item.setProductName(key);
+                                    item.setProductValue(value);
+
+
+
+                                    allSampleDataGeneralInfo.add(item);
+                                    map3.put(key,value);
+                                }
+
+
+
+
+
+
+                            }
+                        }
+
+                        String strresponseparameters = post.getString("parameters");
+                        JSONArray responcearrayparameters = new JSONArray(strresponseparameters);
+                        Log.e("testing", "responcearray value=" + responcearrayparameters);
+
+                        for (int i2 = 0; i2 < responcearrayparameters.length(); i2++) {
+                            JSONObject postparameters = responcearrayparameters.getJSONObject(i2);
+
+
+                            map2 = new HashMap<String,String>();
+                            Iterator iter = postparameters.keys();
+                            while(iter.hasNext()){
+                                String key = (String)iter.next();
+                                String value = postparameters.getString(key);
+
+                                Log.e("testing","Key :" + key + "  Value :" + value);
+                                map2.put(key,value);
+                            }
+
+
+
+                        }
+
+
 
                         JSONArray posts2 = post.optJSONArray("images");
                         if (posts2 == null){
@@ -756,7 +831,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                         if (post.has("variant_id")){
 
-                            String strvariantid = post.getString("variant_id").trim();
+                            strvariantid = post.getString("variant_id").trim();
                             if (strvariantid == null || strvariantid.trim().length() == 0 || strvariantid.trim().equals("")){
                                 _pid = post.getString("id");
                             }else{
@@ -794,7 +869,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                                         }else{
 
                                         }
-                                        singleItem.add(new Entity_weightchild(postvariants.getString("code"), post2.getString("name"), post2.getString("value"), post2.getString("is_selected")));
+                                        singleItem.add(new Entity_weightchild(postvariants.getString("code"), post2.getString("name"), post2.getString("value"), post2.getString("is_selected"), map2));
 
                                     }
                                 }
@@ -940,6 +1015,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 indicator.setViewPager(mPager);
 
 
+                courses_Adapter = new Adapter_Generalinfo(Activity_productdetails.this,allSampleDataGeneralInfo, mCallback2);
+                recyclergeneralinfo.setAdapter(courses_Adapter);
                /* courses_Adapter = new Adapter_Sizes(Activity_productdetails.this,allItemscourses, mCallback2);
                 recyclercoursesoffered.setAdapter(courses_Adapter);
 */
@@ -1354,7 +1431,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
 
             userpramas.add(new BasicNameValuePair(EndUrl.PostWhishlist_User_id, viewUserId));
-            userpramas.add(new BasicNameValuePair(EndUrl.PostWhishlist_product_id, Productid));
+            userpramas.add(new BasicNameValuePair(EndUrl.PostWhishlist_product_id, strvariantid));
 
             Log.e("testing", "userpramas = " + userpramas);
 
@@ -1606,8 +1683,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
 
 
-            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_id, strsizeid));
-            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_name, strsizename));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_id, strvariantid));
             userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_user_id, viewUserId));
             userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_quantity, qty));
 

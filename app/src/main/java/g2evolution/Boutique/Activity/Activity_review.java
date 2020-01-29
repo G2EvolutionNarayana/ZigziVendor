@@ -94,6 +94,8 @@ public class Activity_review extends AppCompatActivity {
         productId = prefuserdata2.getString("reviewid", "");
 
 
+        Log.e("teting","productId = "+productId);
+
 
         dialogmain = new Dialog(Activity_review.this);
         dialogmain.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -674,7 +676,7 @@ public class Activity_review extends AppCompatActivity {
                             item.setTexttitle(post.optString("title"));
                             item.setTextdesc(post.optString("description"));
                             item.setTexton(post.optString("date"));
-                            item.setName(post.optString("user_name"));
+                            item.setName(post.optString("name"));
 
 
 
