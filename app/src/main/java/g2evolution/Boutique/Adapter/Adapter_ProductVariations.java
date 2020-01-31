@@ -25,9 +25,11 @@ public class Adapter_ProductVariations extends RecyclerView.Adapter<Adapter_Prod
     private ArrayList<Entity_weightheader> dataList;
     private Context mContext;
     String catid,category;
-    public Adapter_ProductVariations(Context context, ArrayList<Entity_weightheader> dataList) {
+    private Adapter_ProductVariationsSelection.OnItemClickchildadapter mCallback;
+    public Adapter_ProductVariations(Context context, ArrayList<Entity_weightheader> dataList,  Adapter_ProductVariationsSelection.OnItemClickchildadapter listener) {
         this.dataList = dataList;
         this.mContext = context;
+        this.mCallback = listener;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class Adapter_ProductVariations extends RecyclerView.Adapter<Adapter_Prod
 
         itemRowHolder.itemTitle.setText(sectionName);
 
-        Adapter_ProductVariationsSelection itemListDataAdapter = new Adapter_ProductVariationsSelection(mContext, singleSectionItems);
+        Adapter_ProductVariationsSelection itemListDataAdapter = new Adapter_ProductVariationsSelection(mContext, singleSectionItems, mCallback);
 
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));

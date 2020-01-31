@@ -51,6 +51,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,6 +62,7 @@ import java.util.TimerTask;
 
 import g2evolution.Boutique.Adapter.Adapter_Generalinfo;
 import g2evolution.Boutique.Adapter.Adapter_ProductVariations;
+import g2evolution.Boutique.Adapter.Adapter_ProductVariationsSelection;
 import g2evolution.Boutique.Adapter.Adapter_Productdescription;
 import g2evolution.Boutique.Adapter.Adapter_Sizes;
 import g2evolution.Boutique.Adapter.Image_Slider_Adapter;
@@ -84,7 +86,7 @@ import g2evolution.Boutique.entit.Entity_weightheader;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class Activity_productdetails extends AppCompatActivity implements RecyclerViewDataAdapter.OnItemClick, Adapter_Generalinfo.OnItemClickcourses{
+public class Activity_productdetails extends AppCompatActivity implements RecyclerViewDataAdapter.OnItemClick, Adapter_Generalinfo.OnItemClickcourses, Adapter_ProductVariationsSelection.OnItemClickchildadapter{
 
     RecyclerView my_recycler_view;
     ArrayList<SectionDataModel> allSampleData;
@@ -94,6 +96,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     private RecyclerViewDataAdapter.OnItemClick mCallback;
     RecyclerViewDataAdapter adapter;
 
+    private Adapter_ProductVariationsSelection.OnItemClickchildadapter mCallbackchildadapter;
 
     ImageView butdecrement,butincrement,back;
     TextView quantity;
@@ -219,6 +222,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         strbuttonstatus = "";
 
         mCallback=this;
+        mCallbackchildadapter=this;
         allSampleData = new ArrayList<SectionDataModel>();
         allSampleDatavariables = new ArrayList<Entity_weightheader>();
         allSampleDatadescription = new ArrayList<Entity_descriptionheader>();
@@ -666,8 +670,18 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
     }
 
+    @Override
+    public void onClickedItemchildadapter(int pos, String qty, HashMap hashMap, int status) {
+        Intent intent = new Intent(Activity_productdetails.this, Activity_productdetails.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("HashMap", (Serializable) hashMap);
+        intent.putExtras(extras);
+        startActivity(intent);
+        finish();
+    }
 
-       class LoadProductList extends AsyncTask<String, String, String>
+
+    class LoadProductList extends AsyncTask<String, String, String>
             //implements RemoveClickListner
     {
 
@@ -1021,7 +1035,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 recyclercoursesoffered.setAdapter(courses_Adapter);
 */
                 Log.e("testing","allSampleDatavariables = "+allSampleDatavariables);
-                Adapter_ProductVariations adapter = new Adapter_ProductVariations(Activity_productdetails.this, allSampleDatavariables);
+                Adapter_ProductVariations adapter = new Adapter_ProductVariations(Activity_productdetails.this, allSampleDatavariables, mCallbackchildadapter);
 
                 recyclercoursesoffered.setLayoutManager(new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false));
 

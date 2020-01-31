@@ -48,12 +48,14 @@ public class Adapter_ProductVariationsSelection extends RecyclerView.Adapter<Ada
     JSONParser jsonParser = new JSONParser();
     ArrayList<String> images = new ArrayList<String>();
 
+    private Adapter_ProductVariationsSelection.OnItemClickchildadapter mCallback;
 
     String categoryName, postid,_descvalue,subcategoryname;
 
-    public Adapter_ProductVariationsSelection(Context context, ArrayList<Entity_weightchild> itemsList) {
+    public Adapter_ProductVariationsSelection(Context context, ArrayList<Entity_weightchild> itemsList, Adapter_ProductVariationsSelection.OnItemClickchildadapter listener) {
         this.itemsList = itemsList;
         this.mContext = context;
+        this.mCallback = listener;
     }
 
     @Override
@@ -62,6 +64,11 @@ public class Adapter_ProductVariationsSelection extends RecyclerView.Adapter<Ada
         SingleItemRowHolder mh = new SingleItemRowHolder(v);
         return mh;
     }
+
+    public interface OnItemClickchildadapter {
+        void onClickedItemchildadapter(int pos, String qty, HashMap hashMap, int status);
+    }
+
 
     @Override
     public void onBindViewHolder(SingleItemRowHolder holder, int i) {
@@ -86,6 +93,9 @@ public class Adapter_ProductVariationsSelection extends RecyclerView.Adapter<Ada
             @Override
             public void onClick(View v) {
 
+
+
+
                 String strheadercode = singleItem.getHeadercode();
                 String strvalue = singleItem.getValue();
 
@@ -95,12 +105,8 @@ public class Adapter_ProductVariationsSelection extends RecyclerView.Adapter<Ada
 
                 Log.e("testing","strheadercode = "+strheadercode);
                 Log.e("testing","strvalue = "+strvalue);
+                mCallback.onClickedItemchildadapter(i, strheadercode+", "+strvalue, hashMap,1);
 
-                Intent intent = new Intent(mContext, Activity_productdetails.class);
-                Bundle extras = new Bundle();
-                extras.putSerializable("HashMap", (Serializable) hashMap);
-                intent.putExtras(extras);
-                mContext.startActivity(intent);
 
 
             }
