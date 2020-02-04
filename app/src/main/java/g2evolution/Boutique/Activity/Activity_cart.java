@@ -87,6 +87,8 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
     String status,message,products;
 
+    String stractualprice, strdiscountprice, strfinalprice;
+
     private String TAG = Activity_cart.class.getSimpleName();
 
     LinearLayout linear2;
@@ -316,7 +318,6 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
                     Intent intent = new Intent(Activity_cart.this,Activity_address.class);
 
-
                     SharedPreferences prefuserdata2 = getSharedPreferences("regcart", 0);
                     SharedPreferences.Editor prefeditor2 = prefuserdata2.edit();
                     prefeditor2.putString("bookstatus", "" + "addtocart");
@@ -329,6 +330,15 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
                     prefeditor.putString("Apay", "" + strfinaltotal);
 
                     prefeditor.commit();
+
+                    SharedPreferences prefuserdata3 = getSharedPreferences("cartpaymentdetails", 0);
+                    SharedPreferences.Editor prefeditor3 = prefuserdata3.edit();
+                    prefeditor3.putString("stractualprice", "" + stractualprice);
+                    prefeditor3.putString("strdiscountprice", "" + strdiscountprice);
+                    prefeditor3.putString("strfinalprice", "" + strfinalprice);
+
+                    prefeditor3.commit();
+
                     startActivity(intent);
 
 
@@ -849,6 +859,9 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
                             JSONObject post = responcearray.getJSONObject(i);
 
+                            stractualprice = post.getString("actual_price");
+                            strdiscountprice = post.getString("discount_price");
+                            strfinalprice = post.getString("final_price");
                             String arrayresponseproducts = post.getString("products");
                             Log.e("testing", "adapter value=" + arrayresponseproducts);
                             JSONArray responcearrayproducts = new JSONArray(arrayresponseproducts);

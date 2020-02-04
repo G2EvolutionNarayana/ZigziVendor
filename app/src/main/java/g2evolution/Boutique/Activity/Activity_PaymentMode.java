@@ -1,7 +1,9 @@
 package g2evolution.Boutique.Activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -82,6 +84,8 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
     String order_id,adminorderId, adminorderamount,Usermob,strFullAddress;
 
+    String stractualprice, strdiscountprice, strfinalprice;
+
     Dialog logindialog123;
 
     ArrayList<HashMap<String, String>> arraylist;
@@ -130,7 +134,10 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
         Log.e("testing", "addressid = " + addressid);
 
-
+        SharedPreferences prefuserdata5 = getSharedPreferences("cartpaymentdetails", 0);
+        stractualprice = prefuserdata5.getString("stractualprice", "");
+        strdiscountprice = prefuserdata5.getString("strdiscountprice", "");
+        strfinalprice = prefuserdata5.getString("strfinalprice", "");
 
         SharedPreferences sharedPreferences = getSharedPreferences("productadapter", 0);
         SharedPreferences.Editor edit = sharedPreferences.edit();
@@ -151,7 +158,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
             new BOOK_Now().execute();
 
         }*/
-        new LoadPaymentDetails().execute();
+       // new LoadPaymentDetails().execute();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.feedrecycler);
         /*List<Person> persons = Arrays.asList(
@@ -175,9 +182,24 @@ public class Activity_PaymentMode extends AppCompatActivity {
         radioselGroup = (RadioGroup) findViewById(R.id.radiocancel);
         spstring = "0";
 
-        new LoadShippingmethod().execute();
+       // new LoadShippingmethod().execute();
 
+        final String strrs = getResources().getString(R.string.Rs);
+        if (stractualprice == null || stractualprice.trim().length() == 0 || stractualprice.trim().equals("null")){
 
+        }else{
+            total.setText(strrs +" "+stractualprice);
+        }
+        if (strdiscountprice == null || strdiscountprice.trim().length() == 0 || strdiscountprice.trim().equals("null")){
+
+        }else{
+            textcouponprice.setText(strrs +" "+strdiscountprice);
+        }
+        if (strfinalprice == null || strfinalprice.trim().length() == 0 || strfinalprice.trim().equals("null")){
+
+        }else{
+            amt.setText(strrs +" "+strfinalprice);
+        }
         radioselGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -252,16 +274,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
                 Log.e("testing","String strshippingid = "+strshippingid);
                 Log.e("testing","String strshippingamount = "+strshippingamount);
 
-
-
-                if (strbuttonstatus.equals("addtocart")) {
-
-
-                    if (amt.getText().toString().equals("") || amt.getText().toString().equals("0") || amt.getText().toString().equals("null")) {
-                        Toast.makeText(getApplicationContext(), "You Don't Have any Amount to Pay", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                        if (spstring.equals("1")) {
+                if (spstring.equals("1")) {
 
                            /* Intent intent = new Intent(getApplicationContext(), InitialScreenActivity.class);
                             //  Toast.makeText(Activity_PaymentMode.this, "Online Payment", Toast.LENGTH_SHORT).show();
@@ -274,6 +287,40 @@ public class Activity_PaymentMode extends AppCompatActivity {
                             prefeditor.commit();
 
                             startActivity(intent);*/
+
+                } else if (spstring.equals("2")) {
+
+                    paymentmode = "COD";
+                    // Toast.makeText(Activity_PaymentMode.this, "COD", Toast.LENGTH_SHORT).show();
+
+                    new PlaceOrder().execute();
+
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Select Payment Mode", Toast.LENGTH_SHORT).show();
+
+                }
+
+             /*   if (strbuttonstatus.equals("addtocart")) {
+
+
+                    if (amt.getText().toString().equals("") || amt.getText().toString().equals("0") || amt.getText().toString().equals("null")) {
+                        Toast.makeText(getApplicationContext(), "You Don't Have any Amount to Pay", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        if (spstring.equals("1")) {
+
+                           *//* Intent intent = new Intent(getApplicationContext(), InitialScreenActivity.class);
+                            //  Toast.makeText(Activity_PaymentMode.this, "Online Payment", Toast.LENGTH_SHORT).show();
+                            SharedPreferences prefuserdata = getSharedPreferences("paymentamount", 0);
+                            SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                            prefeditor.putString("grandtotal", "" + strfinaltotal);
+                            prefeditor.putString("strsubtotal", "" + strsubtotal);
+                            prefeditor.putString("strshipping", "" + strshipping);
+
+                            prefeditor.commit();
+
+                            startActivity(intent);*//*
 
                         } else if (spstring.equals("2")) {
 
@@ -327,7 +374,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
                     }
 
-                }
+                }*/
 
             }
         });
@@ -1509,15 +1556,15 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
 
             userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_user_id,  UserId));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_coupon_id,  coupon_id));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_coupon_price, jsoncoupon));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_shipping_method_id, strshippingid));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_shipping_price,  strshippingamount));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_payment_mode_id,  "1"));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_credits_id,  ""));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_credits_price,  jsoncredits));
             userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_delivery_address_id,  addressid));
-            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_gst,  jsongst));
+            userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_payment_mode_id,  "1"));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_coupon_id,  coupon_id));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_coupon_price, jsoncoupon));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_shipping_method_id, strshippingid));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_shipping_price,  strshippingamount));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_credits_id,  ""));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_credits_price,  jsoncredits));
+           // userpramas.add(new BasicNameValuePair(EndUrl.PlaceOrder_gst,  jsongst));
 
 
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.PlaceOrder_URL, "POST", userpramas);
@@ -1538,7 +1585,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
-                    if (status.equals("success")) {
+                /*    if (status.equals("success")) {
 
                         status = json.getString("status");
                         strresponse = json.getString("response");
@@ -1556,7 +1603,7 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
                     }else{
 
-                    }
+                    }*/
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1579,8 +1626,8 @@ public class Activity_PaymentMode extends AppCompatActivity {
 
             }else if (status.equals("success")) {
 
-                ordersuccess();
-
+               // ordersuccess();
+                successdialog();
             }
             else {
 
@@ -1596,7 +1643,42 @@ public class Activity_PaymentMode extends AppCompatActivity {
         }
 
     }
+    private void successdialog() {
 
+        AlertDialog alertDialog = new AlertDialog.Builder(
+                Activity_PaymentMode.this).create();
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Success");
+        alertDialog.setCancelable(false);
+        // Setting Dialog Message
+        alertDialog.setMessage("Order Placed Successfully");
+
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.tick);
+
+        // Setting OK Button
+        alertDialog.setButton("OK",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+
+                        Intent intent =new Intent(Activity_PaymentMode.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        // Write your code here to execute after dialog
+                        // closed
+                       /* Toast.makeText(getApplicationContext(),
+                                "You clicked on OK", Toast.LENGTH_SHORT)
+                                .show();*/
+                    }
+                });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
     private void ordersuccess() {
         logindialog123 = new Dialog(Activity_PaymentMode.this);
         logindialog123.requestWindowFeature(Window.FEATURE_NO_TITLE);

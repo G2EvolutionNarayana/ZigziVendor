@@ -703,13 +703,13 @@ public class EndUrl {
  public static final String PlaceOrder_URL = APIURLMain + "api/rest/order/store";
 
  public static final String PlaceOrder_user_id = "user_id";
+ public static final String PlaceOrder_delivery_address_id = "delivery_address_id";
+ public static final String PlaceOrder_payment_mode_id = "payment_mode_id";
  public static final String PlaceOrder_coupon_id = "coupon_id";
  public static final String PlaceOrder_shipping_method_id = "shipping_method_id";
  public static final String PlaceOrder_shipping_price = "shipping_price";
- public static final String PlaceOrder_payment_mode_id = "payment_mode_id";
  public static final String PlaceOrder_coupon_price = "coupon_price";
  public static final String PlaceOrder_credits_price = "credits_price";
- public static final String PlaceOrder_delivery_address_id = "delivery_address_id";
  public static final String PlaceOrder_credits_id = "credits_id";
  public static final String PlaceOrder_gst = "gst";
 

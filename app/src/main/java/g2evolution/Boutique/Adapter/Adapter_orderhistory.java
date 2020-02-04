@@ -71,6 +71,7 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
         final FeederInfo_orderhistory feederInfo = mListFeeds.get(position);
 
 
+        final String strrs = mContext.getResources().getString(R.string.Rs);
         String feedDesc = null;
 
         if (feederInfo.getDeliverystatus().equals("In_transit")){
@@ -86,7 +87,7 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
 
         holder.orderdate.setText(feederInfo.getOrderdate());
         holder.orderid.setText(feederInfo.getOrderid());
-        holder.totalprice.setText(feederInfo.getTotalprice());
+        holder.totalprice.setText(strrs+feederInfo.getTotalprice());
         // holder.shippingaddress.setText(feederInfo.getShippingadress());
         holder.paymentmode.setText(feederInfo.getPaymentmode());
 

@@ -605,7 +605,11 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
                         status = json.getString("status");
                         strresponse = json.getString("response");
-                        String arrayresponse = json.getString("data");
+
+                        String strresponsedata = json.getString("data");
+                        JSONObject  jsonobjectdata = new JSONObject(strresponsedata);
+
+                        String arrayresponse = jsonobjectdata.getString("products");
                         Log.e("testing", "adapter value=" + arrayresponse);
 
 
@@ -622,11 +626,11 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
                             FeederInfo_orderdetails item = new FeederInfo_orderdetails();
 
-                            item.setId(post.optString("product_id"));
+                           // item.setId(post.optString("product_id"));
                             item.setOrderimage(post.optString("image"));
-                            item.setOrderdate(post.optString("order_date"));
+                            item.setOrderdate(jsonobjectdata.optString("order_date"));
                             item.setOrdername(post.optString("name"));
-                            item.setOrderprodetails(post.optString("sku"));
+                           // item.setOrderprodetails(post.optString("sku"));
                             item.setOrderpriceamount(post.optString("actual_price"));
                             item.setQuantity_ordertext(post.optString("quantity"));
                             item.setOrdertotalamount(post.optString("total_price"));
