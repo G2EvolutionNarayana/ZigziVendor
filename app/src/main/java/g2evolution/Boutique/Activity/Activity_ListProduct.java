@@ -402,7 +402,7 @@ public class Activity_ListProduct extends AppCompatActivity {
                 try {
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
@@ -415,35 +415,36 @@ public class Activity_ListProduct extends AppCompatActivity {
                     JSONArray posts = response.optJSONArray("data");
                     Log.e("testing1", "jsonParser3333" + posts);
 
-                    for (int i = 0; i < posts.length(); i++) {
+                    if (posts == null){
+                        for (int i = 0; i < posts.length(); i++) {
 
-                        JSONObject post = posts.optJSONObject(i);
+                            JSONObject post = posts.optJSONObject(i);
 
-                        DataItem dataItem = new DataItem();
-                        dataItem.setCategoryId(post.getString("code"));
-                        dataItem.setCategoryName(post.getString("name"));
-
-                        arSubCategory = new ArrayList<>();
-
-                        JSONArray posts2 = post.optJSONArray("options");
-
-                        for (int i1 = 0; i1 < posts2.length(); i1++) {
-                            JSONObject post2 = posts2.optJSONObject(i1);
-
-                            SubCategoryItem subCategoryItem = new SubCategoryItem();
-                            subCategoryItem.setCategoryId(String.valueOf(i));
-                            subCategoryItem.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
+                            DataItem dataItem = new DataItem();
                             dataItem.setCategoryId(post.getString("code"));
-                            subCategoryItem.setSubId(post2.getString("id"));
-                            subCategoryItem.setSubCategoryName(post2.getString("name"));
-                            arSubCategory.add(subCategoryItem);
+                            dataItem.setCategoryName(post.getString("name"));
 
+                            arSubCategory = new ArrayList<>();
+
+                            JSONArray posts2 = post.optJSONArray("options");
+
+                            for (int i1 = 0; i1 < posts2.length(); i1++) {
+                                JSONObject post2 = posts2.optJSONObject(i1);
+
+                                SubCategoryItem subCategoryItem = new SubCategoryItem();
+                                subCategoryItem.setCategoryId(String.valueOf(i));
+                                subCategoryItem.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
+                                dataItem.setCategoryId(post.getString("code"));
+                                subCategoryItem.setSubId(post2.getString("id"));
+                                subCategoryItem.setSubCategoryName(post2.getString("name"));
+                                arSubCategory.add(subCategoryItem);
+
+                            }
+                            dataItem.setSubCategory(arSubCategory);
+                            arCategory.add(dataItem);
                         }
-                        dataItem.setSubCategory(arSubCategory);
-                        arCategory.add(dataItem);
-                    }
 
-                    for(DataItem data : arCategory) {
+                    for (DataItem data : arCategory) {
 //                        Log.i("Item id",item.id);
                         ArrayList<HashMap<String, String>> childArrayList = new ArrayList<HashMap<String, String>>();
                         HashMap<String, String> mapParent = new HashMap<String, String>();
@@ -480,7 +481,9 @@ public class Activity_ListProduct extends AppCompatActivity {
                     }
                     ConstantManager.parentItems = parentItems;
                     ConstantManager.childItems = childItems;
+                }else{
 
+                    }
 
 
                 } catch (JSONException e) {
