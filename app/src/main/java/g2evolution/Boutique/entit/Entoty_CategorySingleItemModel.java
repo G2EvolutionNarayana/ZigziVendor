@@ -1,5 +1,7 @@
 package g2evolution.Boutique.entit;
 
+import java.util.Map;
+
 /**
  * Created by G2evolution on 5/20/2017.
  */
@@ -15,6 +17,7 @@ public class Entoty_CategorySingleItemModel {
     private String subcatname;
     private String stockQuantity;
     private String strType;
+    private Map<String,String> mapparameters;
 
     public String getStrType() {
         return strType;
@@ -65,7 +68,7 @@ public class Entoty_CategorySingleItemModel {
     private String discvalue;
 
 
-    public Entoty_CategorySingleItemModel(String id, String categoryName , String name, String productdetails , String phoprice, String discvalue , String discprice , String url, String stockQuantity, String strtype ) {
+    public Entoty_CategorySingleItemModel(String id, String categoryName , String name, String productdetails , String phoprice, String discvalue , String discprice , String url, String stockQuantity, String strtype, Map<String,String> mapparameters ) {
         this.id = id;
         this.categoryName = categoryName;
         this.name = name;
@@ -78,6 +81,7 @@ public class Entoty_CategorySingleItemModel {
         this.discprice = discprice;
         this.discvalue = discvalue;
         this.subcatname = subcatname;
+        this.mapparameters = mapparameters;
 
     }
 
@@ -137,5 +141,11 @@ public class Entoty_CategorySingleItemModel {
         this.description = description;
     }
 
+    public Map<String, String> getMapparameters() {
+        return mapparameters;
+    }
 
+    public void setMapparameters(Map<String, String> mapparameters) {
+        this.mapparameters = mapparameters;
+    }
 }

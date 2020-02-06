@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -84,6 +85,8 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
     TextView droplocation;
     TextView textcontinue;
 
+    String strpicklatitude, strpicklongitude, strpickaddress, strdroplatitude, strdroplongitude, strdropaddress;
+
     private static final String LOG_TAG = "MainActivity";
 
 
@@ -141,8 +144,29 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Activity_BookingDelivery2.class);
-                startActivity(intent);
+
+
+                if (strpicklatitude == null || strpicklatitude.trim().length() == 0 || strpicklatitude.trim().equals("null") || strpicklatitude.trim().equals("0.0")){
+                    Toast.makeText(getActivity(), "Please select Pickup Location", Toast.LENGTH_SHORT).show();
+                }else{
+                    if (strdroplatitude == null || strdroplatitude.trim().length() == 0 || strdroplatitude.trim().equals("null") || strdroplatitude.trim().equals("0.0")){
+                        Toast.makeText(getActivity(), "Please select Drop Location", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent intent = new Intent(getActivity(), Activity_BookingDelivery2.class);
+                        SharedPreferences prefuserdata = getActivity().getSharedPreferences("booklocation", 0);
+                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                        prefeditor.putString("strpicklatitude", "" + strpicklatitude);
+                        prefeditor.putString("strpicklongitude", "" + strpicklongitude);
+                        prefeditor.putString("strpickaddress", "" + strpickaddress);
+                        prefeditor.putString("strdroplatitude", "" + strdroplatitude);
+                        prefeditor.putString("strdroplongitude", "" + strdroplongitude);
+                        prefeditor.putString("strdropaddress", "" + strdropaddress);
+
+                        prefeditor.commit();
+                        startActivity(intent);
+                    }
+                }
+
             }
         });
 
@@ -483,10 +507,11 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
                                 strpicklong = String.valueOf(dlong1);
 
                                 picuplocation.setText(address);
-
+                                strpickaddress = address;
 
 
                                 //  setData();
+
 
 
                                 if (strpicklat == null || strpicklat.trim().length() == 0 || strpicklat.equals("null")){
@@ -504,6 +529,8 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.greenmarker))
 
                                     );
+                                    strpicklatitude = strpicklat;
+                                    strpicklongitude = strpicklong;
 
                                     double latitudes1 = Double.parseDouble(strpicklat);
                                     double longitudes1 = Double.parseDouble(strpicklong);
@@ -533,6 +560,8 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.redmarker))
 
                                     );
+                                    strdroplatitude = strupdatelat;
+                                    strdroplongitude = strupdaelong;
 
                                     double latitudes1 = Double.parseDouble(strupdatelat);
                                     double longitudes1 = Double.parseDouble(strupdaelong);
@@ -555,7 +584,7 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
                                 strupdaelong = String.valueOf(dlong);
 
                                 droplocation.setText(address);
-
+                                strdropaddress = address;
                                 if (strpicklat == null || strpicklat.trim().length() == 0 || strpicklat.equals("null")){
 
 
@@ -570,6 +599,8 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
                                             //     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.greenmarker))
                                     );
+                                    strpicklatitude = strpicklat;
+                                    strpicklongitude = strpicklong;
 
                                     double latitudes1 = Double.parseDouble(strpicklat);
                                     double longitudes1 = Double.parseDouble(strpicklong);
@@ -601,6 +632,9 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
                                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.redmarker))
 
                                         );
+                                        strdroplatitude = strupdatelat;
+                                        strdroplongitude = strupdaelong;
+
                                         double latitudes1 = Double.parseDouble(strupdatelat);
                                         double longitudes1 = Double.parseDouble(strupdaelong);
 

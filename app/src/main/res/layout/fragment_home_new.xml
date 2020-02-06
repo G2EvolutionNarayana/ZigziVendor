@@ -82,6 +82,15 @@
 
         android:layout_alignParentBottom="true"
         app:menu="@menu/navigation"/>-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/whatsapp"
+        android:layout_above="@+id/navigation"/>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

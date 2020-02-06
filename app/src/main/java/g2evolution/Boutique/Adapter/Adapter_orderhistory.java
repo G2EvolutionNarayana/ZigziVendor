@@ -79,6 +79,9 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
         }else if (feederInfo.getDeliverystatus().equals("Canceled")){
             holder.deliverystatus.setText("Cancelled");
             holder.imgdelete.setVisibility(View.GONE);
+        }else if (feederInfo.getDeliverystatus().equals("Rejected")){
+                holder.deliverystatus.setText("Cancelled");
+            holder.imgdelete.setVisibility(View.GONE);
         }else if (feederInfo.getDeliverystatus().equals("Delivered")){
             holder.deliverystatus.setText("Delivered");
         }else{
@@ -126,7 +129,7 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
 
 
 
-                if (feederInfo.getDeliverystatus().equals("Canceled")){
+                if (feederInfo.getDeliverystatus().equals("Canceled") || feederInfo.getDeliverystatus().equals("Rejected")){
 
 
                 }else{

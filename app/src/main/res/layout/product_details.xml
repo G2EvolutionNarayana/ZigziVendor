@@ -948,6 +948,15 @@
 
 
         </LinearLayout>
-
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/whatsapp"
+            android:layout_above="@+id/linerend"
+            android:layout_margin="10dp"/>
     </RelativeLayout>
+
 </RelativeLayout>

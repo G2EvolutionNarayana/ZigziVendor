@@ -5,13 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,7 +24,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import g2evolution.Boutique.Adapter.Adapter_RecyclerViewDataCategory;
 import g2evolution.Boutique.EndUrl;
@@ -64,6 +71,24 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
         my_recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
         my_recycler_view.setHasFixedSize(true);
         my_recycler_view.setVisibility(View.VISIBLE);
+
+        FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String qty = getResources().getString(R.string.whatsappnumber);
+                String toNumber = "+91"+qty; // Replace with mobile phone number without +Sign or leading zeros.
+                String text = "You are requesting chat from Sub Category page please continue chatting...";// Replace with your message.
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+toNumber +"&text="+text));
+                startActivity(intent);
+
+
+
+            }
+        });
 
         new Getproducts().execute();
 
@@ -177,8 +202,30 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
                                                 finalimg = post3.getString("image");
 
 
-                                                singleItem.add(new Entoty_CategorySingleItemModel(post3.getString("product_id"), post3.getString("name"), post3.getString("name"), post3.getString("name"), "2", "3", "1", finalimg, "1", "productcategory"));
+                                                String strresponseparameters = post3.getString("parameters");
+                                                JSONArray responcearrayparameters = new JSONArray(strresponseparameters);
+                                                Log.e("testing", "responcearray value=" + responcearrayparameters);
 
+                                                for (int i2 = 0; i2 < responcearrayparameters.length(); i2++) {
+                                                    JSONObject postparameters = responcearrayparameters.getJSONObject(i2);
+
+
+                                                    Map<String,String> map2 = new HashMap<String,String>();
+                                                    Iterator iter = postparameters.keys();
+                                                    while(iter.hasNext()){
+                                                        String key = (String)iter.next();
+                                                        String value = postparameters.getString(key);
+
+                                                        Log.e("testing","Key :" + key + "  Value :" + value);
+                                                        map2.put(key,value);
+                                                    }
+
+                                                    // item.setMapparameters(map2);
+
+
+
+                                                singleItem.add(new Entoty_CategorySingleItemModel(post3.getString("product_id"), post3.getString("name"), post3.getString("name"), post3.getString("name"), "2", "3", "1", finalimg, "1", "productcategory",map2));
+                                                }
 
                                             }
                                         }
@@ -204,6 +251,9 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
                                         finalimg = post2.getString("image");
 
 
+                                        Map<String,String> map2 = new HashMap<String,String>();
+                                        singleItem.add(new Entoty_CategorySingleItemModel(post2.getString("id"), post2.getString("name"), post2.getString("name"), post2.getString("name"), "2", "3", "1", finalimg, "1","childcategory",map2));
+
                               /*  JSONArray posts3 = post2.optJSONArray("multipleImages");
                                 for (int i2 = 0; i2 < posts3.length(); i2++) {
                                     JSONObject post3 = posts3.optJSONObject(i2);
@@ -215,7 +265,7 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
                                     //groupPosition = deptList.indexOf(headerInfo);
                                 }*/
 
-                                        singleItem.add(new Entoty_CategorySingleItemModel(post2.getString("id"), post2.getString("name"), post2.getString("name"), post2.getString("name"), "2", "3", "1", finalimg, "1","childcategory"));
+
 
 
                                     }

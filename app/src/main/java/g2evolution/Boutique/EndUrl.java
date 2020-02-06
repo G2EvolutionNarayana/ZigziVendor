@@ -549,7 +549,8 @@ public class EndUrl {
 
  public static final String GetProductst_URL = APIURLMain + "api/rest_api/product/list";
 
- public static final String GetProducts_id = "category_id";
+ public static final String GetProducts_id = "categories[0]";
+ public static final String GetProducts_search_param = "search_param";
 
 
 
@@ -734,7 +735,7 @@ public class EndUrl {
 
  public static final String GetOrderCancel_URL = APIURLMain + "api/rest/order/cancel";
 
- public static final String GetOrderCancel_order_id = "id";
+ public static final String GetOrderCancel_order_id = "order_id";
  public static final String GetOrderCancel_user_id = "user_id";
  public static final String GetOrderCancel_order_status = "order_status";
  public static final String GetOrderCancel_order_status_id = "order_status_id";
@@ -807,6 +808,55 @@ public class EndUrl {
  //---------------------------------Search Products------------------------
 
  public static final String Offer_Products_URL = APIURLMain + "api/rest_api/offer/list";
+
+
+
+
+//-------------------------------Get Booking Method--------------------
+
+ public static final String GetBookingMethod_URL = APIURLMain + "api/book_delivery/manage/delivery-module";
+
+ public static final String GetBookingMethod_user_id = "user_id";
+
+
+
+//-------------------------------Get Booking Rates--------------------
+
+ public static final String GetBookingRates_URL = APIURLMain + "api/book_delivery/manage/check-pricing";
+
+ public static final String GetBookingRates_from_latitude = "from_latitude";
+ public static final String GetBookingRates_from_longitude = "from_longitude";
+ public static final String GetBookingRates_to_latitude = "to_latitude";
+ public static final String GetBookingRates_to_longitude = "to_longitude";
+ public static final String GetBookingRates_delivery_module_id = "delivery_module_id";
+
+
+//-------------------------------Store Booking Delivery--------------------
+
+ public static final String StoreBookingDelivery_URL = APIURLMain + "api/book_delivery/manage/store";
+
+ public static final String StoreBookingDelivery_from_latitude = "from_latitude";
+ public static final String StoreBookingDelivery_from_longitude = "from_longitude";
+ public static final String StoreBookingDelivery_to_latitude = "to_latitude";
+ public static final String StoreBookingDelivery_to_longitude = "to_longitude";
+ public static final String StoreBookingDelivery_delivery_module_id = "delivery_module_id";
+ public static final String StoreBookingDelivery_from_address = "from_address";
+ public static final String StoreBookingDelivery_to_address = "to_address";
+ public static final String StoreBookingDelivery_user_id = "user_id";
+ public static final String StoreBookingDelivery_price = "price";
+ public static final String StoreBookingDelivery_pickup_time = "pickup_time";
+ public static final String StoreBookingDelivery_distance = "distance";
+
+
+
+
+//-------------------------------Get Booking List--------------------
+
+    public static final String GetBookingList_URL = APIURLMain + "api/book_delivery/manage/list";
+
+    public static final String GetBookingList_user_id = "user_id";
+    public static final String GetBookingList_from_date = "from_date";
+    public static final String GetBookingList_to_date = "to_date";
 
 
 }

@@ -735,7 +735,7 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
 
 
             userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_order_id, orderitemid));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_user_id, UserId));
+           // userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_user_id, UserId));
          //   userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_order_status, "canceled"));
           //  userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_order_status_id, "7"));
             userpramas.add(new BasicNameValuePair(EndUrl.GetOrderCancel_reason, strreason));

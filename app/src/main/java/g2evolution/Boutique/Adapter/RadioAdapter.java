@@ -50,14 +50,14 @@ public abstract class RadioAdapter<T> extends RecyclerView.Adapter<RadioAdapter.
 
         public RadioButton mRadio;
         public TextView mText;
-        public TextView mprice;
+       // public TextView mprice;
         public TextView mpid;
         String radioitem;
 
         public ViewHolder(final View inflate) {
             super(inflate);
             mText = (TextView) inflate.findViewById(R.id.text);
-            mprice = (TextView) inflate.findViewById(R.id.price);
+           // mprice = (TextView) inflate.findViewById(R.id.price);
             mpid = (TextView) inflate.findViewById(R.id.textViewpid);
             mRadio = (RadioButton) inflate.findViewById(R.id.radio);
 
@@ -73,12 +73,12 @@ public abstract class RadioAdapter<T> extends RecyclerView.Adapter<RadioAdapter.
                     SharedPreferences prefuserdata = mContext.getSharedPreferences("productadapter", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
 
-                    prefeditor.putString("shippingid", "" + mpid.getText().toString());
-                    prefeditor.putString("packname", "" + mText.getText().toString());
-                    prefeditor.putString("price", "" + mprice.getText().toString());
+                    prefeditor.putString("shippingid", "" + mpid.getText().toString().trim());
+                    prefeditor.putString("packname", "" + mText.getText().toString().trim());
+                   // prefeditor.putString("price", "" + mprice.getText().toString());
                     prefeditor.commit();
                     Log.e("testing","pricepack = "+mText.getText().toString());
-                    Log.e("testing","pice = "+mprice.getText().toString());
+                   // Log.e("testing","pice = "+mprice.getText().toString());
 
                     Log.e("radioitem -mahi -------", "radiobutton" + radioitem);
 

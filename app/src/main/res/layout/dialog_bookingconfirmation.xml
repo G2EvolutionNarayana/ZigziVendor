@@ -42,10 +42,11 @@
                     android:layout_margin="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:textColor="@color/theme"
                     android:textAllCaps="true"
                     android:layout_centerVertical="true"
-                    android:text="Confirm Booking"/>
+                    android:text="Confirm Booking"
+                    android:textSize="25dp"/>
 
                 <LinearLayout
                     android:id="@+id/line1"
@@ -59,7 +60,39 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal">
+                    android:gravity="left">
+
+
+
+                    <TextView
+                        android:id="@+id/textdist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distance:   "
+                        android:textSize="25dp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="40dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textdistance"
+                        android:text="Rs 150"
+                        android:textSize="25dp"
+                        android:layout_toRightOf="@+id/textdist"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="40dp"/>
+
+
+
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left">
 
 
 
@@ -68,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Amount:   "
-                        android:textSize="15dp"
+                        android:textSize="25dp"
                         android:textColor="@color/black"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="40dp"/>
@@ -76,9 +109,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/to_date_text"
+                        android:id="@+id/textprice"
                         android:text="Rs 150"
-                        android:textSize="15dp"
+                        android:textSize="25dp"
                         android:layout_toRightOf="@+id/textamt"
                         android:textColor="@color/black"
                         android:layout_marginTop="10dp"
@@ -93,7 +126,7 @@
                 <Button
                     android:id="@+id/submit_filter"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="40dp"
                     android:text="submit"
                     android:background="@drawable/butbg"
                     android:textColor="@color/white"

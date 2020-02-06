@@ -24,7 +24,7 @@ public class PersonAdapter extends RadioAdapter<Person> {
 
         viewHolder.mpid.setText(mItems.get(i).getMpid());
         viewHolder.mText.setText(mItems.get(i).getmName());
-        viewHolder.mprice.setText(mItems.get(i).getMprice());
+       // viewHolder.mprice.setText(mItems.get(i).getMprice());
 
       /*  if (mItems.get(i).getMdiscount().equals("0")||mItems.get(i).getMdiscount() == null){
             viewHolder.mdiscount.setVisibility(View.GONE);

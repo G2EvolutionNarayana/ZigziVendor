@@ -4,7 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,12 +34,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import g2evolution.Boutique.Adapter.Adapter_BookingDeliveryHistory;
+import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.R;
+import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.entit.Entity_BookingDeliveryHistory;
 
 public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter_BookingDeliveryHistory.OnItemClick{
@@ -69,6 +81,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
     String []PickupDate =new String[]{"29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30"};
 
 
+    JSONParser jsonParser = new JSONParser();
 
     private ArrayList<Entity_BookingDeliveryHistory> allItems1 = new ArrayList<Entity_BookingDeliveryHistory>();
 
@@ -86,6 +99,8 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
     String date11 = "";
     String date22 = "";
 
+    String UserId;
+
     FloatingActionButton fab;
 
     RecyclerView mRecyclerView;
@@ -96,6 +111,10 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
 
         View rootView = inflater.inflate(R.layout.fragment_bookingdeliveryhistory, container, false);
 
+
+        SharedPreferences prefuserdata = getActivity().getSharedPreferences("regId", 0);
+        UserId = prefuserdata.getString("UserId", "");
+
         mRecyclerView=(RecyclerView)rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -104,7 +123,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
 
         fab=(FloatingActionButton)rootView.findViewById(R.id.fab);
 
-        setUpReccyler();
+       // setUpReccyler();
 
         mCallback = this;
 
@@ -122,6 +141,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
             }
         });
 
+        new LoadBookingList().execute();
 
         return rootView;
     }
@@ -479,7 +499,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
                 dialogfilter.dismiss();
                 // Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
 
-                // new ProductCompleted().execute();
+                 new LoadBookingList().execute();
 
 
             }
@@ -497,4 +517,140 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
     public void onClickedItem(int pos, String qty, int status) {
 
     }
+
+    class LoadBookingList extends AsyncTask<String, String, String>
+            //implements RemoveClickListner
+    {
+
+
+        String status;
+        String response;
+        String strresponse;
+        String strcode, strtype, strmessage;
+
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Please Wait ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            // progressbarloading.setVisibility(View.VISIBLE);
+        }
+
+        public String doInBackground(String... args) {
+
+            //  product_details_lists = new ArrayList<Product_list>();
+
+            allItems1 =new ArrayList<Entity_BookingDeliveryHistory>();
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+
+            userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_user_id, UserId));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_from_date, strfinalfromdata));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_to_date, strfinaltodata));
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetBookingList_URL, "GET", userpramas);
+
+            Log.e("testing", "userpramas result = " + userpramas);
+            Log.e("testing", "json result = " + json);
+
+            if (json == null) {
+
+            } else {
+                Log.e("testing", "jon2222222222222");
+                try {
+
+
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    if (status.equals("success")) {
+
+                        status = json.getString("status");
+                        strresponse = json.getString("response");
+                        String arrayresponse = json.getString("data");
+                        Log.e("testing", "adapter value=" + arrayresponse);
+                        JSONArray responcearray = new JSONArray(arrayresponse);
+                        Log.e("testing", "responcearray value=" + responcearray);
+                        if (responcearray == null){
+
+                        }else{
+                            for (int i = 0; i < responcearray.length(); i++) {
+
+                                JSONObject post = responcearray.getJSONObject(i);
+
+                                Entity_BookingDeliveryHistory feedInfo = new Entity_BookingDeliveryHistory();
+                                feedInfo.setOrderid(post.getString("order_number"));
+                                feedInfo.setDate(post.getString("ordered_date"));
+                                feedInfo.setFromlocation(post.getString("from_address"));
+                                feedInfo.setTolocation(post.getString("to_address"));
+                                feedInfo.setPickupdate(post.getString("pickup_time"));
+
+
+                                String strresponsedelivery_module = post.getString("delivery_module");
+                                JSONObject  jsonobjectdelivery_module = new JSONObject(strresponsedelivery_module);
+
+                                feedInfo.setDeliverymode(jsonobjectdelivery_module.getString("name"));
+
+                                allItems1.add(feedInfo);
+                            }
+                        }
+
+                    }else{
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return response;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String responce) {
+            super.onPostExecute(responce);
+
+            //  progressbarloading.setVisibility(View.GONE);
+            pDialog.dismiss();
+            if (status == null || status.trim().length() == 0 || status.equals("null")){
+
+            }else if (status.equals("success")) {
+                Log.e("testing123", "allItems1===" + allItems1);
+
+
+                mAdapter = new Adapter_BookingDeliveryHistory(getActivity(),allItems1, mCallback);
+                mRecyclerView.setAdapter(mAdapter);
+
+
+
+
+            }
+            else {
+
+
+                mAdapter = new Adapter_BookingDeliveryHistory(getActivity(),allItems1, mCallback);
+                mRecyclerView.setAdapter(mAdapter);
+
+
+
+            }
+
+
+
+        }
+
+    }
+
 }

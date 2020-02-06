@@ -75,6 +75,7 @@ import java.util.List;
 import g2evolution.Boutique.Activity.Activity_Aboutus;
 import g2evolution.Boutique.Activity.Activity_Address_Navigation;
 import g2evolution.Boutique.Activity.Activity_ContactUs;
+import g2evolution.Boutique.Activity.Activity_SearchProducts;
 import g2evolution.Boutique.Activity.Activity_TermsandConditions;
 import g2evolution.Boutique.Activity.Activity_WishList;
 import g2evolution.Boutique.Activity.Activity_cart;
@@ -683,7 +684,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(MainActivity.this, "Select Pincode", Toast.LENGTH_SHORT).show();
                     setocationdialog();
                 }else{*/
-                    Intent i = new Intent(MainActivity.this, Activity_search.class);
+                    Intent i = new Intent(MainActivity.this, Activity_SearchProducts.class);
 
                     SharedPreferences prefuserdata = getSharedPreferences("searchparam", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
@@ -861,17 +862,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textcontactus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String qty = "7799944412";
-                String toNumber = "+91"+qty; // Replace with mobile phone number without +Sign or leading zeros.
-                String text = "This is for product list testing";// Replace with your message.
-
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+toNumber +"&text="+text));
-                startActivity(intent);
-
-              /*  Intent intentc = new Intent(MainActivity.this, Activity_ContactUs.class);
-                startActivity(intentc);*/
+                Intent intentc = new Intent(MainActivity.this, Activity_ContactUs.class);
+                startActivity(intentc);
             }
         });
 

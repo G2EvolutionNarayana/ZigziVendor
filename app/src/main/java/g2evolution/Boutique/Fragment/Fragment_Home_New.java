@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -133,6 +136,25 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         mDemoSlider.setCustomAnimation(new DescriptionAnimation());
         mDemoSlider.setDuration(2000);
         mDemoSlider.addOnPageChangeListener(this);
+
+        FloatingActionButton fab=(FloatingActionButton)rootView.findViewById(R.id.fab);
+        fab.setBackgroundColor(Color.parseColor("#3963d6"));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String qty = getResources().getString(R.string.whatsappnumber);
+                String toNumber = "+91"+qty; // Replace with mobile phone number without +Sign or leading zeros.
+                String text = "You are requesting chat from Category page please continue chatting...";// Replace with your message.
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+toNumber +"&text="+text));
+                startActivity(intent);
+
+
+
+            }
+        });
 
 
       /*  if (pincode == null || pincode.length() == 0 || pincode.equals("null") || pincode.equals("0")) {

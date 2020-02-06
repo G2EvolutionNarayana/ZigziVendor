@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import g2evolution.Boutique.Activity.Activity_ListProduct;
@@ -116,7 +118,12 @@ public class Adapter_SectionListDatacategory extends RecyclerView.Adapter<Adapte
 */
 
              if (singleItem.getStrType().equals("productcategory")){
+
+
                  Intent intent = new Intent(mContext, Activity_productdetails.class);
+                 Bundle extras = new Bundle();
+                 extras.putSerializable("HashMap", (Serializable) singleItem.getMapparameters());
+                 intent.putExtras(extras);
                  mContext.startActivity(intent);
              }else if (singleItem.getStrType().equals("childcategory")){
                  Intent i = new Intent(mContext, Activity_ListProduct.class);

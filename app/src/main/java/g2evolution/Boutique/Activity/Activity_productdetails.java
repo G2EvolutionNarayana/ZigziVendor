@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -296,6 +297,24 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         RecyclerView.LayoutManager mLayoutManager3 = new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL,false);
 
         recyclerviewdescription.setLayoutManager(mLayoutManager3);
+
+        FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String qty = getResources().getString(R.string.whatsappnumber);
+                String toNumber = "+91"+qty; // Replace with mobile phone number without +Sign or leading zeros.
+                String text = "You are requesting chat from Product Details Page please continue chatting...";// Replace with your message.
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+toNumber +"&text="+text));
+                startActivity(intent);
+
+
+
+            }
+        });
 
     /*    SharedPreferences prefuserdata1 = this.getSharedPreferences("ProDetails", 0);
         category = prefuserdata1.getString("category", "");
