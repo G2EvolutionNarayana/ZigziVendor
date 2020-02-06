@@ -552,6 +552,11 @@ public class EndUrl {
  public static final String GetProducts_id = "categories[0]";
  public static final String GetProducts_search_param = "search_param";
 
+//--------------------------------Get Products Filters--------------------
+
+ public static final String GetProductstFilters_URL = APIURLMain + "api/rest_api/product/product_filter";
+
+ public static final String GetProductsFilters_id = "category_id";
 
 
 //--------------------------------Get Products Details--------------------

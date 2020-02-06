@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,10 +52,14 @@ import java.util.Map;
 import g2evolution.Boutique.Adapter.Adapter_List_Product;
 import g2evolution.Boutique.Adapter.Adapter_Subcategory_list;
 import g2evolution.Boutique.Adapter.Adapter_child_subcategory_list;
+import g2evolution.Boutique.Adapter.MyCategoriesExpandableListAdapter;
 import g2evolution.Boutique.EndUrl;
+import g2evolution.Boutique.FeederInfo.DataItem;
 import g2evolution.Boutique.FeederInfo.FeederInfo_Subcategory_list;
 import g2evolution.Boutique.FeederInfo.FeederInfo_child_subcategory_list;
+import g2evolution.Boutique.FeederInfo.SubCategoryItem;
 import g2evolution.Boutique.R;
+import g2evolution.Boutique.Utility.ConstantManager;
 import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.entit.FeederInfo_List_Product;
 
@@ -91,6 +96,21 @@ public class Activity_ListProduct extends AppCompatActivity {
     Integer introwposition;
     TextView text;
     ImageView cartImage,wishlistImage,searchImage;
+
+
+
+    //------------------ExpandableListview--------------------------------------------------
+    private ExpandableListView lvCategory;
+
+    private ArrayList<DataItem> arCategory;
+    private ArrayList<SubCategoryItem> arSubCategory;
+    private ArrayList<ArrayList<SubCategoryItem>> arSubCategoryFinal;
+
+    private ArrayList<HashMap<String, String>> parentItems;
+    private ArrayList<ArrayList<HashMap<String, String>>> childItems;
+    private MyCategoriesExpandableListAdapter myCategoriesExpandableListAdapter;
+
+    //------------------ExpandableListview--------------------------------------------------
 
 
     JSONParser jsonParser = new JSONParser();
@@ -242,7 +262,7 @@ public class Activity_ListProduct extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               /* final Dialog logoutdialog = new Dialog(Activity_ListProduct.this);
+                final Dialog logoutdialog = new Dialog(Activity_ListProduct.this);
                 logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 logoutdialog.setCancelable(true);
                 logoutdialog.setCanceledOnTouchOutside(true);
@@ -264,6 +284,42 @@ public class Activity_ListProduct extends AppCompatActivity {
                 logoutdialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
+                String strparentstring = "";
+                TextView textparent = (TextView) convertView.findViewById(R.id.textparent);
+                TextView textchild = (TextView) convertView.findViewById(R.id.textchild);
+                Button butsubmit = (Button) convertView.findViewById(R.id.butsubmit);
+
+                butsubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for (int i = 0; i < MyCategoriesExpandableListAdapter.parentItems.size(); i++ ){
+
+                            String isChecked = MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.IS_CHECKED);
+
+                            if (isChecked.equalsIgnoreCase(ConstantManager.CHECK_BOX_CHECKED_TRUE))
+                            {
+                                textparent.setText(textparent.getText() + MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_NAME));
+                            }
+
+                            for (int j = 0; j < MyCategoriesExpandableListAdapter.childItems.get(i).size(); j++ ){
+
+                                String isChildChecked = MyCategoriesExpandableListAdapter.childItems.get(i).get(j).get(ConstantManager.Parameter.IS_CHECKED);
+
+                                if (isChildChecked.equalsIgnoreCase(ConstantManager.CHECK_BOX_CHECKED_TRUE))
+                                {
+
+                                    String strsubcatname = MyCategoriesExpandableListAdapter.childItems.get(i).get(j).get(ConstantManager.Parameter.SUB_CATEGORY_NAME);
+                                    String strcategoryid = MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_ID);
+                                    String strsubid = MyCategoriesExpandableListAdapter.childItems.get(i).get(j).get(ConstantManager.Parameter.SUB_ID);
+                                    Log.e("testing","childitem = "+strcategoryid+" - "+strsubcatname+" - "+strsubid);
+                                    textchild.setText(textchild.getText() +" , " + MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_ID) + " "+(j+1));
+                                }
+
+                            }
+
+                        }
+                    }
+                });
                 ImageView imgcancel = (ImageView) convertView.findViewById(R.id.back);
                 imgcancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -275,7 +331,7 @@ public class Activity_ListProduct extends AppCompatActivity {
                 lvCategory = convertView.findViewById(R.id.lvCategory);
                 new Filterdata().execute();
 
-                logoutdialog.show();*/
+                logoutdialog.show();
 
 
 
@@ -288,6 +344,167 @@ public class Activity_ListProduct extends AppCompatActivity {
 
 
 
+    public class Filterdata extends AsyncTask<String, String, String> {
+
+        String responce;
+        String message;
+        String headers;
+        String childs;
+
+        String strresponse;
+        String strcode, strtype, strmessage;
+        private ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+           /* pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+
+        }
+
+        protected String doInBackground(String... args) {
+            Integer result = 0;
+            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
+
+            arCategory = new ArrayList<>();
+            arSubCategory = new ArrayList<>();
+            parentItems = new ArrayList<>();
+            childItems = new ArrayList<>();
+
+            Log.e("testing", "jsonParser startedkljhk");
+            //userpramas.add(new BasicNameValuePair("feader_reg_id", id));
+            //  Log.e("testing", "feader_reg_id" + id);
+            userpramas.add(new BasicNameValuePair(EndUrl.GetProductsFilters_id, catid));
+            //  userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, "6"));
+
+
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductstFilters_URL, "GET", userpramas);
+
+
+            Log.e("testing1", "jsonParser" + json);
+
+
+            if (json == null) {
+
+                Log.e("testing1", "jon11111111111111111");
+                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
+
+                return responce;
+            } else {
+                Log.e("testing1", "jon2222222222222");
+                // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                try {
+                    status = json.getString("status");
+                    strresponse = json.getString("response");
+                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    strcode = jsonobject.getString("code");
+                    strtype = jsonobject.getString("type");
+                    strmessage = jsonobject.getString("message");
+                    JSONObject response = new JSONObject(json.toString());
+
+                    Log.e("testing1", "jsonParser2222" + json);
+
+                    //JSONObject jsonArray1 = new JSONObject(json.toString());
+                    // Result = response.getString("status");
+                    JSONArray posts = response.optJSONArray("data");
+                    Log.e("testing1", "jsonParser3333" + posts);
+
+                    for (int i = 0; i < posts.length(); i++) {
+
+                        JSONObject post = posts.optJSONObject(i);
+
+                        DataItem dataItem = new DataItem();
+                        dataItem.setCategoryId(post.getString("code"));
+                        dataItem.setCategoryName(post.getString("name"));
+
+                        arSubCategory = new ArrayList<>();
+
+                        JSONArray posts2 = post.optJSONArray("options");
+
+                        for (int i1 = 0; i1 < posts2.length(); i1++) {
+                            JSONObject post2 = posts2.optJSONObject(i1);
+
+                            SubCategoryItem subCategoryItem = new SubCategoryItem();
+                            subCategoryItem.setCategoryId(String.valueOf(i));
+                            subCategoryItem.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
+                            dataItem.setCategoryId(post.getString("code"));
+                            subCategoryItem.setSubId(post2.getString("id"));
+                            subCategoryItem.setSubCategoryName(post2.getString("name"));
+                            arSubCategory.add(subCategoryItem);
+
+                        }
+                        dataItem.setSubCategory(arSubCategory);
+                        arCategory.add(dataItem);
+                    }
+
+                    for(DataItem data : arCategory) {
+//                        Log.i("Item id",item.id);
+                        ArrayList<HashMap<String, String>> childArrayList = new ArrayList<HashMap<String, String>>();
+                        HashMap<String, String> mapParent = new HashMap<String, String>();
+
+                        mapParent.put(ConstantManager.Parameter.CATEGORY_ID, data.getCategoryId());
+                        mapParent.put(ConstantManager.Parameter.CATEGORY_NAME, data.getCategoryName());
+
+                        int countIsChecked = 0;
+                        for (SubCategoryItem subCategoryItem : data.getSubCategory()) {
+
+                            HashMap<String, String> mapChild = new HashMap<String, String>();
+                            mapChild.put(ConstantManager.Parameter.SUB_ID, subCategoryItem.getSubId());
+                            mapChild.put(ConstantManager.Parameter.SUB_CATEGORY_NAME, subCategoryItem.getSubCategoryName());
+                            mapChild.put(ConstantManager.Parameter.CATEGORY_ID, subCategoryItem.getCategoryId());
+                            mapChild.put(ConstantManager.Parameter.IS_CHECKED, subCategoryItem.getIsChecked());
+
+                            if (subCategoryItem.getIsChecked().equalsIgnoreCase(ConstantManager.CHECK_BOX_CHECKED_TRUE)) {
+
+                                countIsChecked++;
+                            }
+                            childArrayList.add(mapChild);
+                        }
+
+                        if (countIsChecked == data.getSubCategory().size()) {
+
+                            data.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_TRUE);
+                        } else {
+                            data.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
+                        }
+
+                        mapParent.put(ConstantManager.Parameter.IS_CHECKED, data.getIsChecked());
+                        childItems.add(childArrayList);
+                        parentItems.add(mapParent);
+                    }
+                    ConstantManager.parentItems = parentItems;
+                    ConstantManager.childItems = childItems;
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                return responce;
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+//            pDialog.dismiss();
+            Log.e("testing", "result is === " + result);
+
+            myCategoriesExpandableListAdapter = new MyCategoriesExpandableListAdapter(Activity_ListProduct.this,parentItems,childItems,false);
+            lvCategory.setAdapter(myCategoriesExpandableListAdapter);
+        }
+
+    }
 
 
 
