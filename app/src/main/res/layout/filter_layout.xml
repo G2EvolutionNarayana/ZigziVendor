@@ -14,14 +14,14 @@
             android:orientation="vertical"
             android:layout_above="@+id/butsubmit">
             <include layout="@layout/actionicons"/>
-            <TextView
+        <!--    <TextView
                 android:id="@+id/textparent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/textchild"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"/>-->
             <ExpandableListView
                 android:id="@+id/lvCategory"
                 android:layout_width="match_parent"

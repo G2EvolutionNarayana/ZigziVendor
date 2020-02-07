@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,7 +52,7 @@ import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.JSONParser;
 import g2evolution.Boutique.entit.Entity_BookingDeliveryHistory;
 
-public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter_BookingDeliveryHistory.OnItemClick{
+public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter_BookingDeliveryHistory.OnItemClick, View.OnClickListener {
 
     String []OrderId =new String[]{"155112KH","155112KH","155112KH","155112KH","155112KH","155112KH","155112KH","155112KH"};
     String []Date =new String[]{"29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30"};
@@ -101,6 +102,12 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
 
     String UserId;
 
+
+    TextView textpending, textcompleted;
+
+    String strselectstatus = "pending";
+
+
     FloatingActionButton fab;
 
     RecyclerView mRecyclerView;
@@ -126,6 +133,18 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
        // setUpReccyler();
 
         mCallback = this;
+
+        textpending = (TextView) rootView.findViewById(R.id.textpending);
+        textcompleted = (TextView) rootView.findViewById(R.id.textcompleted);
+
+        textpending.setOnClickListener(this);
+        textcompleted.setOnClickListener(this);
+
+        textpending.setBackgroundResource(R.color.theme2);
+        textcompleted.setBackgroundResource(R.color.white);
+
+        textpending.setTextColor(Color.WHITE);
+        textcompleted.setTextColor(Color.BLACK);
 
 
         dialogfilter = new Dialog(getActivity(),R.style.MyAlertDialogStyle);
@@ -518,6 +537,41 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.textpending:
+
+                textpending.setBackgroundResource(R.color.theme2);
+                textcompleted.setBackgroundResource(R.color.white);
+
+                textpending.setTextColor(Color.WHITE);
+                textcompleted.setTextColor(Color.BLACK);
+
+                strselectstatus = "pending";
+
+                new LoadBookingList().execute();
+
+                break;
+            case R.id.textcompleted:
+
+                textpending.setBackgroundResource(R.color.white);
+                textcompleted.setBackgroundResource(R.color.theme2);
+
+                textpending.setTextColor(Color.BLACK);
+                textcompleted.setTextColor(Color.WHITE);
+
+
+                strselectstatus = "complete";
+
+                new LoadBookingList().execute();
+
+                break;
+
+        }
+    }
+
     class LoadBookingList extends AsyncTask<String, String, String>
             //implements RemoveClickListner
     {
@@ -552,6 +606,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
             userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_user_id, UserId));
             userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_from_date, strfinalfromdata));
             userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_to_date, strfinaltodata));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetBookingList_order_status, strselectstatus));
 
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetBookingList_URL, "GET", userpramas);
 

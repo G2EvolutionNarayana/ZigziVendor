@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -97,6 +99,11 @@ public class Activity_ListProduct extends AppCompatActivity {
     TextView text;
     ImageView cartImage,wishlistImage,searchImage;
 
+    // For Radio buttons
+    RadioGroup radioselGroup;
+    int pos;
+    int pos1;
+    String spstring = "";
 
 
     //------------------ExpandableListview--------------------------------------------------
@@ -115,6 +122,10 @@ public class Activity_ListProduct extends AppCompatActivity {
 
     JSONParser jsonParser = new JSONParser();
 
+
+    List<String> arrayListkey = new ArrayList<String>();
+    List<String> arrayListvalue = new ArrayList<String>();
+    List<String> arrayListpostion = new ArrayList<String>();
 
 
 
@@ -201,8 +212,6 @@ public class Activity_ListProduct extends AppCompatActivity {
             }
         });
 
-
-
         new LoadProductList().execute();
 
 
@@ -253,6 +262,63 @@ public class Activity_ListProduct extends AppCompatActivity {
                     }
                 });
 
+                // For Radio Buttons
+                radioselGroup = (RadioGroup) convertView.findViewById(R.id.radiogroup);
+                spstring = "0";
+
+                radioselGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        // TODO Auto-generated method stub
+
+                        // Method 1 For Getting Index of RadioButton
+                        pos = radioselGroup.indexOfChild(findViewById(checkedId));
+
+
+               /* Toast.makeText(getBaseContext(), "Method 1 ID = " + String.valueOf(pos),
+                        Toast.LENGTH_SHORT).show();*/
+
+                        //Method 2 For Getting Index of RadioButton
+                        pos1 = radioselGroup.indexOfChild(findViewById(radioselGroup.getCheckedRadioButtonId()));
+
+                /*Toast.makeText(getBaseContext(), "Method 2 ID = " + String.valueOf(pos1),
+                        Toast.LENGTH_SHORT).show();*/
+
+                        switch(checkedId){
+                            case R.id.radiobutton1:
+                                // do operations specific to this selection
+                                spstring = "newest_first";
+                                logoutdialog.dismiss();
+                                new LoadProductList().execute();
+                                break;
+                            case R.id.radiobutton2:
+                                // do operations specific to this selection
+                                spstring = "price_low_to_high";
+                                logoutdialog.dismiss();
+                                new LoadProductList().execute();
+                                break;
+                            case R.id.radiobutton3:
+                                // do operations specific to this selection
+                                spstring = "price_high_to_low";
+                                logoutdialog.dismiss();
+                                new LoadProductList().execute();
+                                break;
+                            default:
+
+                                //The default selection is RadioButton 1
+                                Toast.makeText(getApplicationContext(), " You have Clicked RadioButton 1 = "+spstring,
+                                        Toast.LENGTH_SHORT).show();
+
+                                break;
+                        }
+
+
+
+                    }
+                });
+
+
                 logoutdialog.show();
 
             }
@@ -285,9 +351,13 @@ public class Activity_ListProduct extends AppCompatActivity {
 
 
                 String strparentstring = "";
-                TextView textparent = (TextView) convertView.findViewById(R.id.textparent);
-                TextView textchild = (TextView) convertView.findViewById(R.id.textchild);
+              //  TextView textparent = (TextView) convertView.findViewById(R.id.textparent);
+              //  TextView textchild = (TextView) convertView.findViewById(R.id.textchild);
                 Button butsubmit = (Button) convertView.findViewById(R.id.butsubmit);
+
+                arrayListkey = new ArrayList<String>();
+                arrayListvalue= new ArrayList<String>();
+                arrayListpostion= new ArrayList<String>();
 
                 butsubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -298,7 +368,7 @@ public class Activity_ListProduct extends AppCompatActivity {
 
                             if (isChecked.equalsIgnoreCase(ConstantManager.CHECK_BOX_CHECKED_TRUE))
                             {
-                                textparent.setText(textparent.getText() + MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_NAME));
+                                //textparent.setText(textparent.getText() + MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_NAME));
                             }
 
                             for (int j = 0; j < MyCategoriesExpandableListAdapter.childItems.get(i).size(); j++ ){
@@ -312,7 +382,14 @@ public class Activity_ListProduct extends AppCompatActivity {
                                     String strcategoryid = MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_ID);
                                     String strsubid = MyCategoriesExpandableListAdapter.childItems.get(i).get(j).get(ConstantManager.Parameter.SUB_ID);
                                     Log.e("testing","childitem = "+strcategoryid+" - "+strsubcatname+" - "+strsubid);
-                                    textchild.setText(textchild.getText() +" , " + MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_ID) + " "+(j+1));
+                                   // textchild.setText(textchild.getText() +" , " + MyCategoriesExpandableListAdapter.parentItems.get(i).get(ConstantManager.Parameter.CATEGORY_ID) + " "+(j+1));
+
+
+                                    arrayListkey.add(strcategoryid);
+                                    arrayListvalue.add(strsubid);
+                                    arrayListpostion.add(String.valueOf(j));
+                                    logoutdialog.dismiss();
+                                    new LoadProductList().execute();
                                 }
 
                             }
@@ -329,10 +406,10 @@ public class Activity_ListProduct extends AppCompatActivity {
                 });
 
                 lvCategory = convertView.findViewById(R.id.lvCategory);
-                new Filterdata().execute();
+
 
                 logoutdialog.show();
-
+                new Filterdata().execute();
 
 
 
@@ -359,11 +436,11 @@ public class Activity_ListProduct extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-           /* pDialog = new ProgressDialog(getActivity());
+            pDialog = new ProgressDialog(Activity_ListProduct.this);
             pDialog.setMessage("Loading");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();*/
+            pDialog.show();
 
         }
 
@@ -386,6 +463,7 @@ public class Activity_ListProduct extends AppCompatActivity {
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductstFilters_URL, "GET", userpramas);
 
 
+            Log.e("testing1", "userpramas" + userpramas);
             Log.e("testing1", "jsonParser" + json);
 
 
@@ -415,9 +493,13 @@ public class Activity_ListProduct extends AppCompatActivity {
                     JSONArray posts = response.optJSONArray("data");
                     Log.e("testing1", "jsonParser3333" + posts);
 
+                    Log.e("testing1", "post = " + posts);
                     if (posts == null){
+
+                       }else{
                         for (int i = 0; i < posts.length(); i++) {
 
+                            Log.e("testing1", "post = " + posts);
                             JSONObject post = posts.optJSONObject(i);
 
                             DataItem dataItem = new DataItem();
@@ -430,7 +512,7 @@ public class Activity_ListProduct extends AppCompatActivity {
 
                             for (int i1 = 0; i1 < posts2.length(); i1++) {
                                 JSONObject post2 = posts2.optJSONObject(i1);
-
+                                Log.e("testing1", "post2 = " + post2);
                                 SubCategoryItem subCategoryItem = new SubCategoryItem();
                                 subCategoryItem.setCategoryId(String.valueOf(i));
                                 subCategoryItem.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
@@ -444,45 +526,43 @@ public class Activity_ListProduct extends AppCompatActivity {
                             arCategory.add(dataItem);
                         }
 
-                    for (DataItem data : arCategory) {
+                        for (DataItem data : arCategory) {
 //                        Log.i("Item id",item.id);
-                        ArrayList<HashMap<String, String>> childArrayList = new ArrayList<HashMap<String, String>>();
-                        HashMap<String, String> mapParent = new HashMap<String, String>();
+                            ArrayList<HashMap<String, String>> childArrayList = new ArrayList<HashMap<String, String>>();
+                            HashMap<String, String> mapParent = new HashMap<String, String>();
 
-                        mapParent.put(ConstantManager.Parameter.CATEGORY_ID, data.getCategoryId());
-                        mapParent.put(ConstantManager.Parameter.CATEGORY_NAME, data.getCategoryName());
+                            mapParent.put(ConstantManager.Parameter.CATEGORY_ID, data.getCategoryId());
+                            mapParent.put(ConstantManager.Parameter.CATEGORY_NAME, data.getCategoryName());
 
-                        int countIsChecked = 0;
-                        for (SubCategoryItem subCategoryItem : data.getSubCategory()) {
+                            int countIsChecked = 0;
+                            for (SubCategoryItem subCategoryItem : data.getSubCategory()) {
 
-                            HashMap<String, String> mapChild = new HashMap<String, String>();
-                            mapChild.put(ConstantManager.Parameter.SUB_ID, subCategoryItem.getSubId());
-                            mapChild.put(ConstantManager.Parameter.SUB_CATEGORY_NAME, subCategoryItem.getSubCategoryName());
-                            mapChild.put(ConstantManager.Parameter.CATEGORY_ID, subCategoryItem.getCategoryId());
-                            mapChild.put(ConstantManager.Parameter.IS_CHECKED, subCategoryItem.getIsChecked());
+                                HashMap<String, String> mapChild = new HashMap<String, String>();
+                                mapChild.put(ConstantManager.Parameter.SUB_ID, subCategoryItem.getSubId());
+                                mapChild.put(ConstantManager.Parameter.SUB_CATEGORY_NAME, subCategoryItem.getSubCategoryName());
+                                mapChild.put(ConstantManager.Parameter.CATEGORY_ID, subCategoryItem.getCategoryId());
+                                mapChild.put(ConstantManager.Parameter.IS_CHECKED, subCategoryItem.getIsChecked());
 
-                            if (subCategoryItem.getIsChecked().equalsIgnoreCase(ConstantManager.CHECK_BOX_CHECKED_TRUE)) {
+                                if (subCategoryItem.getIsChecked().equalsIgnoreCase(ConstantManager.CHECK_BOX_CHECKED_TRUE)) {
 
-                                countIsChecked++;
+                                    countIsChecked++;
+                                }
+                                childArrayList.add(mapChild);
                             }
-                            childArrayList.add(mapChild);
+
+                            if (countIsChecked == data.getSubCategory().size()) {
+
+                                data.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_TRUE);
+                            } else {
+                                data.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
+                            }
+
+                            mapParent.put(ConstantManager.Parameter.IS_CHECKED, data.getIsChecked());
+                            childItems.add(childArrayList);
+                            parentItems.add(mapParent);
                         }
-
-                        if (countIsChecked == data.getSubCategory().size()) {
-
-                            data.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_TRUE);
-                        } else {
-                            data.setIsChecked(ConstantManager.CHECK_BOX_CHECKED_FALSE);
-                        }
-
-                        mapParent.put(ConstantManager.Parameter.IS_CHECKED, data.getIsChecked());
-                        childItems.add(childArrayList);
-                        parentItems.add(mapParent);
-                    }
-                    ConstantManager.parentItems = parentItems;
-                    ConstantManager.childItems = childItems;
-                }else{
-
+                        ConstantManager.parentItems = parentItems;
+                        ConstantManager.childItems = childItems;
                     }
 
 
@@ -500,8 +580,10 @@ public class Activity_ListProduct extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-//            pDialog.dismiss();
+            pDialog.dismiss();
             Log.e("testing", "result is === " + result);
+            Log.e("testing", "parentItems is === " + parentItems);
+            Log.e("testing", "childItems is === " + childItems);
 
             myCategoriesExpandableListAdapter = new MyCategoriesExpandableListAdapter(Activity_ListProduct.this,parentItems,childItems,false);
             lvCategory.setAdapter(myCategoriesExpandableListAdapter);
@@ -758,7 +840,20 @@ public class Activity_ListProduct extends AppCompatActivity {
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
+            if (arrayListkey.size()!=0 || arrayListvalue.size()!=0 || arrayListpostion.size()!=0){
+                for (int i = 0; i < arrayListkey.size(); i++) {
+
+                    String strservicepostion = arrayListpostion.get(i);
+                    String strservicekey = arrayListkey.get(i) + "[" + strservicepostion + "]";
+                    String strservicevalue = arrayListvalue.get(i);
+                    userpramas.add(new BasicNameValuePair(strservicekey, strservicevalue));
+
+                }
+
+            }
+
             userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
+            userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_order_by, spstring));
           //  userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, "6"));
 
 

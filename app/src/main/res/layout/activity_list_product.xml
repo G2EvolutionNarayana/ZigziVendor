@@ -51,8 +51,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:background="@color/white"
-                    android:visibility="gone">
+                    android:background="@color/white">
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="30dp"

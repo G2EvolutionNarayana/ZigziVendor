@@ -3,11 +3,44 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey">
+    <LinearLayout
+        android:id="@+id/linearlayout1"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/textpending"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="PENDING"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:gravity="center"/>
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey"/>
+        <TextView
+            android:id="@+id/textcompleted"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="COMPLETED"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearlayout1"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

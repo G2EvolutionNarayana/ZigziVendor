@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/dimen_15dp"
-                android:text="Position"
+                android:text="Newest First"
                 android:textColor="@color/black"/>
             <TextView
                 android:layout_width="match_parent"
@@ -78,21 +78,25 @@
 
         </LinearLayout>
         <RadioGroup
+            android:id="@+id/radiogroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentRight="true">
             <RadioButton
+                android:id="@+id/radiobutton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="gravity"
                 android:layout_marginTop="5dp"/>
             <RadioButton
+                android:id="@+id/radiobutton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="gravity"
                 android:layout_marginTop="10dp"/>
             <RadioButton
+                android:id="@+id/radiobutton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="gravity"

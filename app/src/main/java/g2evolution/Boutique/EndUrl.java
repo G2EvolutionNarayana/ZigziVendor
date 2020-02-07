@@ -551,6 +551,7 @@ public class EndUrl {
 
  public static final String GetProducts_id = "categories[0]";
  public static final String GetProducts_search_param = "search_param";
+ public static final String GetProducts_order_by = "order_by";
 
 //--------------------------------Get Products Filters--------------------
 
@@ -862,6 +863,7 @@ public class EndUrl {
     public static final String GetBookingList_user_id = "user_id";
     public static final String GetBookingList_from_date = "from_date";
     public static final String GetBookingList_to_date = "to_date";
+    public static final String GetBookingList_order_status = "order_status";
 
 
 }
