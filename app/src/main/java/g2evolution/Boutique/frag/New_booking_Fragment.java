@@ -30,7 +30,7 @@ public class New_booking_Fragment extends Fragment implements New_Booking_Adapte
 
     Integer[]Image= new Integer[]{R.drawable.design1,   R.drawable.design2,  R.drawable.design3,R.drawable.design4};
     String[]Name= new String[]{"Henry",   "Jhon",  "Zakir","Kumar"};
-    String[]Order_Number= new String[]{"OD1154",   "OD1157",  "OD1158","OD115476"};
+    String[]Order_Number= new String[]{" OD1154",   "OD1157",  "OD1158","OD115476"};
     String[]Order_Date= new String[]{"4/5/2019",   "8/5/2080",  "6/6/2019","9/6/2019"};
     String[] Delivery_Date= new String[]{"20/5/2019",   "25/5/2080",  "23/6/2019","20/6/2019"};
 

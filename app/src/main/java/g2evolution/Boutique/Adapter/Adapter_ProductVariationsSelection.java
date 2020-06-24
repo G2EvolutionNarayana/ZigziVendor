@@ -93,19 +93,16 @@ public class Adapter_ProductVariationsSelection extends RecyclerView.Adapter<Ada
             @Override
             public void onClick(View v) {
 
-
-
-
-                String strheadercode = singleItem.getHeadercode();
-                String strvalue = singleItem.getValue();
-
-                HashMap hashMap = (HashMap) singleItem.getMapparameters();
-
-                hashMap.replace(strheadercode,strvalue);
-
-                Log.e("testing","strheadercode = "+strheadercode);
-                Log.e("testing","strvalue = "+strvalue);
-                mCallback.onClickedItemchildadapter(i, strheadercode+", "+strvalue, hashMap,1);
+//                String strheadercode = singleItem.getHeadercode();
+//                String strvalue = singleItem.getValue();
+//
+//                HashMap hashMap = (HashMap) singleItem.getMapparameters();
+//
+//                hashMap.put(strheadercode, strvalue);
+//
+//                Log.e("testing","strheadercode = "+strheadercode);
+//                Log.e("testing","strvalue = "+strvalue);
+//                mCallback.onClickedItemchildadapter(i, strheadercode+", "+strvalue, hashMap,1);
 
 
 

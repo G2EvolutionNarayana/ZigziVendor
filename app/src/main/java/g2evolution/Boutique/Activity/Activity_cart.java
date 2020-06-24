@@ -185,9 +185,10 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
             public void onClick(View view) {
 
 
-                Intent intent = new Intent(Activity_cart.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+//                Intent intent = new Intent(Activity_cart.this, MainActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+                finish();
             }
         });
 
@@ -828,7 +829,7 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
             userpramas.add(new BasicNameValuePair(EndUrl.CartList_user_id, userid));
 
 
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.CartList_URL, "GET", userpramas);
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.CartList_URL, "POST", userpramas);
 
             Log.e("testing", "userpramas result = " + userpramas);
             Log.e("testing", "json result = " + json);
@@ -960,8 +961,6 @@ public class Activity_cart extends AppCompatActivity implements Adapter_cart.OnI
 
                 mAdapterFeeds = new Adapter_cart(Activity_cart.this, allItems1, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
-
-
 
 
 

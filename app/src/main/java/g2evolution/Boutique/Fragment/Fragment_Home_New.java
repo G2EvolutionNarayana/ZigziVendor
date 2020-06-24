@@ -104,7 +104,6 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         Usermail = prefuserdata.getString("Usermail", "");
         Usermob = prefuserdata.getString("Usermob", "");
 
-
         mFeedRecyler = (RecyclerView) rootView.findViewById(R.id.recycler_view1);
         //mFeedRecyler.setLayoutManager(new LinearLayoutManager(getActivity()));
         //setUpRecycler();
@@ -151,11 +150,8 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
                 intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+toNumber +"&text="+text));
                 startActivity(intent);
 
-
-
             }
         });
-
 
       /*  if (pincode == null || pincode.length() == 0 || pincode.equals("null") || pincode.equals("0")) {
 
@@ -196,8 +192,6 @@ public class Fragment_Home_New extends Fragment implements ViewPagerEx.OnPageCha
         String status;
         String total_count;
         private ProgressDialog pDialog;
-
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

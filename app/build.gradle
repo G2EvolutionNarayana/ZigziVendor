@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
 
-    signingConfigs {
-        release {
-            storeFile file('E:\\Jana\\GMT Credentials\\gmt.jks')
-            storePassword 'GMT123'
-            keyAlias = 'GMT123'
-            keyPassword 'GMT123'
-        }
-    }
+//    signingConfigs {
+//        release {
+//            storeFile file('E:\\Jana\\GMT Credentials\\gmt.jks')
+//            storePassword 'GMT123'
+//            keyAlias = 'GMT123'
+//            keyPassword 'GMT123'
+//        }
+//    }
     compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
@@ -39,9 +39,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         }
-        debug {
-            signingConfig signingConfigs.release
-        }
+//        debug {
+//            signingConfig signingConfigs.release
+//        }
 
     }
 

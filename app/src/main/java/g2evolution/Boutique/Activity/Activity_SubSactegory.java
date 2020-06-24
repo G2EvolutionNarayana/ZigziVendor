@@ -128,7 +128,7 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
             userpramas.add(new BasicNameValuePair(EndUrl.GetSubcatList_id, category_id));
 
 
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetSubCategoryList_URL, "GET", userpramas);
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetSubCategoryList_URL, "POST", userpramas);
 
 
 
