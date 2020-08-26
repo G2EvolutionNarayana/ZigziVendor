@@ -17,8 +17,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -28,6 +31,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -45,7 +49,9 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +77,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Activity.Activity_Aboutus;
 import g2evolution.Boutique.Activity.Activity_Address_Navigation;
@@ -101,6 +108,7 @@ import g2evolution.Boutique.FeederInfo.Spinner_model;
 import g2evolution.Boutique.FeederInfo.WorldPopulation;
 import g2evolution.Boutique.Fragment.Fragment_Home_New;
 import g2evolution.Boutique.Fragment.Fragment_filter_new_Pagination;
+import g2evolution.Boutique.Utility.CartCount;
 import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.HttpHandler;
 import g2evolution.Boutique.Utility.JSONParser;
@@ -108,7 +116,9 @@ import g2evolution.Boutique.Utility.JSONfunctions1;
 import g2evolution.Boutique.Utility.NotificationUtils;
 import g2evolution.Boutique.app.Config;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Adapter_main.OnItemClick{
+import static g2evolution.Boutique.Utility.Utils.Cart_Count;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Adapter_main.OnItemClick, CartCount {
 
 
     //----------------------------Ask A question- Dailauge----------------------//
@@ -124,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MyListAdapter_MainActivity listAdapter;
     private ExpandableListView myList;
+    CartCount cartCount;
 
     //our child listener
     private ExpandableListView.OnChildClickListener myListItemClicked = new ExpandableListView.OnChildClickListener() {
@@ -131,13 +142,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public boolean onChildClick(ExpandableListView parent, View v,
                                     int groupPosition, int childPosition, long id) {
 
-            //get the group header
             HeaderInfo headerInfo = deptList.get(groupPosition);
-            //get the child info
             DetailInfo detailInfo = headerInfo.getProductList().get(childPosition);
-            //display it or do something with it
-            /*Toast.makeText(getActivity(), "Clicked on Detail " + headerInfo.getName()
-                    + "/" + detailInfo.getName(), Toast.LENGTH_LONG).show();*/
+
             return false;
 
         }
@@ -180,24 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<String> listdata = new ArrayList<String>();
     private MenuItem mMenuBellItem;
 
-
-    String loginstatus;
-    /*//------------------searchable view in actionbar---------------------
-    private MenuItem searchMenuItem;
-    MenuItemCompat menuitem = null;
-    SearchView searchView;
-    RelativeLayout relativemain;
-    ListView listview;
-    ArrayAdapter<String> adapter;
-
-    private CustomAdapter customAdapter;
-    ListView listView;
-    Cursor cursor;
-    StudentRepo studentRepo ;
-    private static DBHelper dbHelper;*/
-
-    //----------------------------------------filter----------------------------------------------------
-
     Spinner catagoryspin;
     TextView filtersubmit;
     String spinnerid;
@@ -205,8 +194,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<String> spinner_array;
 
     String searchType;
-    TextView texthome,textoffers;
-   // TextView account,aboutus,termsconditon,contactus;
+    TextView texthome, textoffers;
+    // TextView account,aboutus,termsconditon,contactus;
 
     static String status;
     String amount;
@@ -214,12 +203,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String total_record;
 
     static String UserId;
-    public  static  String cartmenucount;
+    public static String cartmenucount;
     private static MenuItem menuItemcart;
 
-    String  headers;
-    TextView profilename,profileid;
-   // TextView logout;
+    String headers;
+    TextView profilename, profileid;
+    // TextView logout;
     private Adapter_main.OnItemClick mCallback;
 
     //-------------------------------navigationrecycler-------------------------------------------------
@@ -233,14 +222,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Adapter_main mAdapterFeeds;
     RecyclerView rView;
 
-    String []Name =new String[]{"Electronic Products","Accessorices","Grocery Products","Photo Frame",};
+    String[] Name = new String[]{"Electronic Products", "Accessorices", "Grocery Products", "Photo Frame",};
 
-   LinearLayout linearsearch;
-   String Username,Usermail,Usermob;
-   TextView lowtohigh,hightolow,newest,offer;
+    LinearLayout linearsearch;
+    String Username, Usermail, Usermob;
+    TextView lowtohigh, hightolow, newest, offer;
 
 
-   // private String TAG = fragment_home.class.getSimpleName();
+    // private String TAG = fragment_home.class.getSimpleName();
 
     private ProgressDialog pDialog;
     RecyclerView my_recycler_view;
@@ -258,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //------------------------FCM Notification--------------------------
     String regId;
 
-  //  TextView My_Order,My_Cart,notifcations,my_bookings;
+    //  TextView My_Order,My_Cart,notifcations,my_bookings;
 
     Dialog dialog; // apartment dialog
 
@@ -272,24 +261,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Spinner spinapartment;
     String capartmentid_id;
     String pincode;
+    String userid, shname, shemailid, shmobileno, image;
 
     DrawerLayout mDrawerLayout;
+    RelativeLayout cart;
+    TextView mTvCartCount;
 
-    TextView textmyaddress, textmycart,textmywishlist, textmyorders, textnotifications, textmybookings, textaboutus, textcontactus, textterms;
+    TextView textmyaddress, textmycart, textmywishlist, textmyorders, textnotifications, textmybookings, textaboutus, textcontactus, textterms;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-
-        SharedPreferences prefuserdata23 = getSharedPreferences("regId", 0);
-         viewUserId = prefuserdata23.getString("UserId", "");
+        cartCount = this::itemCount;
 
         dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-      //  logout = (TextView) findViewById(R.id.logout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        SharedPreferences prefuserdata1 = getSharedPreferences("regId", 0);
+        viewUserId = prefuserdata1.getString("UserId", "");
+        shname = prefuserdata1.getString("Username", "");
+        shemailid = prefuserdata1.getString("Usermail", "");
+        shmobileno = prefuserdata1.getString("Usermob", "");
+        image = prefuserdata1.getString("image", "");
+
+        TextView drawer_title_name = (TextView) findViewById(R.id.drawer_title_name);
+        TextView drawer_titlenumber = (TextView) findViewById(R.id.drawer_titlenumber);
+        ImageView imageViewprofile = (ImageView) findViewById(R.id.imageViewprofile);
+        drawer_title_name.setText(shname);
+        drawer_titlenumber.setText(shmobileno);
+        mTvCartCount = findViewById(R.id.xTvCartCount);
+
+        cart = findViewById(R.id.cart);
+        cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")) {
+
+                    ShowLogoutAlert1("Please login");
+
+                } else {
+
+                    Intent intent = new Intent(MainActivity.this, Activity_cart.class);
+                    startActivityForResult(intent, 2);
+
+                }
+            }
+        });
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -300,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>GMT</font>"));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -314,12 +335,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textcontactus = (TextView) findViewById(R.id.textcontactus);
         textterms = (TextView) findViewById(R.id.textterms);
 
-     /*   NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
-        navigationView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemTextColor(ColorStateList.valueOf(Color.parseColor("#000000")));*/
-
-        capartmentid_id ="0";
+        capartmentid_id = "0";
 
         SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
         UserId = prefuserdata.getString("UserId", "");
@@ -330,303 +346,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences prefuserdata2 = getSharedPreferences("pincode", 0);
         pincode = prefuserdata2.getString("pincode", "");
 
-        Log.e("testing","pincode====Main sharedpreference"+pincode);
+        Log.e("testing", "pincode====Main sharedpreference" + pincode);
 
         allSampleData = new ArrayList<SectionDataModel>();
-      //  my_recycler_view = (RecyclerView)findViewById(R.id.recycler_view);
-     //   my_recycler_view.setHasFixedSize(true);
 
         mCallback = this;
 
         texthome = (TextView) findViewById(R.id.texthome);
-      //  textoffers = (TextView) findViewById(R.id.textoffers);
-
-      /*  account = (TextView) findViewById(R.id.accounts);
-        My_Order = (TextView) findViewById(R.id.myorders);
-        My_Cart = (TextView) findViewById(R.id.cart);
-        notifcations = (TextView) findViewById(R.id.notifcations);
-        my_bookings = (TextView) findViewById(R.id.my_bookings);
-        aboutus = (TextView) findViewById(R.id.about);
-        termsconditon = (TextView) findViewById(R.id.terms);
-        contactus = (TextView) findViewById(R.id.contactus);*/
 
 
         profilename = (TextView) findViewById(R.id.profilename);
-        profileid = (TextView) findViewById(R.id.profileid);
+//        profileid = (TextView) findViewById(R.id.profileid);
 
-        Log.e("testing","Usermail===="+Usermail);
-        Log.e("testing","Username===="+Username);
+        Log.e("testing", "Usermail====" + Usermail);
+        Log.e("testing", "Username====" + Username);
 
-      /*  if (Usermob==null||Usermob.length()==0|Usermob.equals("")||Usermob.equals("null")){
-
-           logout.setText("Login");
-           loginstatus="Login";
-
-        }else {
-            loginstatus="Logout";
-            logout.setText("Logout");
-           // profilename .setText(Username);
-
-        }*/
-
-       /* My_Order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (viewUserId==null ||viewUserId.equals("") || viewUserId.equals("null") ||  viewUserId.equals("0")){
-
-                    ShowLogoutAlert1("Please login");
-
-                }else {
-
-
-                    Intent intent = new Intent(MainActivity.this, My_Orders.class);
-                    startActivity(intent);
-
-
-                }
-
-            }
-        });
-
-
-
-        my_bookings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                    ShowLogoutAlert1("Please login");
-
-                }else {
-
-                    Intent intent = new Intent(MainActivity.this, My_Bookings_Activity.class);
-                    startActivity(intent);
-                }
-
-            }
-        });
-
-
-        notifcations.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                    ShowLogoutAlert1("Please login");
-
-                }else {
-
-                    Intent intent = new Intent(MainActivity.this, Notifications_Activity.class);
-                    startActivity(intent);
-
-                }
-
-            }
-        });
-
-
-        My_Cart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                    ShowLogoutAlert1("Please login");
-
-                }else {
-
-                    Intent intent = new Intent(MainActivity.this, Activity_cart.class);
-                    startActivity(intent);
-
-                }
-
-            }
-        });
-*/
-      /*  logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if (loginstatus.equals("Login")){
-
-                    ShowLogoutAlert1("Please login");
-
-
-                }else {
-
-                    final Dialog logoutdialog = new Dialog(MainActivity.this);
-                    logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(MainActivity.this.LAYOUT_INFLATER_SERVICE);
-                    View convertView = (View) inflater.inflate(R.layout.logout_dialog, null);
-                    //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
-
-                    logoutdialog.setContentView(convertView);
-                    LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
-                    // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-                    logoutdialog.setCanceledOnTouchOutside(false);
-                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                    lp.copyFrom(logoutdialog.getWindow().getAttributes());
-                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                    lp.gravity = Gravity.CENTER;
-                    logoutdialog.getWindow().setAttributes(lp);
-
-
-                    TextView yesselect = (TextView) convertView.findViewById(R.id.yes);
-
-                    yesselect.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            SharedPreferences sharedPreferences = getSharedPreferences("regId", 0);
-                            SharedPreferences.Editor edit = sharedPreferences.edit();
-                            edit.clear();
-                            edit.commit();
-
-                            SharedPreferences prefuserdata1=getSharedPreferences("Logintype",0);
-                            SharedPreferences.Editor edit1 = prefuserdata1.edit();
-                            edit1.clear();
-                            edit1.commit();
-
-                            Intent i = new Intent(MainActivity.this, Login.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    });
-
-
-                    TextView noselect = (TextView) convertView.findViewById(R.id.no);
-                    noselect.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            logoutdialog.dismiss();
-
-                        }
-                    });
-
-                    logoutdialog.show();
-                }
-
-            }
-        });*/
-      /*  account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
-
-                    ShowLogoutAlert1("Please login");
-
-                }else {
-
-                    Intent intent = new Intent(MainActivity.this, Activity_Address_Navigation.class);
-                    startActivity(intent);
-
-                }
-
-            }
-        });
-
-
-        aboutus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, Activity_Aboutus.class);
-                startActivity(intent);
-
-               *//* mFragmentManager = getSupportFragmentManager();
-                mFragmentTransaction = mFragmentManager.beginTransaction();
-                mFragmentTransaction.replace(R.id.fragment_container, new Fragment_aboutus()).commit();*//*
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-
-            }
-        });
-
-        termsconditon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, Activity_TermsandConditions.class);
-                startActivity(intent);
-
-              *//*  mFragmentManager = getSupportFragmentManager();
-                mFragmentTransaction = mFragmentManager.beginTransaction();
-                mFragmentTransaction.replace(R.id.fragment_container, new Fragment_terms()).commit();
-*//*
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-
-            }
-        });
-
-        contactus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent = new Intent(MainActivity.this, Activity_ContactUs.class);
-                startActivity(intent);
-
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-
-            }
-        });
-*/
-
-
-
-        profileid.setText(Usermob);
-
-           /* if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
-
-                setocationdialog();
-
-            }else{
-
-
-            }*/
-        //   listview = (ListView) findViewById(R.id.listView1);
 
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.replace(R.id.fragment_container, new Fragment_Home_New()).commit();
 
-       /*
-        ConnectionDetector cd = new ConnectionDetector(MainActivity.this);
-        if (cd.isConnectingToInternet()) {
-            new searchfunction().execute();
-        } else {
-            Toast.makeText(MainActivity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
-        }
-
-*/
-
-        //get reference to the ExpandableListView
-          myList = (ExpandableListView) findViewById(R.id.myList);
+        myList = (ExpandableListView) findViewById(R.id.myList);
         //create the adapter by passing your ArrayList data
-          listAdapter = new MyListAdapter_MainActivity(MainActivity.this, deptList);
+        listAdapter = new MyListAdapter_MainActivity(MainActivity.this, deptList);
         //attach the adapter to the list
-          myList.setAdapter(listAdapter);
+        myList.setAdapter(listAdapter);
+        expandAll();
 
-        //expand all Groups
-          expandAll();
-
-        //listener for child row click
-        //myList.setOnChildClickListener(myListItemClicked);
-        //listener for group heading click
-        //  myList.setOnGroupClickListener(myListGroupClicked);
-
-
-        //------------------------FCM Notification--------------------------
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -655,123 +401,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         displayFirebaseRegId();
 
-
-//------------------------FCM Notification--------------------------
-
-        //setocationdialog();
-/*
-
-        mFeedRecyler = (RecyclerView) findViewById(R.id.recycler_view);
-        mFeedRecyler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        //setUpRecycler();
-        // context = this;
-        ///  lLayout = new GridLayoutManager(Activity_cart.this,2);
-        rView = (RecyclerView) findViewById(R.id.recycler_view);
-        rView.setHasFixedSize(true);
-        //  rView.setLayoutManager(lLayout);
-        //   mFeedRecyler.setLayoutManager(lLayout);
-        mFeedRecyler.setHasFixedSize(true);
-*/
-
-        linearsearch = (LinearLayout)findViewById(R.id.linearsearch);
+        linearsearch = (LinearLayout) findViewById(R.id.linearsearch);
         linearsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Log.e("testing","pincode,,,,,search-----"+pincode);
+                Log.e("testing", "pincode,,,,,search-----" + pincode);
 
                /* if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
                     Toast.makeText(MainActivity.this, "Select Pincode", Toast.LENGTH_SHORT).show();
                     setocationdialog();
                 }else{*/
-                    Intent i = new Intent(MainActivity.this, Activity_SearchProducts.class);
+                Intent i = new Intent(MainActivity.this, Activity_SearchProducts.class);
 
-                    SharedPreferences prefuserdata = getSharedPreferences("searchparam", 0);
-                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("category_id", "" + "");
-                    prefeditor.putString("sub_category_id", "" + "");
-                    prefeditor.putString("child_category_id", "" + "");
-
-
-                    prefeditor.commit();
+                SharedPreferences prefuserdata = getSharedPreferences("searchparam", 0);
+                SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                prefeditor.putString("category_id", "" + "");
+                prefeditor.putString("sub_category_id", "" + "");
+                prefeditor.putString("child_category_id", "" + "");
 
 
-                    startActivity(i);
-              //  }
+                prefeditor.commit();
+
+
+                startActivity(i);
+                //  }
             }
         });
-
 
 
         ConnectionDetector cd = new ConnectionDetector(MainActivity.this);
         if (cd.isConnectingToInternet()) {
 
-         //  new GetCategories().execute();
             new userdata().execute();
-            
+
         } else {
 
             Toast.makeText(MainActivity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
 
         }
 
-      //  setUpRecycler();
+        //  setUpRecycler();
 
         texthome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent=new Intent(MainActivity.this,Home_Activity.class);
+                Intent intent = new Intent(MainActivity.this, Home_Activity.class);
                 startActivity(intent);
                 finish();
-
-              /*  mFragmentManager = getSupportFragmentManager();
-                mFragmentTransaction = mFragmentManager.beginTransaction();
-                mFragmentTransaction.replace(R.id.fragment_container, new fragment_home()).commit();
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);*/
-
             }
         });
-
-/*
-
-        textoffers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
-                    Toast.makeText(MainActivity.this, "Select Pincode", Toast.LENGTH_SHORT).show();
-                    setocationdialog();
-
-                }else{
-
-                    mFragmentManager = getSupportFragmentManager();
-                    mFragmentTransaction = mFragmentManager.beginTransaction();
-                    mFragmentTransaction.replace(R.id.fragment_container, new Fragment_Offer_Products()).commit();
-
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                    drawer.closeDrawer(GravityCompat.START);
-
-                }
-
-            }
-
-        });
-*/
-
 
 
         textmyaddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+                if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")) {
 
                     ShowLogoutAlert1("Please login");
 
-                }else {
+                } else {
 
                     Intent intent = new Intent(MainActivity.this, Activity_Address_Navigation.class);
                     startActivity(intent);
@@ -783,11 +473,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textmycart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+                if (viewUserId == null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")) {
 
                     ShowLogoutAlert1("Please login");
 
-                }else {
+                } else {
 
                     Intent intent = new Intent(MainActivity.this, Activity_cart.class);
                     startActivity(intent);
@@ -805,11 +495,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textmyorders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (viewUserId==null ||viewUserId.equals("") || viewUserId.equals("null") ||  viewUserId.equals("0")){
+                if (viewUserId == null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals("0")) {
 
                     ShowLogoutAlert1("Please login");
 
-                }else {
+                } else {
 
 
                     Intent intent = new Intent(MainActivity.this, My_Orders.class);
@@ -823,11 +513,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textnotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+                if (viewUserId == null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")) {
 
                     ShowLogoutAlert1("Please login");
 
-                }else {
+                } else {
 
                     Intent intent = new Intent(MainActivity.this, Notifications_Activity.class);
                     startActivity(intent);
@@ -839,11 +529,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textmybookings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (viewUserId==null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+                if (viewUserId == null || viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")) {
 
                     ShowLogoutAlert1("Please login");
 
-                }else {
+                } else {
 
                     Intent intent = new Intent(MainActivity.this, My_Bookings_Activity.class);
                     startActivity(intent);
@@ -878,12 +568,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
-    //-----------------------expandable------------------------//
-
-
-
-    //method to expand all groups
     private void expandAll() {
         int count = listAdapter.getGroupCount();
         for (int i = 0; i < count; i++) {
@@ -891,61 +575,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    //method to collapse all groups
-    private void collapseAll() {
-        int count = listAdapter.getGroupCount();
-        for (int i = 0; i < count; i++) {
-            myList.collapseGroup(i);
-        }
-    }
-
-
-
-
-    //here we maintain our products in various departments
-    private int addProduct(String department, String product) {
-
-        int groupPosition = 0;
-
-        //check the hash map if the group already exists
-        HeaderInfo headerInfo = myDepartments.get(department);
-        //add the group if doesn't exists
-        if (headerInfo == null) {
-
-            headerInfo = new HeaderInfo();
-            headerInfo.setName(department);
-            myDepartments.put(department, headerInfo);
-            deptList.add(headerInfo);
-
-        }
-
-        //get the children for the group
-        ArrayList<DetailInfo> productList = headerInfo.getProductList();
-        //size of the children list
-        int listSize = productList.size();
-        //add to the counter
-        listSize++;
-
-        //create a new child and add that to the group
-        DetailInfo detailInfo = new DetailInfo();
-        detailInfo.setSequence(String.valueOf(listSize));
-        detailInfo.setName(product);
-        productList.add(detailInfo);
-        headerInfo.setProductList(productList);
-
-        //find the group position inside the list
-        groupPosition = deptList.indexOf(headerInfo);
-        return groupPosition;
-
-    }
-
-
-
-
-    //------------------------FCM Notification--------------------------------------------------------
-    // Fetches reg id from shared preferences
-    // and displays on the screen
 
     private void displayFirebaseRegId() {
 
@@ -955,10 +584,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.e(TAG, "Firebase reg id: " + regId);
 
         if (!TextUtils.isEmpty(regId))
-            Log.e("testing","Firebase Reg Id: " + regId);
+            Log.e("testing", "Firebase Reg Id: " + regId);
             // txtRegId.setText("Firebase Reg Id: " + regId);
         else
-            Log.e("testing","Firebase Reg Id is not received yet!");
+            Log.e("testing", "Firebase Reg Id is not received yet!");
         //  txtRegId.setText("Firebase Reg Id is not received yet!");
 
     }
@@ -1015,15 +644,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClickedItem(int pos, int qty, int status) {
-        Log.e("DMen", "Pos:"+ pos + "Qty:"+qty);
-        Log.e("testing","status  = "+status);
-        Log.e("testing","title inm  = "+allItems1.get(pos).getId());
+        Log.e("DMen", "Pos:" + pos + "Qty:" + qty);
+        Log.e("testing", "status  = " + status);
+        Log.e("testing", "title inm  = " + allItems1.get(pos).getId());
 
 
         String category = allItems1.get(pos).getTextnavi();
         strquantity = String.valueOf(qty);
         strcartid = allItems1.get(pos).getId();
-        String  strcategory = allItems1.get(pos).getId();
+        String strcategory = allItems1.get(pos).getId();
 
         SharedPreferences prefuserdata = getSharedPreferences("category", 0);
         SharedPreferences.Editor prefeditor = prefuserdata.edit();
@@ -1034,15 +663,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         prefeditor.commit();
 
 
-        Log.e("testing","category  = ======on click" + strcategory);
-        Log.e("testing","categoryname  = ======on click" + category);
+        Log.e("testing", "category  = ======on click" + strcategory);
+        Log.e("testing", "categoryname  = ======on click" + category);
 
-        if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
+        if (pincode == null || pincode.length() == 0 || pincode.equals("null") || pincode.equals("0")) {
 
             Toast.makeText(MainActivity.this, "Select Pincode", Toast.LENGTH_SHORT).show();
             setocationdialog();
 
-        }else{
+        } else {
 
 
             Intent intent = new Intent(MainActivity.this, Activity_subcategory_details.class);
@@ -1068,25 +697,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         MenuItem menuItemlogin = menu.findItem(R.id.login);
         MenuItem menuItemlogout = menu.findItem(R.id.logout);
-        /*if (UserId==null||UserId.trim().length()==0||UserId.trim().equals("0")||UserId.trim().equals("null")){
 
-
-
-
-            menuItemlogin.setVisible(true);
-            menuItemlogout.setVisible(false);
-
-        }else {
-
-
-            menuItemlogin.setVisible(false);
-            menuItemlogout.setVisible(true);
-
-            // profilename .setText(Username);
-
-        }*/
-
-        for(int i = 0; i < menu.size(); i++) {
+        for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
             SpannableString spanString = new SpannableString(menu.getItem(i).getTitle().toString());
 
@@ -1113,26 +725,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     @Override
-public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-    switch (item.getItemId()) {
+        switch (item.getItemId()) {
 
-        case R.id.cartitem:
+            case R.id.cartitem:
 
-        //    menuItemcart = menu.findItem(R.id.cartitem);
+//            menuItemcart = menu.findItem(R.id.cartitem);
 
-            if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")){
+                if (viewUserId.equals("") || viewUserId.equals("null") || viewUserId.equals(null) || viewUserId.equals("0")) {
 
-                ShowLogoutAlert1("Please login");
+                    ShowLogoutAlert1("Please login");
 
-            }else {
+                } else {
 
-                Intent intent = new Intent(MainActivity.this, Activity_cart.class);
-                startActivity(intent);
+                    Intent intent = new Intent(MainActivity.this, Activity_cart.class);
+                    startActivity(intent);
 
-            }
+                }
 
-            return true;
+                return true;
 
       /*  case R.id.tracking:
 
@@ -1153,236 +765,164 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
 
             return true;*/
-        case R.id.filter:
+            case R.id.filter:
 
-            if (pincode==null||pincode.length()== 0 ||pincode.equals("null")||pincode.equals("0")){
+                if (pincode == null || pincode.length() == 0 || pincode.equals("null") || pincode.equals("0")) {
 
-                setocationdialog();
+                    setocationdialog();
 
-            }else {
+                } else {
 
-                final List<String> points = new ArrayList<>();
+                    final List<String> points = new ArrayList<>();
 
-                final Dialog logindialog = new Dialog(MainActivity.this);
-                logindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                LayoutInflater inflater1 = (LayoutInflater) MainActivity.this.getSystemService(MainActivity.this.LAYOUT_INFLATER_SERVICE);
-                View convertView1 = (View) inflater1.inflate(R.layout.filter, null);
-
-                //  StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
-
-                logindialog.setContentView(convertView1);
-                //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-                logindialog.setCanceledOnTouchOutside(true);
-                WindowManager.LayoutParams lp1 = new WindowManager.LayoutParams();
-                lp1.copyFrom(logindialog.getWindow().getAttributes());
-                lp1.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp1.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                lp1.gravity = Gravity.CENTER;
-                logindialog.getWindow().setAttributes(lp1);
+                    final Dialog logindialog = new Dialog(MainActivity.this);
+                    logindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    LayoutInflater inflater1 = (LayoutInflater) MainActivity.this.getSystemService(MainActivity.this.LAYOUT_INFLATER_SERVICE);
+                    View convertView1 = (View) inflater1.inflate(R.layout.filter, null);
 
 
-                lowtohigh = (TextView) convertView1.findViewById(R.id.lowtohigh);
-                hightolow = (TextView) convertView1.findViewById(R.id.hightolow);
-                newest = (TextView) convertView1.findViewById(R.id.newest);
-                // offer = (TextView)convertView1.findViewById(R.id.offer);
+                    logindialog.setContentView(convertView1);
+
+                    logindialog.setCanceledOnTouchOutside(true);
+                    WindowManager.LayoutParams lp1 = new WindowManager.LayoutParams();
+                    lp1.copyFrom(logindialog.getWindow().getAttributes());
+                    lp1.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp1.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    lp1.gravity = Gravity.CENTER;
+                    logindialog.getWindow().setAttributes(lp1);
 
 
-                lowtohigh.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        searchType = "lowTOhigh";
-
-                        SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
-                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                        prefeditor.putString("searchtype", "" + "lowTOhigh");
-
-                        prefeditor.commit();
-
-                        Intent intent =new Intent(MainActivity.this,Fragment_filter_new_Pagination.class);
-                        startActivity(intent);
-                       /* mFragmentManager = getSupportFragmentManager();
-                        mFragmentTransaction = mFragmentManager.beginTransaction();
-                        mFragmentTransaction.replace(R.id.fragment_container, new Fragment_filter_new_Pagination()).commit();*/
-                        logindialog.dismiss();
+                    lowtohigh = (TextView) convertView1.findViewById(R.id.lowtohigh);
+                    hightolow = (TextView) convertView1.findViewById(R.id.hightolow);
+                    newest = (TextView) convertView1.findViewById(R.id.newest);
+                    // offer = (TextView)convertView1.findViewById(R.id.offer);
 
 
-                      /*  ConnectionDetector cd = new ConnectionDetector(MainActivity.this);
-                        if (cd.isConnectingToInternet()) {
+                    lowtohigh.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                            new Filter().execute();
+                            searchType = "lowTOhigh";
 
-                        } else {
+                            SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
+                            SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                            prefeditor.putString("searchtype", "" + "lowTOhigh");
 
-                            Toast.makeText(MainActivity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
+                            prefeditor.commit();
+
+                            Intent intent = new Intent(MainActivity.this, Fragment_filter_new_Pagination.class);
+                            startActivity(intent);
+
+                            logindialog.dismiss();
+
 
                         }
-*/
+                    });
 
-                    }
-                });
+                    hightolow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                hightolow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                            searchType = "highTOlow";
+                            SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
+                            SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                            prefeditor.putString("searchtype", "" + "highTOlow");
 
-                        searchType = "highTOlow";
-                        SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
-                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                        prefeditor.putString("searchtype", "" + "highTOlow");
+                            prefeditor.commit();
 
-                        prefeditor.commit();
+                            Intent intent = new Intent(MainActivity.this, Fragment_filter_new_Pagination.class);
+                            startActivity(intent);
 
-                        Intent intent =new Intent(MainActivity.this,Fragment_filter_new_Pagination.class);
-                        startActivity(intent);
-                       /* mFragmentManager = getSupportFragmentManager();
-                        mFragmentTransaction = mFragmentManager.beginTransaction();
-                        mFragmentTransaction.replace(R.id.fragment_container, new Fragment_filter_new_Pagination()).commit();*/
-                        logindialog.dismiss();
-
-                    }
-                });
-
-                newest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        searchType = "recent";
-
-                        SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
-                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                        prefeditor.putString("searchtype", "" + "recent");
-
-                        prefeditor.commit();
-
-                        Intent intent =new Intent(MainActivity.this,Fragment_filter_new_Pagination.class);
-                        startActivity(intent);
-
-                      /*  mFragmentManager = getSupportFragmentManager();
-                        mFragmentTransaction = mFragmentManager.beginTransaction();
-                        mFragmentTransaction.replace(R.id.fragment_container, new Fragment_filter_new_Pagination()).commit();*/
-                        logindialog.dismiss();
-
-
-/*
-
-                        ConnectionDetector cd = new ConnectionDetector(MainActivity.this);
-                        if (cd.isConnectingToInternet()) {
-
-                            new Filter().execute();
-
-                        } else {
-
-                            Toast.makeText(MainActivity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
+                            logindialog.dismiss();
 
                         }
+                    });
 
-*/
+                    newest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                    }
-                });
+                            searchType = "recent";
 
+                            SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
+                            SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                            prefeditor.putString("searchtype", "" + "recent");
 
+                            prefeditor.commit();
 
-             /*   offer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, Fragment_filter_new_Pagination.class);
+                            startActivity(intent);
 
-                        searchType = "offer";
-
-                        SharedPreferences prefuserdata = getSharedPreferences("searchtype", 0);
-                        SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                        prefeditor.putString("searchtype", "" + "offer");
-
-                        prefeditor.commit();
-
-                        mFragmentManager = getSupportFragmentManager();
-                        mFragmentTransaction = mFragmentManager.beginTransaction();
-                        mFragmentTransaction.replace(R.id.fragment_container, new fragment_filter()).commit();
-                        logindialog.dismiss();
+                            logindialog.dismiss();
 
 
-                   *//*     ConnectionDetector cd = new ConnectionDetector(MainActivity.this);
-                        if (cd.isConnectingToInternet()) {
+                        }
+                    });
 
-                            new Filter().execute();
-
-                        } else {
-
-                            Toast.makeText(MainActivity.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
-
-                        }*//*
-
-                    }
-                });
-*/
-                logindialog.show();
-            }
+                    logindialog.show();
+                }
 
 
-        default:
+            default:
 
-            return super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(item);
 
+        }
     }
-}
 
     private void logoutmethod() {
 
 
+        final Dialog logoutdialog = new Dialog(MainActivity.this);
+        logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(MainActivity.this.LAYOUT_INFLATER_SERVICE);
+        View convertView = (View) inflater.inflate(R.layout.logout_dialog, null);
+        //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
 
-            final Dialog logoutdialog = new Dialog(MainActivity.this);
-            logoutdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(MainActivity.this.LAYOUT_INFLATER_SERVICE);
-            View convertView = (View) inflater.inflate(R.layout.logout_dialog, null);
-            //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
-
-            logoutdialog.setContentView(convertView);
-            LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
-            // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
-            logoutdialog.setCanceledOnTouchOutside(false);
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(logoutdialog.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            lp.gravity = Gravity.CENTER;
-            logoutdialog.getWindow().setAttributes(lp);
-
-
-            TextView yesselect = (TextView) convertView.findViewById(R.id.yes);
-
-            yesselect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("regId", 0);
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
-                    edit.clear();
-                    edit.commit();
-
-                    SharedPreferences prefuserdata1=getSharedPreferences("Logintype",0);
-                    SharedPreferences.Editor edit1 = prefuserdata1.edit();
-                    edit1.clear();
-                    edit1.commit();
-
-                    Intent i = new Intent(MainActivity.this, Login_Activity.class);
-                    startActivity(i);
-                    finish();
-                }
-            });
+        logoutdialog.setContentView(convertView);
+        LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
+        // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
+        logoutdialog.setCanceledOnTouchOutside(false);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(logoutdialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.CENTER;
+        logoutdialog.getWindow().setAttributes(lp);
 
 
-            TextView noselect = (TextView) convertView.findViewById(R.id.no);
-            noselect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    logoutdialog.dismiss();
+        TextView yesselect = (TextView) convertView.findViewById(R.id.yes);
 
-                }
-            });
+        yesselect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("regId", 0);
+                SharedPreferences.Editor edit = sharedPreferences.edit();
+                edit.clear();
+                edit.commit();
 
-            logoutdialog.show();
+                SharedPreferences prefuserdata1 = getSharedPreferences("Logintype", 0);
+                SharedPreferences.Editor edit1 = prefuserdata1.edit();
+                edit1.clear();
+                edit1.commit();
 
+                Intent i = new Intent(MainActivity.this, Login_Activity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
+
+        TextView noselect = (TextView) convertView.findViewById(R.id.no);
+        noselect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutdialog.dismiss();
+
+            }
+        });
+
+        logoutdialog.show();
 
 
     }
@@ -1392,96 +932,16 @@ public boolean onOptionsItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-       /* if (id == R.id.home) {
 
-            mToolbar.setTitle("Home");
-            mToolbar.setTitleTextColor(Color.WHITE);
+        if (id == R.id.accounts) {
 
 
-          *//*  Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);*//*
+        } else if (id == R.id.about) {
 
-            fragment_home fragment2 = new fragment_home();
-            FragmentTransaction fragmentTransaction2 =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction2.replace(R.id.fragment_container, fragment2);
-            fragmentTransaction2.commit();
+        } else if (id == R.id.terms) {
+
 
         }
-        else*/
-
-            if (id == R.id.accounts) {
-
-              //  mToolbar.setTitle("Accounts");
-/*
-                Intent intent = new Intent(MainActivity.this, Activity_Account.class);
-                startActivity(intent);*/
-
-              /*  Fragment_accounts fragment1 = new Fragment_accounts();
-                FragmentTransaction fragmentTransaction3 =
-                        getSupportFragmentManager().beginTransaction();
-                fragmentTransaction3.replace(R.id.fragment_container, fragment1);
-                fragmentTransaction3.commit();*/
-
-                } else if (id == R.id.about) {
-
-                 //   mToolbar.setTitle("About Us");
-
-                  /*  Fragment_aboutus fragment3 = new Fragment_aboutus();
-                    FragmentTransaction fragmentTransaction3 =
-                            getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.fragment_container, fragment3);
-                    fragmentTransaction3.commit();*/
-                }
-
-                else if (id == R.id.terms) {
-
-                  //  mToolbar.setTitle("Terms & Conditions");
-/*
-                    Fragment_terms fragment3 = new Fragment_terms();
-                    FragmentTransaction fragmentTransaction3 =
-                            getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.fragment_container, fragment3);
-                    fragmentTransaction3.commit();*/
-                }
-/*
-                else if (id == R.id.logout) {
-
-                    mToolbar.setTitle("Logout");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Logout ");
-                    builder.setMessage("Are you Sure Want to Logout");
-                    builder.setNegativeButton("NO",
-                            new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    // Toast.makeText(getApplicationContext(), "No is clicked", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                    builder.setPositiveButton("YES",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    Intent intent = new Intent(MainActivity.this, Login.class);
-*/
-/*
-                                    SharedPreferences prefuserdata = getSharedPreferences("registerUser", 0);
-                                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
-
-                                    prefeditor.putString("id", "");
-
-                                    prefeditor.clear();
-                                    prefeditor.commit();*//*
-
-                                    //Toast.makeText(getApplicationContext(), "Yes is clicked", Toast.LENGTH_LONG).show();
-                                    startActivity(intent);
-                                }
-                            });
-                    builder.show();
-                }
-*/
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -1490,122 +950,15 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     }
 
-    private class GetCategories extends AsyncTask<Void, Void, Void> {
+    @Override
+    public void itemCount(int count) {
+        Log.e("testing", "itemCount " + count);
+        TextView mTvCartCount = findViewById(R.id.xTvCartCount);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Showing progress dialog
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
-
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(EndUrl.GetCategorywise_URL);
-
-            Log.e(TAG, "Response from url: " + jsonStr);
-
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-
-                    // Getting JSON Array node
-
-                    Log.e("testing","jsonObj = "+jsonObj);
-
-                    status = jsonObj.getString("status");
-                    message = jsonObj.getString("message");
-                    total_record = jsonObj.getString("total_record");
-
-                    String arrayresponce = jsonObj.getString("data");
-                    Log.e("testing", "adapter value=" + arrayresponce);
-
-                    JSONArray responcearray = new JSONArray(arrayresponce);
-                    Log.e("testing", "responcearray value=" + responcearray);
-
-                    for (int i = 0; i < responcearray.length(); i++) {
-
-                        JSONObject post = responcearray.getJSONObject(i);
-                        HashMap<String, String> map = new HashMap<String, String>();
-
-                        FeederInfo_main item = new FeederInfo_main();
-
-                        //  item.setId(post.optString("id"));
-
-                        item.setTextnavi(post.optString("categoryName"));
-                        item.setId(post.optString("catId"));
-
-                        allItems1.add(item);
-
-                    }
-
-                } catch (final JSONException e) {
-                    Log.e(TAG, "Json parsing error: " + e.getMessage());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-
-                }
-            } else {
-                Log.e(TAG, "Couldn't get json from server.");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            /**
-             * Updating parsed JSON data into ListView
-             * */
-            if (status == null || status.length() == 0 || status.equals("null")){
-
-            }else if (status.equals("success")) {
-
-                mAdapterFeeds = new Adapter_main(MainActivity.this, allItems1,mCallback);
-                mFeedRecyler.setAdapter(mAdapterFeeds);
-
-            } else if (status.equals("error")) {
-
-                allItems1.clear();
-
-                mAdapterFeeds = new Adapter_main(MainActivity.this,allItems1, mCallback);
-                mFeedRecyler.setAdapter(mAdapterFeeds);
-
-                Toast.makeText(MainActivity.this, "no data found", Toast.LENGTH_LONG).show();
-
-            }
-        }
-
+        mTvCartCount.setText(String.valueOf(count));
+        mTvCartCount.setVisibility(View.VISIBLE);
+        Cart_Count = count;
     }
-
 
 //-------------------------------------------------------------------------------------------------------------
 
@@ -1620,7 +973,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
         String strcode, strtype, strmessage;
 
         private ProgressDialog pDialog;
-        Integer intcartcount;
+        int intcartcount;
 
         @Override
         protected void onPreExecute() {
@@ -1641,11 +994,8 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
-
             userpramas.add(new BasicNameValuePair(EndUrl.CartList_user_id, UserId));
-
-
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.CartList_URL, "GET", userpramas);
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.CartList_URL, "POST", userpramas);
 
             Log.e("testing", "userpramas result = " + userpramas);
             Log.e("testing", "json result = " + json);
@@ -1659,7 +1009,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
@@ -1680,16 +1030,11 @@ public boolean onOptionsItemSelected(MenuItem item) {
                             Log.e("testing", "adapter value=" + arrayresponseproducts);
                             JSONArray responcearrayproducts = new JSONArray(arrayresponseproducts);
                             Log.e("testing", "responcearrayproducts value=" + responcearrayproducts);
-
-
                             intcartcount = responcearrayproducts.length();
 
 
-
-
-
                         }
-                    }else{
+                    } else {
 
                     }
                 } catch (JSONException e) {
@@ -1710,160 +1055,36 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
             //  progressbarloading.setVisibility(View.GONE);
             pDialog.dismiss();
-            if (status == null || status.trim().length() == 0 || status.equals("null")){
+            if (status == null || status.trim().length() == 0 || status.equals("null")) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
                 Log.e("testing123", "allItems1===" + allItems1);
 
 
-                if (intcartcount == null){
+                if (intcartcount == 0) {
+                    mTvCartCount.setVisibility(View.GONE);
+                    Cart_Count = 0;
 
-                }else{
-                    Log.e("testing","intcartcount = "+intcartcount);
-                    menuItemcart.setIcon(buildCounterDrawable1(intcartcount,R.drawable.cart));
+
+                } else {
+                    Log.e("testing", "intcartcount = " + intcartcount);
+//                    menuItemcart.setIcon(buildCounterDrawable1(intcartcount, R.drawable.cart));
+                    mTvCartCount.setVisibility(View.VISIBLE);
+                    mTvCartCount.setText(String.valueOf(intcartcount));
+                    Cart_Count = intcartcount;
                 }
 
 
-            }
-            else {
-
-
-
-
-
+            } else {
+                mTvCartCount.setVisibility(View.GONE);
 
             }
-
 
 
         }
 
     }
-    public static class cartcount2 extends AsyncTask<Void, Void, JSONObject> {
 
-      //  ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-          /*  if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(MainActivity.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(MainActivity.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();*/
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject(EndUrl.GetuserCartDetails_URL, makingJson());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-              //  dialog.dismiss();
-
-                Log.e("testing2","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-                    Log.e(" cart count", "cartmenucount==" + cartmenucount);
-
-                    String value2= cartmenucount;
-
-                    if (value2 == null || value2.length() == 0 || value2.equals("null")){
-
-                    }else{
-
-                        int countw = Integer.valueOf(value2);
-                        Log.e("mahi class count", "count==" + countw);
-
-                        menuItemcart.setIcon(buildCounterDrawable1(countw,R.drawable.cart));
-
-                    }
-
-/*
-                    if (_pdsubprice == null || _pdsubprice.length() == 0){
-                        final String strrs = Activity_productdetails.this.getResources().getString(R.string.Rs);
-                        pdsubprice.setText(strrs+" "+_pdsubprice);
-                    }else{
-                        pdprice.setVisibility(View.VISIBLE);
-                        final String strrs = Activity_productdetails.this.getResources().getString(R.string.Rs);
-                        pdsubprice.setText(strrs+" "+ _pdsubprice);
-
-
-                        pdprice.setText(strrs+" "+ _pdsubprice);
-                        pdprice.setPaintFlags(pdprice.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
-
-                    }*/
-
-                   // Toast.makeText(MainActivity.this, ""+message, Toast.LENGTH_LONG).show();
-
-
-                }else {
-
-                   // Toast.makeText(MainActivity.this, ""+message, Toast.LENGTH_LONG).show();
-
-                }
-
-            }else {
-
-
-              //  Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-               // dialog.dismiss();
-
-            }
-
-        }
-
-    }
-
-
-    private static Drawable buildCounterDrawable1(int count, int backgroundImageId) {
-
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.trolleycount, null);
-        view.setBackgroundResource(backgroundImageId);
-
-        if (count == 0) {
-
-            Log.e("testing2", "wishcount================11111=" + count);
-            View counterTextPanel = view.findViewById(R.id.count1);
-            View counterTextPanel2 = view.findViewById(R.id.counterBackground);
-            counterTextPanel.setVisibility(View.GONE);
-            counterTextPanel2.setVisibility(View.GONE);
-
-
-        } else {
-
-            Log.e("testing2", "wishcount================22222=" + count);
-            TextView textView = (TextView) view.findViewById(R.id.count1);
-            textView.setText("" + count);
-
-        }
-
-
-        view.measure(
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-
-        view.setDrawingCacheEnabled(true);
-        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
-        view.setDrawingCacheEnabled(false);
-
-        return new BitmapDrawable(context.getResources(), bitmap);
-
-
-    }
 
     public static JSONObject makingJson() {
 
@@ -1873,19 +1094,10 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
         try {
 
-            object.put(EndUrl.GetuserCartDetails_Id,UserId);
+            object.put(EndUrl.GetuserCartDetails_Id, UserId);
 
             Log.e("testing2", "adapter GetCartCount_Id=" + UserId);
 
-
-            //if you want to modify some value just do like this.
-
-         /*
-            details.put(EndUrl.SIGNUPjsonobject_outside_register,object);
-            Log.d("json",details.toString());
-            Log.e("testing2","json"+details.toString());
-
-*/
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1896,187 +1108,10 @@ public boolean onOptionsItemSelected(MenuItem item) {
     }
 
 
-
-    public static JSONObject postJsonObject(String url, JSONObject loginJobj){
+    public static JSONObject postJsonObject(String url, JSONObject loginJobj) {
         InputStream inputStream = null;
         String result = "";
 
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString(inputStream);
-
-            else
-
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing2","testing in json result======="+result);
-            Log.e("testing2","testing in json result json======="+json);
-            Log.e("testing2","result in post status========="+json.getString("status"));
-            status = json.getString("status");
-           // message = json.getString("message");
-          //  total_record = json.getString("total_record");
-
-
-            String arrayresponce = json.getString("data");
-
-
-
-            Log.e("testing2", "adapter value=" + arrayresponce);
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing2", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-                String products = post.getString("products");
-                JSONArray responcearray2 = new JSONArray(products);
-                cartmenucount = String.valueOf(responcearray2.length());
-                Log.e("testing2", "cartcount = "+cartmenucount);
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
-
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-//-----------------------------------------------------------------------------------------------------
-
-/*
-
-    class Filter extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(MainActivity.this, ProgressDialog.THEME_HOLO_LIGHT);
-            } else {
-                dialog = new ProgressDialog(MainActivity.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            // allItems = new ArrayList<SingleItemModel>();
-            return postJsonObject1(EndUrl.Filter_URL, makingJson1());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            */
-
-
-
-    /**
-             * Updating parsed JSON data into ListView
-             * *//*
-
-            RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(MainActivity.this, allSampleData);
-
-            my_recycler_view.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
-
-            my_recycler_view.setAdapter(adapter);
-        }
-
-    }
-
-    public JSONObject makingJson1() {
-
-
-        JSONObject jobj = new JSONObject();
-        // user_id = edt_mobileno.getText().toString();
-
-        try {
-
-            jobj.put(EndUrl.Filter_searchType, searchType);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.e("testing","json object "+jobj);
-        return jobj;
-
-    }
-
-
-
-    public JSONObject postJsonObject1(String url, JSONObject loginJobj) {
-        InputStream inputStream = null;
-        String result = "";
         try {
 
             // 1. create HttpClient
@@ -2115,7 +1150,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
             if (inputStream != null)
 
                 result = convertInputStreamToString(inputStream);
+
             else
+
                 result = "Did not work!";
 
 
@@ -2126,91 +1163,31 @@ public boolean onOptionsItemSelected(MenuItem item) {
         JSONObject json = null;
         try {
 
-            JSONObject jsonObj = new JSONObject(String.valueOf(json));
-
-            // Getting JSON Array node
-
-            Log.e("testing", "jsonObj = " + jsonObj);
-
-
-            JSONObject response = new JSONObject(jsonObj.toString());
-
-            Log.e("testing", "jsonParser2222" + jsonObj);
-
-            //JSONObject jsonArray1 = new JSONObject(json.toString());
-            //  Result = response.getString("status");
-            JSONArray posts = response.optJSONArray("data");
-            Log.e("testing", "jsonParser3333" + posts);
+            json = new JSONObject(result);
+            Log.e("testing2", "testing in json result=======" + result);
+            Log.e("testing2", "testing in json result json=======" + json);
+            Log.e("testing2", "result in post status=========" + json.getString("status"));
+            status = json.getString("status");
+            // message = json.getString("message");
+            //  total_record = json.getString("total_record");
 
 
-            if (posts == null) {
-                Log.e("testing", "jon11111111111111111");
-
-                //Toast.makeText(getContext(),"No data found",Toast.LENGTH_LONG).show();
-
-            } else {
-
-                Log.e("testing", "jon122222211");
-                Log.e("testing", "jsonParser4444" + posts);
-
-                for (int i = 0; i < posts.length(); i++) {
-                    Log.e("testing", "" + posts);
-
-                    Log.e("testing", "" + i);
-                    JSONObject post = posts.optJSONObject(i);
-                    // JSONArray posts2 = response.optJSONArray("categories");
-                    Log.e("testng", "" + post);
-                    headers = post.getString("categoryName");
-
-                    Log.e("testing", "name is 11= " + post.getString("categoryName"));
+            String arrayresponce = json.getString("data");
 
 
-                    String Title = post.getString("categoryName");
+            Log.e("testing2", "adapter value=" + arrayresponce);
 
-                    SectionDataModel dm = new SectionDataModel();
+            JSONArray responcearray = new JSONArray(arrayresponce);
+            Log.e("testing2", "responcearray value=" + responcearray);
 
-                    dm.setHeaderTitle(post.getString("categoryName"));
+            for (int i = 0; i < responcearray.length(); i++) {
 
-                    JSONArray posts2 = post.optJSONArray("products");
-                    ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
-                    for (int i1 = 0; i1 < posts2.length(); i1++) {
-                        JSONObject post2 = posts2.optJSONObject(i1);
-
-                               */
-/* String Title2 = post2.getString("title");
-                                String Productid = post2.getString("productId");
-                                String Parentid = post2.getString("subcatName");
-                                String Typename = post2.getString("location");
-
-                               *//*
-
-
-                        String finalimg = null;
-
-                        finalimg = post2.getString("image");
-                              */
-/*  JSONArray posts3 = post2.optJSONArray("multipleImages");
-                                for (int i2 = 0; i2 < posts3.length(); i2++) {
-                                    JSONObject post3 = posts3.optJSONObject(i2);
-
-                                    finalimg = post3.getString("image");
-
-
-                                    //find the group position inside the list
-                                    //groupPosition = deptList.indexOf(headerInfo);
-                                }*//*
-
-
-                        singleItem.add(new SingleItemModel(post2.getString("productId"),post2.getString("categoryName"),post2.getString("title"),post2.getString("subTitle"),post2.getString("price"),post2.getString("discountValue"),post2.getString("afterDiscount"), finalimg));
-
-
-                    }
-
-                    dm.setAllItemsInSection(singleItem);
-
-                    allSampleData.add(dm);
-
-                }
+                JSONObject post = responcearray.getJSONObject(i);
+                HashMap<String, String> map = new HashMap<String, String>();
+                String products = post.getString("products");
+                JSONArray responcearray2 = new JSONArray(products);
+                cartmenucount = String.valueOf(responcearray2.length());
+                Log.e("testing2", "cartcount = " + cartmenucount);
 
             }
 
@@ -2223,36 +1200,17 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     }
 
-*/
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
 
-   /* @Override
-    public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-  //      Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        Fragment_Home_New fragment3 = new Fragment_Home_New();
-        FragmentTransaction fragmentTransaction3 =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction3.replace(R.id.fragment_container, fragment3);
-        fragmentTransaction3.commit();
-
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 5000);
+        inputStream.close();
+        return result;
 
     }
-*/
-
 
 
     private void setocationdialog() {
@@ -2268,9 +1226,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
             public void onClick(View v) {
 
 
-                if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
+                if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")) {
                     Toast.makeText(MainActivity.this, "Please select Pincode", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
 
                     ConnectionDetector cd = new ConnectionDetector(MainActivity.this);
                     if (cd.isConnectingToInternet()) {
@@ -2278,7 +1236,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                         SharedPreferences.Editor prefeditor2 = prefuserdata2.edit();
                         prefeditor2.putString("pincode", "" + capartmentid_id);
 
-                        Log.e("testing","pincode  = " + capartmentid_id);
+                        Log.e("testing", "pincode  = " + capartmentid_id);
 
                         prefeditor2.commit();
                         pincode = capartmentid_id;
@@ -2323,50 +1281,6 @@ public boolean onOptionsItemSelected(MenuItem item) {
             }
         });
 
-        // dialog.setTitle("OTP");
-        //  dialog.setCancelable(false);
-/*
-
-        ImageView imgcancel = (ImageView) dialog.findViewById(R.id.imgcancel);
-        edt_mobile = (EditText) dialog.findViewById(R.id.edt_mobile);
-        butlogin = (Button) dialog.findViewById(R.id.butlogin);
-
-
-        imgcancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        butlogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                strpickotp = edt_mobile.getText().toString();
-
-                if (strpickotp == null || strpickotp.length() == 0 || strpickotp.equals("Enter OTP")) {
-
-
-                } else {
-                    ConnectionDetector cd = new ConnectionDetector(getApplicationContext());
-                    if (cd.isConnectingToInternet()) {
-
-                        new LoadSpinnerdata4().execute();
-
-
-                    } else {
-
-
-                        Toast.makeText(Activiy_Dynamic_Route.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
-
-                    }
-                }
-
-            }
-        });
-
-*/
 
         dialog.show();
 
@@ -2384,10 +1298,10 @@ public boolean onOptionsItemSelected(MenuItem item) {
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
             // JSON file URL address
             jsonobject = JSONfunctions1
-                    .getJSONfromURL(EndUrl.Pincode_URL, "GET",userpramas);
+                    .getJSONfromURL(EndUrl.Pincode_URL, "GET", userpramas);
 
 
-            Log.e("testing","apartments = "+jsonobject);
+            Log.e("testing", "apartments = " + jsonobject);
 
             try {
                 // Locate the NodeList name
@@ -2420,18 +1334,6 @@ public boolean onOptionsItemSelected(MenuItem item) {
         @Override
         protected void onPostExecute(Void args) {
 
-            // Locate the spinner in activity_main.xml
-            // Spinner mySpinner = (Spinner) findViewById(R.id.my_spinner);
-
-/*
-            MultiSelectionSpinner multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.checkbox1);
-            multiSelectionSpinner.setItems(students1);
-            // multiSelectionSpinner.setSelection(new int[]{2, 6});
-            multiSelectionSpinner.setListener(this);*/
-
-
-            // -----------------------------spinner for age-----------------------------------
-
 
             spinnerAdapter adapter = new spinnerAdapter(MainActivity.this, R.layout.spinner_item);
             adapter.addAll(worldlist);
@@ -2439,12 +1341,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
             spinapartment.setAdapter(adapter);
             spinapartment.setSelection(adapter.getCount());
 
-            /*CurrentLocation
-                    .setAdapter(new ArrayAdapter<String>(Signup_Tutor.this,
-                            R.layout.spinner_item,
-                            worldlist));*/
 
-            // Spinner on item click listener
             spinapartment
                     .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -2453,11 +1350,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
                                                    View arg1, int position, long arg3) {
                             // TODO Auto-generated method stub
                             // Locate the textviews in activity_main.xml
-                            if(spinapartment.getSelectedItem() == "Select Pincode")
-                            {
+                            if (spinapartment.getSelectedItem() == "Select Pincode") {
                                 //Do nothing.
-                            }
-                            else{
+                            } else {
                                 capartmentid_id = world.get(position).getAname();
 
                                 Log.e("ugender", "ugender = " + capartmentid_id);
@@ -2483,17 +1378,12 @@ public boolean onOptionsItemSelected(MenuItem item) {
         String headers;
         String childs;
 
-        private ProgressDialog pDialog;
+//        private ProgressDialog pDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
 
         }
 
@@ -2533,24 +1423,6 @@ public boolean onOptionsItemSelected(MenuItem item) {
                     Log.e("testing1", "jsonParser3333" + posts);
 
 
-
-              /* if (posts.equals(null)){
-                   listDataHeader = new ArrayList<FeedHeader>();
-                   listDataChild= new HashMap<String, FeedDetail>();
-               }else{
-                   listDataHeader.clear();
-                   listDataChild.clear();
-               }*/
-            /*Initialize array if null*/
-                  /*  if (null == listDataHeader || null == listDataChild) {
-                        listDataHeader = new ArrayList<FeedHeader>();
-                        // listDataChild = new ArrayList<FeedDetail>();
-                        listDataChild = new HashMap<String, List<FeedDetail>>();
-                    } else {
-                        listDataHeader.clear();
-                        listDataChild.clear();
-                    }*/
-
                     if (posts == null) {
                         Log.e("testing", "jon11111111111111111");
 
@@ -2579,16 +1451,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
                             String image = post.getString("catImage");
                             String Subcategorylist = post.getString("Subcategorylist");
-                            //     String desc = post.getString("category_id");
-                            //     String time = post.getString("category_id");
-                            //   String uploads = post.getString("cat_image");
-                            // item.setHeaderName(Title);
-                            // item.setRowid(Rowid);
-                            //   item.setDescription(desc);
-                            //  item.setUpload(uploads);
-                            //  item.setTime(time);
 
-                            Log.e("testing","test cat id========"+date);
+
+                            Log.e("testing", "test cat id========" + date);
                             // listDataHeader.add(item);
 
 
@@ -2622,34 +1487,21 @@ public boolean onOptionsItemSelected(MenuItem item) {
                                 String Title2 = post2.getString("subcatname");
                                 String Title4 = post2.getString("catId");
                                 String Title3 = post2.getString("categoryName");
-                                Log.e("testing","Title3====="+Title3);
-                                Log.e("testing","subcatid====="+subcatid);
+                                Log.e("testing", "Title3=====" + Title3);
+                                Log.e("testing", "subcatid=====" + subcatid);
                                 Log.e("testing", "name222 = " + post2.getString("subcatname"));
                                 childs = post2.getString("subcatname");
 
-                                Log.e("testing","Title2======"+Title2);
-
-                                /*FeedDetail feedDetail = new FeedDetail(Title2);
-                                item2.setTitle(Title2);
-                                listDataChild.put(item.getHeaderName(), feedDetail);*/
+                                Log.e("testing", "Title2======" + Title2);
 
                                 item2.setTitle(Title2);
-                                //listDataChild.add(item2);
-                                // Log.e("mahi--------------", "mahi--------------------- " + item2.setTitle(Title2));
 
                                 feedDetail1.add(item2);
                                 Log.e("mahi--------------", "mahi--------------------- " + feedDetail1.add(item2));
 
-                                //   listDataChild.put(item.getHeaderName(), feedDetail1);
-                                ///listDataChild.put(listDataHeader.get(0), wk);*/
-
-                                // listDataChild.add(item2);
-
-
-                                //create a new child and add that to the group
                                 DetailInfo detailInfo = new DetailInfo();
                                 detailInfo.setSequence(String.valueOf(listSize));
-                                Log.e("testing","listSize==="+listSize);
+                                Log.e("testing", "listSize===" + listSize);
                                 detailInfo.setName(Title2);
                                 detailInfo.setCategoryname(Title3);
                                 detailInfo.setSubcatid(subcatid);
@@ -2678,16 +1530,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-//            pDialog.dismiss();
             Log.e("testing", "result is === " + result);
-
-            // addProduct(listDataHeader, listDataChild);
-            // mEListAdapter.setData(listDataHeader, listDataChild);
-
-            //expListView.setAdapter(mEListAdapter);
-            // listviewmyorder.setAdapter(adapter);
             Log.e("testing", "adapter");
-            Log.e("testing", "adapter===="+deptList);
+            Log.e("testing", "adapter====" + deptList);
 
             listAdapter = new MyListAdapter_MainActivity(MainActivity.this, deptList);
 
@@ -2734,6 +1579,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
         listView.requestLayout();
 
     }
+
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
@@ -2748,8 +1594,33 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                mTvCartCount.setText(data.getStringExtra("CartCount"));
+                mTvCartCount.setVisibility(View.VISIBLE);
+            }
+
+        }else {
+            if (resultCode == RESULT_OK) {
+
+                if (data.getStringExtra("CartCount").equals("0")){
+                    mTvCartCount.setVisibility(View.GONE);
+
+                }else {
+                    mTvCartCount.setText(data.getStringExtra("CartCount"));
+                    mTvCartCount.setVisibility(View.VISIBLE);
+                }
+
+            }
+        }
+    }
+
 }

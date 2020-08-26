@@ -17,7 +17,8 @@ public class ViewHolder_cart extends RecyclerView.ViewHolder implements View.OnC
 
     public TextView cartname,cartprodetails,pdsubprice,pdprice,cartquantity,carttotalamount, textsize;
 
-    public ImageView cartimage,butdecrement,butincrement,delete;
+    public ImageView cartimage;
+    public  TextView delete,butdecrement,butincrement;
 
     public ViewHolder_cart(View itemView) {
 
@@ -25,9 +26,9 @@ public class ViewHolder_cart extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
 
         cartimage = (ImageView)itemView.findViewById(R.id.cartimage);
-        butdecrement = (ImageView)itemView.findViewById(R.id.butdecrement);
-        butincrement = (ImageView)itemView.findViewById(R.id.butincrement);
-        delete = (ImageView)itemView.findViewById(R.id.delete);
+        butdecrement = (TextView) itemView.findViewById(R.id.butdecrement);
+        butincrement = (TextView)itemView.findViewById(R.id.butincrement);
+        delete = (TextView)itemView.findViewById(R.id.delete);
 
 
         cartname = (TextView)itemView.findViewById(R.id.cartname);
@@ -35,8 +36,6 @@ public class ViewHolder_cart extends RecyclerView.ViewHolder implements View.OnC
         pdprice = (TextView)itemView.findViewById(R.id.pdprice);
         pdsubprice = (TextView)itemView.findViewById(R.id.pdsubprice);
         cartquantity = (TextView)itemView.findViewById(R.id.cartquantity);
-        carttotalamount = (TextView)itemView.findViewById(R.id.carttotalamount);
-        textsize = (TextView)itemView.findViewById(R.id.textsize);
 
 
     }

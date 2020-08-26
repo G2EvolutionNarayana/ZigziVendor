@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,11 +15,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:padding="15dp"
             android:text=" Congratulations "
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:gravity="center"/>
+            android:textStyle="bold" />
 
 
         <!--     <LinearLayout
@@ -59,65 +59,65 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="Order has been Placed  Successfully."
                 android:layout_gravity="center"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Order has been Placed  Successfully." />
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
-                    android:text="Your Order ID is"
-                    android:layout_gravity="center"
-                    android:gravity="end"/>
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="end"
+                    android:padding="5dp"
+                    android:text="Your Order ID is" />
+
+                <TextView
                     android:id="@+id/orderid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textStyle="bold"
+                    android:gravity="start"
                     android:padding="5dp"
-                    android:text="cfsdfffsf"
-                    android:layout_gravity="center"
-                    android:gravity="start"/>
+                    android:text=""
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
-                    android:text="Your Final Amount is"
-                    android:layout_gravity="center"
-                    android:gravity="end"/>
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/textorderamount"
-                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:padding="5dp"
-                    android:text="cfsdfffsf"
                     android:layout_gravity="center"
-                    android:gravity="start"/>
+                    android:layout_marginTop="10dp"
+                    android:gravity="end"
+                    android:padding="5dp"
+                    android:text="Your Final Amount is" />
+
+                <TextView
+                    android:id="@+id/textorderamount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:text=""
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>
@@ -128,14 +128,14 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="22dp"
         android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="22dp"
 
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        card_view:cardBackgroundColor="@color/green"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardElevation="2dp">
 
         <LinearLayout
@@ -160,7 +160,6 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
 
 
 </LinearLayout>

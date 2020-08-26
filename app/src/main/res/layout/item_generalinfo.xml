@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+>
 
 
     <LinearLayout
         android:id="@+id/linearlayout1"
+        android:background="#F2F2F2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -16,31 +17,21 @@
             android:id="@+id/texttitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Bangalore"
             android:textSize="15dp"
             android:textColor="@color/black"
             android:layout_weight="1"
-            android:padding="3dp"
-            android:gravity="center"/>
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/grey"/>
+            android:padding="3dp" />
+
 
         <TextView
             android:id="@+id/textvalue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bangalore"
             android:textSize="15dp"
             android:textColor="@color/black"
             android:layout_weight="1"
             android:padding="3dp"
-            android:gravity="center"/>
+            android:gravity="center_vertical"/>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/grey"
-        android:layout_below="@+id/linearlayout1"/>
+
 </RelativeLayout>

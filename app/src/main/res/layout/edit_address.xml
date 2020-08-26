@@ -5,44 +5,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-
-            android:weightSum="2">
-
-            <TextView
-                android:id="@+id/login"
-                android:layout_width="0dp"
-                android:layout_weight=".5"
-                android:layout_height="wrap_content"
-                android:text="Login"
-                android:padding="5dp"
-                android:gravity="center"
-                android:background="@color/white"
-                android:layout_marginLeft="20dp"/>
-            <TextView
-                android:id="@+id/signup"
-                android:layout_width="0dp"
-                android:layout_weight=".5"
-                android:padding="5dp"
-                android:textColor="@color/white"
-                android:background="@color/green"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="SignUp"
-                />
-
-
-
-
-        </LinearLayout>
-    -->
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -56,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@color/green"
+                android:background="@color/colorPrimary"
                 android:padding="10dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
@@ -69,9 +31,10 @@
                      android:padding="5dp"
                      android:src="@drawable/back"/>-->
                 <TextView
+                    android:id="@+id/xTvEditAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Edit Address"
+                    android:text="Add Address"
                     android:textColor="@color/white"
                     android:layout_gravity="center"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -79,338 +42,364 @@
 
             </LinearLayout>
 
-
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Name*"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <androidx.cardview.widget.CardView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="25dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey">
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editname"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint=" Name "
-                        android:padding="10dp"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="text"
+                        android:maxLength="10"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Enter Area* / Select Address"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <androidx.cardview.widget.CardView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bordergrey"
-                    android:orientation="horizontal">
-                    <!--       <EditText
-                               android:id="@+id/editadd"
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:layout_marginTop="5dp"
-                               android:layout_weight=".4"
-                               android:background="@null"
-                               android:hint=" Address "
-                               android:padding="10dp"
-                               android:paddingLeft="10sp"
-                               android:textSize="12sp" />-->
+                    android:layout_marginLeft="@dimen/dimen_10dp">
+
                     <AutoCompleteTextView
                         android:id="@+id/locationsedt"
+                        android:layout_toLeftOf="@+id/xIvAddress"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Enter Area"
-                        android:paddingLeft="10dp"
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
 
-                        android:padding="10dp"
-                        android:textSize="12sp" />
+                    <ImageView
+                        android:id="@+id/xIvAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_select_address"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:paddingLeft="@dimen/padding_10"
+                        android:paddingRight="@dimen/padding_10"/>
 
-                </LinearLayout>
-
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
 
-                android:id="@+id/cardlandmark"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Enter  Landmark* "
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editlandmark"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint=" Enter  Landmark "
-                        android:padding="10dp"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Enter House No*"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/edithouseno"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Enter House No"
-                        android:inputType="text"
-                        android:padding="10dp"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Enter City*"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editcity"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Enter City"
+                        android:drawablePadding="@dimen/dimen_5dp"
                         android:inputType="text"
-                        android:padding="10dp"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Select State*"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editstate"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Select State"
+                        android:drawablePadding="@dimen/dimen_5dp"
                         android:inputType="text"
-                        android:padding="10dp"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Mobile No*"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editmob1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Mobile No "
-                        android:inputType="phone"
-                        android:padding="10dp"
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="number"
                         android:maxLength="10"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="Alternative Mobile No "
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editmob"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Alternative Mobile No "
-                        android:inputType="phone"
-                        android:padding="10dp"
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="number"
                         android:maxLength="10"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="PinCode*"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardElevation="2dp">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bordergrey"
-                    >
+                    android:layout_marginLeft="@dimen/dimen_10dp">
 
                     <EditText
                         android:id="@+id/editpincode"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight=".4"
+                        android:layout_height="40dp"
                         android:background="@null"
-                        android:hint="Enter Pincode "
-                        android:inputType="phone"
-                        android:padding="10dp"
-                        android:maxLength="10"
-                        android:paddingLeft="10sp"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                        android:drawablePadding="@dimen/dimen_5dp"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_14sp" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -473,7 +462,8 @@
 
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                card_view:cardBackgroundColor="@color/green"
+                card_view:cardBackgroundColor="@color/colorPrimary"
+                card_view:cardCornerRadius="@dimen/dimen_5dp"
                 card_view:cardElevation="2dp">
 
                 <LinearLayout
@@ -486,15 +476,14 @@
                     <Button
                         android:id="@+id/addsubmit"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_height="55dp"
                         android:background="@null"
                         android:gravity="center"
-                        android:padding="1dp"
                         android:paddingLeft="0sp"
                         android:text=" Submit "
+                        android:fontFamily="@font/roboto_bold"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>

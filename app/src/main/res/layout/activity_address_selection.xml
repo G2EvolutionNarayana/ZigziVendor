@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.AddressSelectionActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/xRelaySelect">
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.currentplacedetailsonmap.MapsActivityCurrentPlace" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_map_red"
+            android:layout_centerInParent="true"
+            android:paddingBottom="22.5dp"
+            android:layout_marginRight="@dimen/padding_15"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/xRelaySelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_corners_curved_bg"
+
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_light_gray" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Select Delivery location"
+                    android:drawableLeft="@drawable/ic_location"
+                    android:textColor="@color/color_black1"
+                    android:drawablePadding="@dimen/padding_15"
+                    android:textSize="@dimen/text_size_18"
+                    android:padding="@dimen/padding_20"/>
+
+                <ImageView
+                    android:id="@+id/xIvSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_tick_mark"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/padding_15"/>
+
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_light_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_10"
+              >
+
+
+                    <TextView
+                        android:id="@+id/xTvAdrress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="Picked up timing"
+                        android:textColor="@color/color_black1"
+                        android:textSize="@dimen/text_size_14"
+                        android:layout_gravity="center_vertical"
+                        android:padding="@dimen/padding_5"/>
+
+
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+</RelativeLayout>

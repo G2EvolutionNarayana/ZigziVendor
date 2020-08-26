@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="55dp"
-    android:background="@drawable/button_effect"
+    android:background="@color/colorPrimary"
 
 
     >
@@ -33,6 +33,7 @@
         android:layout_gravity="center_vertical"
         android:textSize="20dp"
         android:paddingLeft="5dp"
+        android:fontFamily="@font/roboto_bold"
         android:layout_toRightOf="@+id/back"
 
         android:textColor="@color/white"

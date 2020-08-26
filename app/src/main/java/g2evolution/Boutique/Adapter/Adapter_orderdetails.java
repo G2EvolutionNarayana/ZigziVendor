@@ -66,19 +66,16 @@ public class Adapter_orderdetails extends RecyclerView.Adapter<ViewHolder_orderd
 
         final String strrs = mContext.getResources().getString(R.string.Rs);
 
-        holder.orderdate.setText(feederInfo.getOrderdate());
+//        holder.orderdate.setText(feederInfo.getOrderdate());
         holder.ordername.setText(feederInfo.getOrdername());
         holder.orderprodetails.setText(feederInfo.getOrderprodetails());
-        if (feederInfo.getDiscountamount() == null ||feederInfo.getDiscountamount().trim().equals("null")||feederInfo.getDiscountamount().trim().length() == 0 || feederInfo.getDiscountamount().trim().equals("0")){
-            holder.pdsubprice.setText(strrs+" "+feederInfo.getOrderpriceamount());
-        }else{
-
-            holder.pdsubprice.setText(strrs+" "+feederInfo.getAfterdiscount());
-            holder.pdprice.setText(strrs+" "+feederInfo.getOrderpriceamount());
-            holder.pdprice.setVisibility(View.VISIBLE);
-            holder.pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-      //  holder.orderpriceamount.setText(strrs+" "+feederInfo.getOrderpriceamount());
+//        if (feederInfo.getDiscountamount() == null ||feederInfo.getDiscountamount().trim().equals("null")||feederInfo.getDiscountamount().trim().length() == 0 || feederInfo.getDiscountamount().trim().equals("0")){
+//        }else{
+//
+//            holder.pdprice.setText(strrs+" "+feederInfo.getOrderpriceamount());
+//            holder.pdprice.setVisibility(View.VISIBLE);
+//            holder.pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//        }
         holder.quantity_ordertext.setText(feederInfo.getQuantity_ordertext());
         holder.ordertotalamount.setText(strrs+" "+feederInfo.getOrdertotalamount());
 
@@ -95,22 +92,6 @@ public class Adapter_orderdetails extends RecyclerView.Adapter<ViewHolder_orderd
 
         }
 
-
-
-    /*    holder.imgdelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                qty = feederInfo.getId();
-                if (mCallback!=null){
-                    mCallback.onClickedItem(position,feederInfo.getId(), 1);
-                }
-            }
-        });
-*/
-
-
-
-        //holder.rate.setRating(Float.parseFloat(feederInfo.get_rating()));
 
 
         mPreviousPosition = position;

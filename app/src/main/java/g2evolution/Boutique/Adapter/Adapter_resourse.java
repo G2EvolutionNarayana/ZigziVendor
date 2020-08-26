@@ -55,24 +55,18 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_resourse.Title_List_ViewHolder holder, final int position) {
-
         final Datum follow = Datum.get(position);
-
-      /*  if(follow.getTitlename()==null || follow.getTitlename().equals("null") || follow.getTitlename().length()==0)
-        {
-            holder.title_name.setText("");
-        }
-        else {
-            String upperString1 = follow.getTitlename().substring(0,1).toUpperCase() + follow.getTitlename().substring(1);
-            holder.title_name.setText(upperString1);
-        }*/
-
       String strs =  mCtx.getResources().getString(R.string.Rs);
 
       holder.title_name.setText(follow.getName());
-      holder.title_count.setText(follow.getAllocatedResumes()+"/"+follow.getCvCount());
-      holder.textprice.setText(strs+follow.getPrice());
+      holder.title_count.setText(follow.getCvCount());
+//        holder.title_count.setText(follow.getAllocatedResumes()+"/"+follow.getCvCount());
+
+        holder.textprice.setText(strs+follow.getPrice());
       holder.textdesc.setText(follow.getDescription());
+        if (follow.getSubscribed().trim().equals("yes")){
+            holder.butbuy.setText("Subscribed");
+        }
 
         holder.cardview1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,36 +74,17 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
 
                 qty= String.valueOf(follow.getResourcePackagesId());
 
-            /*    if (mCallbackcropnames != null) {
-                    mCallbackcropnames.OnItemClickcropNames(position, qty, 1);
-                    Log.e("testing", "qtyadapter" + qty);
-
-                }*/
-
             if (follow.getSubscribed().trim().equals("yes")){
                 SharedPreferences prefuserdata =mCtx.getSharedPreferences("ProductIDDetails", 0);
                 SharedPreferences.Editor prefeditor = prefuserdata.edit();
                 prefeditor.putString("ProductId", "" + qty);
                 prefeditor.putString("Productsubscriptionid", "" + follow.getSubscriptionId());
                 prefeditor.commit();
-
                 Intent intent=new Intent(mCtx, Activity_ResourcesList.class);
                 mCtx.startActivity(intent);
+//                Toast.makeText(mCtx,"Already package suscribed",Toast.LENGTH_LONG).show();
+
             }else{
-                Toast.makeText(mCtx, "Please Buy this plan", Toast.LENGTH_SHORT).show();
-            }
-
-
-
-
-                Log.e("testing","subcatid===child========"+qty);
-            }
-        });
-
-
-        holder.butbuy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 final Dialog logindialog = new Dialog(mCtx);
                 logindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 LayoutInflater inflater1 = (LayoutInflater) mCtx.getSystemService(mCtx.LAYOUT_INFLATER_SERVICE);
@@ -145,8 +120,7 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
                         }
                     }
                 });
-                //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
+
                 logindialog.setCanceledOnTouchOutside(true);
                 WindowManager.LayoutParams lp1 = new WindowManager.LayoutParams();
                 lp1.copyFrom(logindialog.getWindow().getAttributes());
@@ -155,14 +129,13 @@ public class Adapter_resourse extends RecyclerView.Adapter<Adapter_resourse.Titl
                 lp1.gravity = Gravity.CENTER;
                 logindialog.getWindow().setAttributes(lp1);
 
-
-
-                // lowtohigh = (TextView) convertView1.findViewById(R.id.lowtohigh);
-
-
                 logindialog.show();
             }
+
+
+            }
         });
+
 
     }
 

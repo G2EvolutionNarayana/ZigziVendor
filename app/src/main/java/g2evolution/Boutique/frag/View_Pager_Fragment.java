@@ -47,10 +47,10 @@ public class View_Pager_Fragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        adapter.addFragment(new New_booking_Fragment(),      "New Booking             ");
-        adapter.addFragment(new Waitng_Orders_Fragmnet(),  "Waiting Orders            ");
-        adapter.addFragment(new Completed_Booking_Fragment(),  "Completed Booking     ");
-        adapter.addFragment(new Cancelled_Booking_Fragment(),  "Cancelled Booking     ");
+        adapter.addFragment(new New_booking_Fragment(),      " New Booking ");
+        adapter.addFragment(new Waitng_Orders_Fragmnet(),   " Waiting Orders ");
+        adapter.addFragment(new Completed_Booking_Fragment(),  " Completed Booking ");
+        adapter.addFragment(new Cancelled_Booking_Fragment(),  " Cancelled Booking ");
 
 
 

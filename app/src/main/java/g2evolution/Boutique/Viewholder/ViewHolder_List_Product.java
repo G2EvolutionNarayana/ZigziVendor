@@ -2,6 +2,7 @@ package g2evolution.Boutique.Viewholder;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ public class ViewHolder_List_Product extends RecyclerView.ViewHolder implements 
 
     public ImageView electronicimage;
 
-    public RelativeLayout line;
+    public LinearLayout line;
     public ViewHolder_List_Product(View itemView) {
 
         super(itemView);
@@ -29,7 +30,7 @@ public class ViewHolder_List_Product extends RecyclerView.ViewHolder implements 
         pdsubprice = (TextView)itemView.findViewById(R.id.pdsubprice);
         pdprice = (TextView)itemView.findViewById(R.id.pdprice);
         textdiscount = (TextView) itemView.findViewById(R.id.textdiscount);
-        line = (RelativeLayout) itemView.findViewById(R.id.line1);
+        line = (LinearLayout) itemView.findViewById(R.id.line);
         actual_price = (TextView)itemView.findViewById(R.id.actual_price);
 
 

@@ -28,11 +28,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Adapter.Adapter_RecyclerViewDataCategory;
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.JSONParser;
+import g2evolution.Boutique.Utility.Utils;
 import g2evolution.Boutique.entit.Entity_CategorySimilarDataModel;
 import g2evolution.Boutique.entit.Entoty_CategorySingleItemModel;
 
@@ -63,7 +65,9 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+
+                mCallCartback();
+
             }
         });
 
@@ -238,13 +242,7 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
                                         JSONObject post2 = posts2.optJSONObject(i1);
 
 
-                               /*
-                                String Title2 = post2.getString("title");
-                                String Productid = post2.getString("productId");
-                                String Parentid = post2.getString("subcatName");
-                                String Typename = post2.getString("location");
 
-                               */
 
                                         String finalimg = null;
 
@@ -253,19 +251,6 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
 
                                         Map<String,String> map2 = new HashMap<String,String>();
                                         singleItem.add(new Entoty_CategorySingleItemModel(post2.getString("id"), post2.getString("name"), post2.getString("name"), post2.getString("name"), "2", "3", "1", finalimg, "1","childcategory",map2));
-
-                              /*  JSONArray posts3 = post2.optJSONArray("multipleImages");
-                                for (int i2 = 0; i2 < posts3.length(); i2++) {
-                                    JSONObject post3 = posts3.optJSONObject(i2);
-
-                                    finalimg = post3.getString("image");
-
-
-                                    //find the group position inside the list
-                                    //groupPosition = deptList.indexOf(headerInfo);
-                                }*/
-
-
 
 
                                     }
@@ -322,4 +307,18 @@ public class Activity_SubSactegory extends AppCompatActivity implements Adapter_
 
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        mCallCartback();
+    }
+
+    private void mCallCartback() {
+
+        Intent intent = new Intent();
+        intent.putExtra("CartCount", String.valueOf(Utils.Cart_Count));
+        setResult(RESULT_OK, intent);
+        finish();
+
+    }
 }

@@ -22,7 +22,7 @@
         android:id="@+id/butsubmit"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/green"
+        android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:text="Continue"
         android:layout_alignParentBottom="true"/>

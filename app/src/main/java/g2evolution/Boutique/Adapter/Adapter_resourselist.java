@@ -36,7 +36,6 @@ public class Adapter_resourselist extends RecyclerView.Adapter<Adapter_resoursel
         this.Entity_ResourseList = Entity_ResourseList;
         this.mCallbackcropnames = mCallbackcropnames;
 
-
     }
     public interface OnItemClickcropNames {
         void OnItemClickcropNames(int pos, String qty, int status);
@@ -54,16 +53,6 @@ public class Adapter_resourselist extends RecyclerView.Adapter<Adapter_resoursel
     public void onBindViewHolder(@NonNull Adapter_resourselist.Title_List_ViewHolder holder, final int position) {
 
         final Entity_ResourseList follow = Entity_ResourseList.get(position);
-
-      /*  if(follow.getTitlename()==null || follow.getTitlename().equals("null") || follow.getTitlename().length()==0)
-        {
-            holder.title_name.setText("");
-        }
-        else {
-            String upperString1 = follow.getTitlename().substring(0,1).toUpperCase() + follow.getTitlename().substring(1);
-            holder.title_name.setText(upperString1);
-        }*/
-
 
         String strs =  mCtx.getResources().getString(R.string.Rs);
 

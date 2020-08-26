@@ -37,10 +37,6 @@ public class OTP_Activity extends AppCompatActivity implements View.OnClickListe
 
     @BindView(R.id.firstPinView)
     PinView firstPinView;
-    @BindView(R.id.otp_text)
-    TextView otp_text;
-    @BindView(R.id.otp_text2)
-    TextView otp_text2;
     @BindView(R.id.submit_text)
     TextView submit_text;
     @BindView(R.id.resend_text)
@@ -68,14 +64,11 @@ public class OTP_Activity extends AppCompatActivity implements View.OnClickListe
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "arial.ttf");
 
-        ((TextView) findViewById(R.id.otp_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.otp_text2)).setTypeface(typeface);
+
         ((TextView) findViewById(R.id.submit_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.resend_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.firstPinView)).setTypeface(typeface);
 
-        otp_text.setText("Enter the code ");
-        otp_text2.setText("from the mobile we just sent you.");
 
 
         listeners();
@@ -173,15 +166,10 @@ public class OTP_Activity extends AppCompatActivity implements View.OnClickListe
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(OTP_Activity.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
 
 
         }
@@ -318,7 +306,7 @@ public class OTP_Activity extends AppCompatActivity implements View.OnClickListe
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(OTP_Activity.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 

@@ -36,10 +36,7 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
 
     public Adapter_List_Product(Context context, ArrayList<FeederInfo_List_Product> feedList){
         mContext = context;
-        // mInflater = LayoutInflater.from(context);
         mListFeeds=feedList;
-
-
     }
 
 
@@ -67,39 +64,11 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
 
         Log.e("testing","adapetr====="+feederInfo.getElectronicname());
         _descvalue=feederInfo.getDiscountvalue();
-
-        if (feederInfo.getDiscountvalue() == null || feederInfo.getDiscountvalue().trim().length() == 0 || feederInfo.getDiscountvalue().trim().equals("null")){
-            holder.pdprice.setVisibility(View.GONE);
-            holder.textdiscount.setVisibility(View.GONE);
-            holder.discount_price.setVisibility(View.GONE);
-        }else if (feederInfo.getDiscountvalue().trim().equals("0")){
-            holder.pdprice.setVisibility(View.GONE);
-            holder.textdiscount.setVisibility(View.GONE);
-            holder.discount_price.setVisibility(View.GONE);
-        }else{
-            holder.pdprice.setText(feederInfo.getElectronicprice());
-            holder. pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-            holder. pdprice.setVisibility(View.VISIBLE);
-            holder. textdiscount.setVisibility(View.VISIBLE);
-            holder.textdiscount.setText((feederInfo.getDiscountvalue()+"%"));
-            holder.discount_price.setVisibility(View.GONE);
-        }
-
-
-       /* stockQuantity=feederInfo.getStockQuantity().trim();
-        int foo = Integer.parseInt(stockQuantity);
-
-        if (foo>0){*/
-
-
         if (feederInfo.getElectronicimage() == null || feederInfo.getElectronicimage().equals("0")||feederInfo.getElectronicimage().equals("")||feederInfo.getElectronicimage().equals("null")){
             holder.electronicimage.setImageResource(R.drawable.car);
         }else {
             Glide.with(mContext)
                     .load(Uri.parse(feederInfo.getElectronicimage()))
-                    // .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    //.skipMemoryCache(true)
                     .error(R.drawable.car)
                     .into(holder.electronicimage);
 
@@ -122,15 +91,6 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
                 Log.e("testing","Proid  = " + postid);
                 Log.e("testing","productid in adapter = "+postid);
                 prefeditor.commit();
-
-              /*  SharedPreferences prefuserdata2 = mContext.getSharedPreferences("regId", 0);
-                SharedPreferences.Editor prefeditor2 = prefuserdata2.edit();
-                prefeditor2.putString("UserId", "" + "2");
-
-                prefeditor2.commit();*/
-
-
-
                 Intent intent = new Intent(mContext, Activity_productdetails.class);
                 Bundle extras = new Bundle();
                 extras.putSerializable("HashMap", (Serializable) feederInfo.getMapparameters());
@@ -141,63 +101,21 @@ public class Adapter_List_Product extends RecyclerView.Adapter<ViewHolder_List_P
             }
         });
 
-     /*   }else {
-
-            Log.e("testing1","foo=====<<<<<<"+foo);
-
-            holder.electronicimage.setImageResource(R.drawable.outofstock);
-
-            holder.electronicimage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "Product Is Not Available", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }*/
         holder.electronicname.setText(feederInfo.getElectronicname());
-        holder.electronicdetail1.setText(feederInfo.getElectronicdetail1());
-        //  holder.electronicdetail2.setText(feederInfo.getElectronicdetail2());
-        //   holder.pdsubprice.setText(feederInfo.getElectronicprice());
-
         if (feederInfo.getDiscountvalue() == null || feederInfo.getDiscountvalue().length() == 0 || feederInfo.getDiscountvalue().equals("NA")){
             final String strrs = mContext.getResources().getString(R.string.Rs);
             holder.pdsubprice.setText(strrs+" "+feederInfo.getElectronicprice());
         }else{
-            // holder.pdprice.setVisibility(View.VISIBLE);
             final String strrs = mContext.getResources().getString(R.string.Rs);
             holder.pdsubprice.setText(strrs+" "+feederInfo.getAfterdiscount());
-
-
-            //  holder.pdprice.setText(strrs+" "+feederInfo.getElectronicprice());
-            //  holder.pdprice.setPaintFlags(holder.pdprice.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
 
         }
 
         Log.e("testing","_descvalue"+_descvalue);
 
-        if (_descvalue == null || _descvalue.length() == 0 || _descvalue.equals("NA")){
-
-            holder. textdiscount.setVisibility(View.INVISIBLE);
-
-
-        }else{
-
-            holder. textdiscount.setVisibility(View.VISIBLE);
-            holder.textdiscount.setText((_descvalue+"%"));
-        }
-
         postid = feederInfo.getId();
 
         Log.e("testing","image in adapter = "+feederInfo.getElectronicimage());
-
-
-
-
-
-
-        //holder.rate.setRating(Float.parseFloat(feederInfo.get_rating()));
-
 
         mPreviousPosition = position;
 

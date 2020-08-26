@@ -38,6 +38,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Adapter.Adapter_orderhistory;
 import g2evolution.Boutique.EndUrl;
@@ -126,62 +127,6 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
     }
 
 
-    class Loader extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(My_Orders.this, ProgressDialog.THEME_HOLO_LIGHT);
-            } else {
-                dialog = new ProgressDialog(My_Orders.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            allItems1 = new ArrayList<FeederInfo_orderhistory>();
-            return postJsonObject(EndUrl.OrderHistory_URL, makingJson());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                dialog.dismiss();
-
-                Log.e("testing", "result in post execute=========" + result);
-
-                if (status.equals("success")) {
-
-                    mAdapterFeeds = new Adapter_orderhistory(My_Orders.this, allItems1, mCallback);
-                    mFeedRecyler.setAdapter(mAdapterFeeds);
-
-                } else if (status.equals("error")) {
-
-                    allItems1.clear();
-
-                    mAdapterFeeds = new Adapter_orderhistory(My_Orders.this, allItems1, mCallback);
-                    mFeedRecyler.setAdapter(mAdapterFeeds);
-
-                    Toast.makeText(My_Orders.this, "no data found", Toast.LENGTH_LONG).show();
-
-                }
-
-            } else {
-                Toast.makeText(My_Orders.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
 
     public JSONObject makingJson() {
 
@@ -367,62 +312,6 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
     }
 
 
-    class DeleteItem extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(My_Orders.this, ProgressDialog.THEME_HOLO_LIGHT);
-            } else {
-                dialog = new ProgressDialog(My_Orders.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject2(EndUrl.OrderDelete_URL, makingJson2());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                dialog.dismiss();
-                dialog1.dismiss();
-
-                Log.e("testing", "result in post execute=========" + result);
-
-                if (status.equals("success")) {
-
-                    dialog.dismiss();
-                    Toast.makeText(My_Orders.this,"Your Order has been Cancelled Successfully" , Toast.LENGTH_LONG).show();
-                    new Loader().execute();
-
-                } else{
-
-                    Toast.makeText(My_Orders.this, message, Toast.LENGTH_LONG).show();
-
-                }
-
-            } else {
-                Toast.makeText(My_Orders.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
-
-
-
     public JSONObject makingJson2() {
 
 
@@ -504,38 +393,7 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
             status = json.getString("status");
             message = json.getString("message");
 
-          /*  // data = json.getString("data");
 
-            String arrayresponce = json.getString("data");
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-
-
-                FeederInfo_orderdetails item = new FeederInfo_orderdetails();
-
-                item.setOrderimage(post.optString("image"));
-                item.setOrderdate(post.optString("postedOn"));
-                item.setOrdername(post.optString("title"));
-                item.setOrderprodetails(post.optString("subTitle"));
-                item.setOrderpriceamount(post.optString("TaxandPrice"));
-                item.setQuantity_ordertext(post.optString("qty"));
-                item.setOrdertotalamount(post.optString("NetAmount"));
-
-
-
-                allItems1.add(item);
-
-            }*/
 
 
         } catch (JSONException e) {
@@ -589,7 +447,6 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
 
             allItems1 = new ArrayList<FeederInfo_orderhistory>();
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
-
 
             userpramas.add(new BasicNameValuePair(EndUrl.GetOrderList_user_id, UserId));
 
@@ -646,9 +503,6 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
                             allItems1.add(item);
 
 
-
-
-
                         }
                     }else{
 
@@ -677,22 +531,10 @@ public class My_Orders extends AppCompatActivity  implements Adapter_orderhistor
                 mAdapterFeeds = new Adapter_orderhistory(My_Orders.this, allItems1, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
 
-
-
-
-
-
             }
             else {
-
-
                 mAdapterFeeds = new Adapter_orderhistory(My_Orders.this, allItems1, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
-
-
-
-
-
             }
 
 

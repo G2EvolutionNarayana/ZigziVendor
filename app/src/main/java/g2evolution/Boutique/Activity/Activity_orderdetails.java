@@ -2,21 +2,23 @@ package g2evolution.Boutique.Activity;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -50,29 +52,22 @@ import g2evolution.Boutique.Utility.JSONParser;
 public class Activity_orderdetails extends AppCompatActivity implements Adapter_orderdetails.OnItemClick {
 
 
-
     ArrayList<HashMap<String, String>> arraylist1;
-    private ArrayList<FeederInfo_orderdetails> allItems1 = new ArrayList<FeederInfo_orderdetails>();
-    private RecyclerView mFeedRecyler;
-    private ArrayList<FeederInfo_orderdetails> mListFeederInfo;
     Adapter_orderdetails mAdapterFeeds;
     RecyclerView rView;
-
     String strorderid;
-
     String orderitemid;
-
     JSONParser jsonParser = new JSONParser();
-
-    private Adapter_orderdetails.OnItemClick mCallback;
-    String userid,pid;
-
-
-    String status,message,orderid,products;
-
+    String userid, pid;
+    String status, message, orderid, products;
+    TextView xTvChangePass;
     ImageView back;
     String strreason;
     Dialog dialog; // cancel dialog
+    private ArrayList<FeederInfo_orderdetails> allItems1 = new ArrayList<FeederInfo_orderdetails>();
+    private RecyclerView mFeedRecyler;
+    private ArrayList<FeederInfo_orderdetails> mListFeederInfo;
+    private Adapter_orderdetails.OnItemClick mCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,25 +77,23 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
         SharedPreferences prefuserdata = this.getSharedPreferences("OrderDetails", 0);
         orderid = prefuserdata.getString("orderid", "");
 
+        SharedPreferences prefuserdata1 = getSharedPreferences("regId", 0);
+        userid = prefuserdata1.getString("UserId", "");
+        Log.e("testing", "onClick: "+userid );
 
-        SharedPreferences prefuserdata2 = getSharedPreferences("regcart", 0);
-        userid = prefuserdata2.getString("userid","");
-        pid = prefuserdata2.getString("productid","");
+
+//        pid = prefuserdata2.getString("productid", "");
 
         mFeedRecyler = (RecyclerView) findViewById(R.id.recycler_view);
         mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_orderdetails.this));
-        //setUpRecycler();
-        // context = this;
-        //  lLayout = new GridLayoutManager(Activity_orderdetails.this,2);
+
         rView = (RecyclerView) findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
-        // rView.setLayoutManager(lLayout);
-        //   mFeedRecyler.setLayoutManager(lLayout);
+
         mFeedRecyler.setHasFixedSize(true);
-
+        xTvChangePass = findViewById(R.id.xTvChangePass);
         mCallback = this;
-
-        back = (ImageView)findViewById(R.id.back);
+        back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,19 +102,33 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
             }
         });
 
+        xTvChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+//                http://zigzi.in/admin/order/order_invoice?id=36&user_id=16
+                String url = "http://zigzi.in/admin/order/order_invoice?id=" + orderid + "&user_id=" + userid;
+                //Copy App URL from Google Play Store.
+                intent.setData(Uri.parse(url));
+                Log.e("testing", "onClick: "+url );
+                startActivity(intent);
+
+            }
+        });
+
         // setUpRecycler();
 
         new LoadOrderDetails().execute();
-
 
 
     }
 
     @Override
     public void onClickedItem(int pos, String qty, int status) {
-        Log.e("DMen", "Pos:"+ pos + "Qty:"+qty);
-        Log.e("testing","status  = "+status);
-        Log.e("testing","title inm  = "+allItems1.get(pos).getId());
+        Log.e("DMen", "Pos:" + pos + "Qty:" + qty);
+        Log.e("testing", "status  = " + status);
+        Log.e("testing", "title inm  = " + allItems1.get(pos).getId());
 
         orderitemid = allItems1.get(pos).getId();
 
@@ -133,9 +140,9 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
         butsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editreason.getText().toString() == null || editreason.getText().toString().length() == 0){
+                if (editreason.getText().toString() == null || editreason.getText().toString().length() == 0) {
                     Toast.makeText(Activity_orderdetails.this, "Enter Reason", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
 
                     strreason = editreason.getText().toString();
 
@@ -153,10 +160,239 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
         dialog.show();
 
 
+    }
 
+    public JSONObject makingJson() {
+
+
+        JSONObject jobj = new JSONObject();
+        // user_id = edt_mobileno.getText().toString();
+
+        try {
+
+            jobj.put(EndUrl.OrderDetails_order_id, orderid);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("testing", "json object " + jobj);
+        return jobj;
 
     }
 
+    public JSONObject postJsonObject(String url, JSONObject loginJobj) {
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+
+            //http://localhost:9000/api/products/GetAllProducts
+            HttpPost httpPost = new HttpPost(url);
+
+            System.out.println(url);
+            String json = "";
+
+            // 4. convert JSONObject to JSON to String
+
+            json = loginJobj.toString();
+
+            System.out.println(json);
+            // 5. set json to StringEntity
+            StringEntity se = new StringEntity(json);
+
+            // 6. set httpPost Entity
+            httpPost.setEntity(se);
+
+            // 7. Set some headers to inform server about the type of the content
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if (inputStream != null)
+
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        JSONObject json = null;
+        try {
+
+            json = new JSONObject(result);
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            status = json.getString("status");
+            message = json.getString("message");
+
+            // data = json.getString("data");
+
+            String arrayresponce = json.getString("data");
+            Log.e("testing", "adapter value=" + arrayresponce);
+
+
+            JSONArray responcearray = new JSONArray(arrayresponce);
+            Log.e("testing", "responcearray value=" + responcearray);
+
+            for (int i = 0; i < responcearray.length(); i++) {
+
+                JSONObject post = responcearray.getJSONObject(i);
+                HashMap<String, String> map = new HashMap<String, String>();
+
+
+                FeederInfo_orderdetails item = new FeederInfo_orderdetails();
+
+                item.setId(post.optString("productId"));
+                item.setOrderimage(post.optString("image"));
+                item.setOrderdate(post.optString("postedOn"));
+                item.setOrdername(post.optString("title"));
+                item.setOrderprodetails(post.optString("subTitle"));
+                item.setOrderpriceamount(post.optString("price"));
+                item.setQuantity_ordertext(post.optString("qty"));
+                item.setOrdertotalamount(post.optString("totalAmount"));
+
+
+                allItems1.add(item);
+
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // 11. return result
+
+        return json;
+
+    }
+
+    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+    }
+
+    public JSONObject makingJson2() {
+
+
+        JSONObject object = new JSONObject();
+
+        try {
+
+
+            object.put(EndUrl.OrderItemDelete_Userid, userid);
+            object.put(EndUrl.OrderItemDelete_Orderid, orderid);
+            object.put(EndUrl.OrderItemDelete_Orderitem, orderitemid);
+            object.put(EndUrl.OrderItemDelete_Reason, strreason);
+
+
+            Log.e("json", object.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object;
+
+    }
+
+    public JSONObject postJsonObject2(String url, JSONObject loginJobj) {
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+
+            //http://localhost:9000/api/products/GetAllProducts
+            HttpPost httpPost = new HttpPost(url);
+
+            System.out.println(url);
+            String json = "";
+
+            // 4. convert JSONObject to JSON to String
+
+            json = loginJobj.toString();
+
+            System.out.println(json);
+            // 5. set json to StringEntity
+            StringEntity se = new StringEntity(json);
+
+            // 6. set httpPost Entity
+            httpPost.setEntity(se);
+
+            // 7. Set some headers to inform server about the type of the content
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if (inputStream != null)
+
+                result = convertInputStreamToString2(inputStream);
+            else
+                result = "Did not work!";
+
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        JSONObject json = null;
+        try {
+
+            json = new JSONObject(result);
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            status = json.getString("status");
+            message = json.getString("message");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // 11. return result
+
+        return json;
+
+    }
+
+    private String convertInputStreamToString2(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+    }
 
     class Loader extends AsyncTask<Void, Void, JSONObject> {
 
@@ -204,7 +440,7 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
                     mFeedRecyler.setAdapter(mAdapterFeeds);
 
                     Toast.makeText(Activity_orderdetails.this, "no data found", Toast.LENGTH_LONG).show();
-                }else  {
+                } else {
 
                     allItems1.clear();
 
@@ -221,143 +457,6 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
         }
 
     }
-
-    public JSONObject makingJson() {
-
-
-        JSONObject jobj = new JSONObject();
-        // user_id = edt_mobileno.getText().toString();
-
-        try {
-
-            jobj.put(EndUrl.OrderDetails_order_id,orderid);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.e("testing","json object "+jobj);
-        return jobj;
-
-    }
-
-
-
-    public JSONObject postJsonObject(String url, JSONObject loginJobj){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            status = json.getString("status");
-            message = json.getString("message");
-
-            // data = json.getString("data");
-
-            String arrayresponce = json.getString("data");
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-
-
-                FeederInfo_orderdetails item = new FeederInfo_orderdetails();
-
-                item.setId(post.optString("productId"));
-                item.setOrderimage(post.optString("image"));
-                item.setOrderdate(post.optString("postedOn"));
-                item.setOrdername(post.optString("title"));
-                item.setOrderprodetails(post.optString("subTitle"));
-                item.setOrderpriceamount(post.optString("price"));
-                item.setQuantity_ordertext(post.optString("qty"));
-                item.setOrdertotalamount(post.optString("totalAmount"));
-
-
-
-                allItems1.add(item);
-
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
-
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-    }
-
 
     class DeleteItem extends AsyncTask<Void, Void, JSONObject> {
 
@@ -397,7 +496,7 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
                     dialog.dismiss();
                     new Loader().execute();
 
-                } else{
+                } else {
                     Toast.makeText(Activity_orderdetails.this, message, Toast.LENGTH_LONG).show();
 
 
@@ -410,144 +509,6 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
         }
 
     }
-
-
-
-    public JSONObject makingJson2() {
-
-
-        JSONObject object = new JSONObject();
-
-        try {
-
-
-            object.put(EndUrl.OrderItemDelete_Userid,userid);
-            object.put(EndUrl.OrderItemDelete_Orderid,orderid);
-            object.put(EndUrl.OrderItemDelete_Orderitem,orderitemid);
-            object.put(EndUrl.OrderItemDelete_Reason,strreason);
-
-
-            Log.e("json",object.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return object;
-
-    }
-
-    public JSONObject postJsonObject2(String url, JSONObject loginJobj){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString2(inputStream);
-            else
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            status = json.getString("status");
-            message = json.getString("message");
-
-          /*  // data = json.getString("data");
-
-            String arrayresponce = json.getString("data");
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-
-
-                FeederInfo_orderdetails item = new FeederInfo_orderdetails();
-
-                item.setOrderimage(post.optString("image"));
-                item.setOrderdate(post.optString("postedOn"));
-                item.setOrdername(post.optString("title"));
-                item.setOrderprodetails(post.optString("subTitle"));
-                item.setOrderpriceamount(post.optString("TaxandPrice"));
-                item.setQuantity_ordertext(post.optString("qty"));
-                item.setOrdertotalamount(post.optString("NetAmount"));
-
-
-
-                allItems1.add(item);
-
-            }*/
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
-
-    }
-
-    private String convertInputStreamToString2(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-    }
-
 
     class LoadOrderDetails extends AsyncTask<String, String, String>
             //implements RemoveClickListner
@@ -589,6 +550,7 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
             Log.e("testing", "json result = " + json);
 
             if (json == null) {
+                Log.e("testing", "adapter value=" + json);
 
             } else {
                 Log.e("testing", "jon2222222222222");
@@ -597,7 +559,7 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
@@ -607,12 +569,10 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
                         strresponse = json.getString("response");
 
                         String strresponsedata = json.getString("data");
-                        JSONObject  jsonobjectdata = new JSONObject(strresponsedata);
+                        JSONObject jsonobjectdata = new JSONObject(strresponsedata);
 
                         String arrayresponse = jsonobjectdata.getString("products");
                         Log.e("testing", "adapter value=" + arrayresponse);
-
-
 
 
                         JSONArray responcearray = new JSONArray(arrayresponse);
@@ -626,26 +586,21 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
                             FeederInfo_orderdetails item = new FeederInfo_orderdetails();
 
-                           // item.setId(post.optString("product_id"));
+                            // item.setId(post.optString("product_id"));
                             item.setOrderimage(post.optString("image"));
                             item.setOrderdate(jsonobjectdata.optString("order_date"));
                             item.setOrdername(post.optString("name"));
-                           // item.setOrderprodetails(post.optString("sku"));
+                            // item.setOrderprodetails(post.optString("sku"));
                             item.setOrderpriceamount(post.optString("actual_price"));
                             item.setQuantity_ordertext(post.optString("quantity"));
                             item.setOrdertotalamount(post.optString("total_price"));
 
 
-
                             allItems1.add(item);
 
 
-
-
-
-
                         }
-                    }else{
+                    } else {
 
                     }
                 } catch (JSONException e) {
@@ -666,30 +621,21 @@ public class Activity_orderdetails extends AppCompatActivity implements Adapter_
 
             //  progressbarloading.setVisibility(View.GONE);
             pDialog.dismiss();
-            if (status == null || status.trim().length() == 0 || status.equals("null")){
+            if (status == null || status.trim().length() == 0 || status.equals("null")) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
                 mAdapterFeeds = new Adapter_orderdetails(Activity_orderdetails.this, allItems1, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
 
 
-
-
-
-
-            }
-            else {
+            } else {
 
 
                 mAdapterFeeds = new Adapter_orderdetails(Activity_orderdetails.this, allItems1, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
 
 
-
-
-
             }
-
 
 
         }

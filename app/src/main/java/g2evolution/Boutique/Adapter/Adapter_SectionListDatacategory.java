@@ -82,8 +82,6 @@ public class Adapter_SectionListDatacategory extends RecyclerView.Adapter<Adapte
 
                 Glide.with(mContext)
                         .load(Uri.parse(singleItem.getUrl()))
-                        // .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        //.skipMemoryCache(true)
                         .error(R.drawable.car)
                         .into(holder.itemImage);
 
@@ -106,16 +104,7 @@ public class Adapter_SectionListDatacategory extends RecyclerView.Adapter<Adapte
 
                     prefeditor.commit();
 
-             /*   SharedPreferences prefuserdata = mContext.getSharedPreferences("category", 0);
-                SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                prefeditor.putString("Proid", "" + postid);
-                prefeditor.putString("categoryName", "" + categoryName);
-                prefeditor.putString("subcategoryname", "" + subcategoryname);
-                Log.e("testing","Proid  = " + postid);
 
-                Log.e("testing","productid in adapter = "+postid);
-                prefeditor.commit();
-*/
 
              if (singleItem.getStrType().equals("productcategory")){
 
@@ -132,7 +121,6 @@ public class Adapter_SectionListDatacategory extends RecyclerView.Adapter<Adapte
 
              }
 
-                    // new userdata().execute();
 
                 }
             });
@@ -168,18 +156,6 @@ if (singleItem.getName()==null||singleItem.getName().length()==0||singleItem.get
 
         Log.e("testing","Name in adapter = "+singleItem.getName());
         Log.e("testing","Image in adapter = "+singleItem.getUrl());
-       /* Glide.with(mContext)
-                .load(singleItem.getUrl())
-                //.diskCacheStrategy(DiskCacheStrategy.ALL)
-               // .centerCrop()
-               // .error(R.drawable.car)
-                .into(holder.itemImage);*/
-      /*  Picasso.with(mContext)
-                .load("http://androidappfirst.com/b2b/app/images/8f9b8cf90aefe22bf2071a0dea497325.jpg")
-                .placeholder(R.drawable.car) //this is optional the image to display while the url image is downloading
-                .error(R.drawable.car)         //this is also optional if some error has occurred in downloading the image this image would be displayed
-                .into(holder.itemImage);*/
-
 
 
 
@@ -207,20 +183,6 @@ if (singleItem.getName()==null||singleItem.getName().length()==0||singleItem.get
             this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
             this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
 
-
-/*
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
-*/
 
         }
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,14 +29,15 @@ public class Adapter_Category extends RecyclerView.Adapter<Adapter_Category.Filt
     private List<Entity_Category> filter_lists;
     private Adapter_Category.OnItemClickcatlist mCallback1;
     String qty;
-
+    FragmentActivity activity;
 
 
     //getting the context and product list with constructor
-    public Adapter_Category(Context mCtx, List<Entity_Category> filter_lists) {
+    public Adapter_Category(Context mCtx, List<Entity_Category> filter_lists, FragmentActivity activity) {
         this.mCtx = mCtx;
         this.filter_lists = filter_lists;
         this.mCallback1 = mCallback1;
+        this.activity=activity;
     }
 
     public interface OnItemClickcatlist {
@@ -77,12 +79,12 @@ public class Adapter_Category extends RecyclerView.Adapter<Adapter_Category.Filt
 
                 SharedPreferences prefuserdata = mCtx.getSharedPreferences("categoryid", 0);
                 SharedPreferences.Editor prefeditor = prefuserdata.edit();
-
                 prefeditor.putString("categoryid", "" + follow.getId());
 
 
                 prefeditor.commit();
-                mCtx.startActivity(intent);
+//                mCtx.startActivity(intent);
+                activity.startActivityForResult(intent, 1);
 
             }
         });

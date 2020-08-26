@@ -56,8 +56,6 @@ import retrofit2.Response;
 
 public class Activity_ResourcesList extends AppCompatActivity implements Adapter_resourselist.OnItemClickcropNames {
 
-
-
     public  static RecyclerView dashboard_reccyler;
     public  static
     Adapter_resourselist.OnItemClickcropNames mCallbackcropnames;
@@ -98,7 +96,6 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
     Spinner spincategory;
     String cmainshop_id = "";
     String cmainshop_name = "";
-
     //------------------searchable Qualification spinner----------------
     JSONObject jsonobjectmainqualification;
     JSONArray jsonarraymainqualification;
@@ -107,7 +104,6 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
     Spinner spinqualification;
     String cmainqualificationshop_id = "";
     String cmainqualificationshop_name = "";
-
     //------------------searchable Language spinner----------------
     JSONObject jsonobjectmainlanguage;
     JSONArray jsonarraymainlanguage;
@@ -116,8 +112,6 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
     Spinner spinlanguage;
     String cmainlanguageshop_id = "";
     String cmainlanguageshop_name = "";
-
-
     String maxPrice="";
     String  minPrice="";
 
@@ -154,7 +148,7 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
         linearfilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                strsortby="";
                 filtering();
 
             }
@@ -471,7 +465,7 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_ResourcesList.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
@@ -593,7 +587,7 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_ResourcesList.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
@@ -715,7 +709,7 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_ResourcesList.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
@@ -943,13 +937,26 @@ public class Activity_ResourcesList extends AppCompatActivity implements Adapter
             openings_entity = new ArrayList<Entity_ResourseList>();
 
             Log.e("testing", "jsonParser startedkljhk");
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_subscription_id, Productsubscriptionid));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_category_id, cmainshop_id));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_education_id, cmainqualificationshop_id));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_language_id, cmainlanguageshop_id));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_min_salary, minPrice));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_max_salary, maxPrice));
-            userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_sort_by, strsortby));
+            if (strsortby.equals("")){
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_subscription_id, Productsubscriptionid));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_category_id, cmainshop_id));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_education_id, cmainqualificationshop_id));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_language_id, cmainlanguageshop_id));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_min_salary, minPrice));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_max_salary, maxPrice));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_sort_by, strsortby));
+            }else {
+
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_subscription_id, Productsubscriptionid));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_category_id, ""));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_education_id, ""));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_language_id, ""));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_min_salary, ""));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_max_salary, ""));
+                userpramas.add(new BasicNameValuePair(EndUrl.GetResourceList_sort_by, strsortby));
+
+            }
+
             //  Log.e("testing", "feader_reg_id" + id);
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetResourceList_URL, "GET", userpramas);
 

@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Adapter.Adapter_List_Product;
 import g2evolution.Boutique.Adapter.Adapter_Subcategory_list;
@@ -113,7 +114,7 @@ public class Activity_ListProduct extends AppCompatActivity {
     private ArrayList<SubCategoryItem> arSubCategory;
     private ArrayList<ArrayList<SubCategoryItem>> arSubCategoryFinal;
 
-    private ArrayList<HashMap<String, String>> parentItems;
+        private ArrayList<HashMap<String, String>> parentItems;
     private ArrayList<ArrayList<HashMap<String, String>>> childItems;
     private MyCategoriesExpandableListAdapter myCategoriesExpandableListAdapter;
 
@@ -225,10 +226,6 @@ public class Activity_ListProduct extends AppCompatActivity {
         mFeedRecyler2.setHasFixedSize(true);
         mFeedRecyler2.setLayoutManager(new GridLayoutManager(Activity_ListProduct.this,2));
 
-        // mFeedRecyler2.setLayoutManager(lLayout2);
-
-        //   new Child_SubCategory_List().execute();
-        //   new PRODUCT_LIST().execute();
         sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,12 +235,8 @@ public class Activity_ListProduct extends AppCompatActivity {
                 logoutdialog.setCanceledOnTouchOutside(true);
                 LayoutInflater inflater = (LayoutInflater) Activity_ListProduct.this.getSystemService(Activity_ListProduct.this.LAYOUT_INFLATER_SERVICE);
                 View convertView = (View) inflater.inflate(R.layout.sort_custom_layout, null);
-                //StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);
 
                 logoutdialog.setContentView(convertView);
-
-                // LinearLayout logoutdialoglay = (LinearLayout) convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
 
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(logoutdialog.getWindow().getAttributes());
@@ -344,7 +337,7 @@ public class Activity_ListProduct extends AppCompatActivity {
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(logoutdialog.getWindow().getAttributes());
                 lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 lp.gravity = Gravity.BOTTOM;
                 logoutdialog.getWindow().setAttributes(lp);
                 logoutdialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -353,7 +346,7 @@ public class Activity_ListProduct extends AppCompatActivity {
                 String strparentstring = "";
               //  TextView textparent = (TextView) convertView.findViewById(R.id.textparent);
               //  TextView textchild = (TextView) convertView.findViewById(R.id.textchild);
-                Button butsubmit = (Button) convertView.findViewById(R.id.butsubmit);
+                ImageView butsubmit = (ImageView) convertView.findViewById(R.id.butsubmit);
 
                 arrayListkey = new ArrayList<String>();
                 arrayListvalue= new ArrayList<String>();
@@ -397,13 +390,13 @@ public class Activity_ListProduct extends AppCompatActivity {
                         }
                     }
                 });
-                ImageView imgcancel = (ImageView) convertView.findViewById(R.id.back);
-                imgcancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        logoutdialog.dismiss();
-                    }
-                });
+//                ImageView imgcancel = (ImageView) convertView.findViewById(R.id.back);
+//                imgcancel.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        logoutdialog.dismiss();
+//                    }
+//                });
 
                 lvCategory = convertView.findViewById(R.id.lvCategory);
 
@@ -591,90 +584,10 @@ public class Activity_ListProduct extends AppCompatActivity {
 
     }
 
-
-
-    class PRODUCT_LIST extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_ListProduct.this, ProgressDialog.THEME_HOLO_LIGHT);
-            } else {
-                dialog = new ProgressDialog(Activity_ListProduct.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            allItems3.clear();
-            allItems3 = new ArrayList<FeederInfo_List_Product>();
-            return postJsonObject2(EndUrl.GetCategoryChildProductList_URL, makingJson2());
-
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                dialog.dismiss();
-
-                Log.e("testing", "result in post execute=========" + result);
-
-                if (status.equals("success")) {
-
-                    Log.e("testing", "result in post execute=========" + allItems3);
-
-                    mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                    //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this, LinearLayoutManager.VERTICAL, true));
-                    mFeedRecyler2.setAdapter(mAdapterFeeds2);
-
-                } else if (status.equals("fail")) {
-
-                    allItems3.clear();
-
-                    mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                    mFeedRecyler2.setAdapter(mAdapterFeeds2);
-
-                    Toast.makeText(Activity_ListProduct.this, "no data found", Toast.LENGTH_LONG).show();
-
-                }
-
-            } else {
-
-                Toast.makeText(Activity_ListProduct.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-
-            }
-        }
-
-    }
-
     public JSONObject makingJson2() {
 
         JSONObject jobj = new JSONObject();
-     /*   // user_id = edt_mobileno.getText().toString();
 
-        try {
-
-            jobj.put(EndUrl.Get_subcatId,subcategoryname);
-            jobj.put(EndUrl.Get_childCatId,childid);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-
-        Log.e("testing","json object "+jobj);*/
         return jobj;
 
 
@@ -686,18 +599,14 @@ public class Activity_ListProduct extends AppCompatActivity {
         String result = "";
         try {
 
-            // 1. create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
 
-            // 2. make POST request to the given URL
 
-            //http://localhost:9000/api/products/GetAllProducts
             HttpPost httpPost = new HttpPost(url);
 
             System.out.println(url);
             String json = "";
 
-            // 4. convert JSONObject to JSON to String
 
             json = loginJobj.toString();
 
@@ -792,7 +701,6 @@ public class Activity_ListProduct extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // 11. return result
         return json;
 
     }
@@ -854,7 +762,6 @@ public class Activity_ListProduct extends AppCompatActivity {
 
             userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
             userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_order_by, spstring));
-          //  userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, "6"));
 
 
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductst_URL, "GET", userpramas);
@@ -982,31 +889,13 @@ public class Activity_ListProduct extends AppCompatActivity {
                 Log.e("testing123", "allItems1===" + allItems1);
 
 
-/*
-                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                 prodcuts_recycler.setLayoutManager(mLayoutManager);
-                product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
-                prodcuts_recycler.setAdapter(product_details_adapter);*/
-
                 mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this, LinearLayoutManager.VERTICAL, true));
                 mFeedRecyler2.setAdapter(mAdapterFeeds2);
-
-
-
-
 
             }
             else {
                 mAdapterFeeds2 = new Adapter_List_Product(Activity_ListProduct.this, allItems3);
-                //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Activity_ListProduct.this, LinearLayoutManager.VERTICAL, true));
                 mFeedRecyler2.setAdapter(mAdapterFeeds2);
-
-            /*    product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
-                prodcuts_recycler.setAdapter(product_details_adapter);*/
-
-
-
 
             }
 

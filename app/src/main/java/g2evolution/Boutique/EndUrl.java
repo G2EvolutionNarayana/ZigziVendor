@@ -3,13 +3,10 @@ package g2evolution.Boutique;
 
 public class EndUrl {
 
-
-
    // public static final String APIURLMain = "http://zigzi.sutures.ind.in/";
   //  public static final String APIURLMain = "http://Zigzi.g2evolution.com/";
-    public static final String   APIURLMain = "http://new-zigzi.g2evolution.com/";
+    public static final String   APIURLMain = "http://zigzi.in/admin/";
     public static final String APIURLMaintest = "http://casual365.sutures.ind.in/";
-
 
     public static final String APIURL2 = "http://g2evolution.in/eshop_New/admin/payumoney/";
 
@@ -19,13 +16,15 @@ public class EndUrl {
   //  public static final String APIURLgrocerry = "http://new-zigzi.g2evolution.com/api/";
 
 
-    public static final String straccessCode = "AVQB78FE28CH17BQHC";
-    public static final String strmerchantId = "176524";
+    public static final String straccessCode = "AVPW93HG46BA13WPAB";
+//     public static final String straccessCode = "AVWX93HG46BA28XWAB";
+
+ public static final String strmerchantId = "260838";
     public static final String strcurrency = "INR";
 
-    public static final String strrsaKeyUrl = "http://www.grocshop.in/ccavenue/GetRSA.php";
-    public static final String strredirectUrl = "http://www.grocshop.in/ccavenue/ccavResponseHandler.php";
-    public static final String strcancelUrl = "http://www.grocshop.in/ccavenue/ccavResponseHandler.php";
+    public static final String strrsaKeyUrl = "http://new-zigzi.g2evolution.com/ccavenue/PHP/GetRSA.php";
+    public static final String strredirectUrl = "http://new-zigzi.g2evolution.com/ccavenue/PHP/ccavResponseHandler.php";
+    public static final String strcancelUrl = "http://new-zigzi.g2evolution.com/ccavenue/PHP/ccavResponseHandler.php";
 
 
 
@@ -454,7 +453,7 @@ public class EndUrl {
 
  public static final String Login_emailphone  = "emailphone";
  public static final String Login_password  = "password";
- public static final String Login_firebase_token  = "firebase_token";
+ public static final String Login_firebase_token  = "fcm_token";
 
 
 
@@ -585,11 +584,18 @@ public class EndUrl {
 //-------------------------------Add To Cart--------------------
 
  public static final String AddToCart_URL = APIURLMain + "api/rest_api/cart/store";
+    public static final String AddToCart_proid = "pro_id";
+    public static final String AddToCart_amount = "amount";
+    public static final String AddToCart_final_price = "final_price";
 
  public static final String AddToCart_product_id = "product_id";
  public static final String AddToCart_user_id = "user_id";
  public static final String AddToCart_quantity = "quantity";
- public static final String AddToCart_product_name = "size";
+ public static final String AddToCart_type = "cart_type";
+    public static final String Final_Price = "final_price";
+    public static final String AddToCartProduct_id = "pro_id";
+
+    public static final String AddToCart_product_name = "size";
  public static final String AddToCart_price = "price";
 
 
@@ -603,7 +609,6 @@ public class EndUrl {
 //-------------------------------Delete Whishlist--------------------
 
  public static final String DeleteWhishlist_URL = APIURLMain + "api/rest/wishlist/remove";
-
  public static final String DeleteWhishlist_User_id = "user_id";
  public static final String DeleteWhishlist_id = "id";
 
@@ -670,17 +675,15 @@ public class EndUrl {
 
  public static final String CartDelete_id = "id";
 
-
-
 //-------------------------------Cart Update--------------------
 
  public static final String PostCartUpdate_URL = APIURLMain + "api/rest_api/cart/store";
 
- public static final String PostCartUpdate_product_id = "product_id";
+ public static final String PostCartUpdate_cart_id = "cart_id";
  public static final String PostCartUpdate_user_id = "user_id";
  public static final String PostCartUpdate_quantity = "quantity";
  public static final String PostCartUpdate_product_name = "size";
- public static final String PostCartUpdate_price = "price";
+ public static final String PostCartUpdate_price = "amount";
 
 
 //-------------------------------CheckCoupon--------------------
@@ -712,7 +715,9 @@ public class EndUrl {
  public static final String PlaceOrder_user_id = "user_id";
  public static final String PlaceOrder_delivery_address_id = "delivery_address_id";
  public static final String PlaceOrder_payment_mode_id = "payment_mode_id";
- public static final String PlaceOrder_coupon_id = "coupon_id";
+    public static final String payment_status = "payment_status";
+
+    public static final String PlaceOrder_coupon_id = "coupon_id";
  public static final String PlaceOrder_shipping_method_id = "shipping_method_id";
  public static final String PlaceOrder_shipping_price = "shipping_price";
  public static final String PlaceOrder_coupon_price = "coupon_price";

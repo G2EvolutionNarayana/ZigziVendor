@@ -24,15 +24,12 @@ import g2evolution.Boutique.entit.Entity_descriptionchild;
 
 public class Adapter_ProductdescriptionSelection extends RecyclerView.Adapter<Adapter_ProductdescriptionSelection.SingleItemRowHolder> {
 
-    private ArrayList<Entity_descriptionchild> itemsList;
-    private Context mContext;
-
     JSONObject json;
     JSONParser jsonParser = new JSONParser();
     ArrayList<String> images = new ArrayList<String>();
-
-
-    String categoryName, postid,_descvalue,subcategoryname;
+    String categoryName, postid, _descvalue, subcategoryname;
+    private ArrayList<Entity_descriptionchild> itemsList;
+    private Context mContext;
 
     public Adapter_ProductdescriptionSelection(Context context, ArrayList<Entity_descriptionchild> itemsList) {
         this.itemsList = itemsList;
@@ -51,11 +48,8 @@ public class Adapter_ProductdescriptionSelection extends RecyclerView.Adapter<Ad
 
         final Entity_descriptionchild singleItem = itemsList.get(i);
 
-        holder.texttitle.setText(singleItem.getName());
+        holder.texttitle.setText("Product Details");
         holder.textvalue.setText(singleItem.getValue());
-
-
-
     }
 
     @Override
@@ -91,9 +85,6 @@ public class Adapter_ProductdescriptionSelection extends RecyclerView.Adapter<Ad
         }
 
     }
-
-
-
 
 
 }

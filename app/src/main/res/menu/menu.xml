@@ -19,6 +19,7 @@
         android:id="@+id/cartitem"
         android:title="cart"
         android:icon="@drawable/cart"
+        android:visible="false"
         app:showAsAction="always">
 
     </item>

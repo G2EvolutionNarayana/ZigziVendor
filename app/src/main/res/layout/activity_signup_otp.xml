@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="Your One Time Password(OTP) is Sent to your Registered Mobile Number."
             android:gravity="center_horizontal"
-            android:textColor="@color/green"
+            android:textColor="@color/colorPrimary"
             android:layout_marginTop="70dp"
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp"/>
@@ -48,7 +48,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="@color/green"
+                    android:textColorHint="@color/colorPrimary"
                     android:gravity="bottom">
 
                     <EditText
@@ -56,7 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#00000000"
-                        android:textColorHint="@color/green"
+                        android:textColorHint="@color/colorPrimary"
                         android:hint="Enter  the OTP"
                        android:inputType="number"
                         android:textColor="@color/black"
@@ -78,7 +78,7 @@
                 <View
                     android:layout_width="316dp"
                     android:layout_height="1.5dp"
-                    android:background="@color/green" />
+                    android:background="@color/colorPrimary" />
 
                 <View
                     android:layout_width="match_parent"

@@ -31,7 +31,7 @@
             android:title="Contact Us" />
         <item
             android:id="@+id/policy"
-            android:title="Policy" />
+            android:title="Privacy Policy" />
     </group>
 
 

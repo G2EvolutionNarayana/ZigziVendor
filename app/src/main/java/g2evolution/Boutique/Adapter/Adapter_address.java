@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import g2evolution.Boutique.Activity.Activity_PaymentMode;
 import g2evolution.Boutique.FeederInfo.FeederInfo_address;
+import g2evolution.Boutique.Payment.Activity_Payment;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Viewholder.ViewHolder_address;
 
@@ -74,9 +75,8 @@ public class Adapter_address extends RecyclerView.Adapter<ViewHolder_address> {
 
 
         holder.textname.setText(feederInfo.getTextname());
-        holder.textaddress.setText(feederInfo.getTextaddress());
-        holder.textlandmark.setText(feederInfo.getTextlandmark());
-        holder.textstate.setText(feederInfo.getCity());
+        holder.textaddress.setText(feederInfo.getTextaddress()+", "+feederInfo.getTextlandmark()+", "+feederInfo.getCity()+", "+feederInfo.getTextpincode());
+
         if (feederInfo.getTextmobileno() == null || feederInfo.getTextmobileno().length() == 0 || feederInfo.getTextmobileno().equals("0")) {
 
 
@@ -84,10 +84,6 @@ public class Adapter_address extends RecyclerView.Adapter<ViewHolder_address> {
 
             holder.textmobileno.setText(feederInfo.getTextmobileno());
         }
-
-        holder.textpincode.setText(feederInfo.getTextpincode());
-        holder.impnotice.setText(feederInfo.getImpnotice());
-
 
         holder.radiobutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,16 +93,21 @@ public class Adapter_address extends RecyclerView.Adapter<ViewHolder_address> {
                 strmobileno = feederInfo.getTextmobileno();
                 strFullAddress = feederInfo.getLandMark1()+feederInfo.getTextlandmark()+feederInfo.getTextaddress();
 
-             //   holder.radiobutton.setChecked(false);
+//                holder.radiobutton.setChecked(false);
                 SharedPreferences prefuserdata = mContext.getSharedPreferences("addressid", 0);
                 SharedPreferences.Editor prefeditor = prefuserdata.edit();
                 prefeditor.putString("addressid", "" + addressid);
                 prefeditor.putString("strmobileno", "" + strmobileno);
                 prefeditor.putString("strFullAddress", "" + strFullAddress);
+                prefeditor.putString("addressCity", "" + feederInfo.getCity());
+                prefeditor.putString("addressState", "" + feederInfo.getState());
+                prefeditor.putString("addressZipCode", "" + feederInfo.getTextpincode());
+                prefeditor.putString("addressLandMark", "" + feederInfo.getTextlandmark());
 
                 prefeditor.commit();
 
                 Intent i = new Intent(mContext,Activity_PaymentMode.class);
+
                 mContext.startActivity(i);
             }
         });

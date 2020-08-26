@@ -72,12 +72,7 @@ public class Adapter_address_Navigation extends RecyclerView.Adapter<ViewHolder_
 
 
         holder.textname.setText(feederInfo.getTextname());
-        holder.textaddress.setText(feederInfo.getTextaddress());
-        holder.textlandmark.setText(feederInfo.getTextlandmark());
-        holder.textstate.setText(feederInfo.getCity());
-       // holder.textmobileno.setText(feederInfo.getTextmobileno());
-        holder.textpincode.setText(feederInfo.getTextpincode());
-        holder.impnotice.setText(feederInfo.getImpnotice());
+        holder.textaddress.setText(feederInfo.getTextaddress()+", "+feederInfo.getTextlandmark()+", "+feederInfo.getCity()+", "+feederInfo.getTextpincode());
 
 
         if (feederInfo.getTextmobileno() == null || feederInfo.getTextmobileno().length() == 0 || feederInfo.getTextmobileno().equals("0")) {
@@ -115,8 +110,6 @@ public class Adapter_address_Navigation extends RecyclerView.Adapter<ViewHolder_
             public void onClick(View v) {
 
                 addressid = feederInfo.getId();
-
-
 
                 if (mCallback!=null){
                     mCallback.onClickedItem(position,Integer.parseInt(addressid), 1);

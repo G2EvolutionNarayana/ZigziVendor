@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,6 @@ import g2evolution.Boutique.Utility.JSONParser;
 public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickListener {
 
 
-
     @BindView(R.id.user_name_edit_text)
     EditText user_name_edit_text;
     @BindView(R.id.phone_number_edit_text)
@@ -46,14 +46,13 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
     EditText edit_emailid;
     @BindView(R.id.sign_up_text)
     TextView sign_up_text;
-    @BindView(R.id.member_text)
-    TextView member_text;
+
 
     String strtemp_user_id;
 
     JSONParser jsonParser = new JSONParser();
 
-    String strusername, strmobileno, stremailid, strpassword;
+    String strusername, strmobileno, stremailid, strpassword,fcm_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,8 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         requestWindowFeature(Window.FEATURE_NO_TITLE);// hide statusbar of Android
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up);
-
+        ImageView member_text = findViewById(R.id.member_text);
+        member_text.setOnClickListener(this);
 
         ButterKnife.bind(this);
 
@@ -70,26 +70,24 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         ((TextView) findViewById(R.id.title_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.sub_title_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.sign_up_text)).setTypeface(typeface);
-        ((TextView) findViewById(R.id.member_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.user_name_edit_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.phone_number_edit_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.password_edit_text)).setTypeface(typeface);
         ((TextView) findViewById(R.id.edit_emailid)).setTypeface(typeface);
-
+        SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
+        fcm_token = prefuserdata.getString("FCM_TOKEN", "");
         listeners();
     }
 
     private void listeners() {
 
         sign_up_text.setOnClickListener(this);
-        member_text.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.sign_up_text:
 
                 submit();
@@ -99,11 +97,9 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.member_text:
 
-                Intent intent2=new Intent(SignUp_ACtivity.this,Login_Activity.class);
+                Intent intent2 = new Intent(SignUp_ACtivity.this, Login_Activity.class);
                 startActivity(intent2);
                 break;
-
-
 
 
             default:
@@ -112,6 +108,7 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
+
     private void submit() {
 
 
@@ -120,22 +117,20 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         stremailid = edit_emailid.getText().toString();
         strpassword = password_edit_text.getText().toString();
 
-        if (strusername.isEmpty()){
+        if (strusername.isEmpty()) {
 
             Toast.makeText(SignUp_ACtivity.this, "Please Enter Username", Toast.LENGTH_SHORT).show();
-        }else if (strmobileno.isEmpty()){
+        } else if (strmobileno.isEmpty()) {
 
             Toast.makeText(SignUp_ACtivity.this, "Please Enter Mobileno", Toast.LENGTH_SHORT).show();
-        }else if (stremailid.isEmpty()){
+        } else if (stremailid.isEmpty()) {
 
             Toast.makeText(SignUp_ACtivity.this, "Please Enter Email Id", Toast.LENGTH_SHORT).show();
-        }
-
-        else {
-            if (strpassword.isEmpty()){
+        } else {
+            if (strpassword.isEmpty()) {
 
                 Toast.makeText(SignUp_ACtivity.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
 
                 //  strpassword = logpassword.getText().toString();
 
@@ -154,7 +149,6 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
             }
 
 
-
         }
 
     }
@@ -168,11 +162,12 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         String strdata;
         ProgressDialog mProgress;
         String strcode, strtype, strmessage;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(SignUp_ACtivity.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
@@ -192,11 +187,13 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
-
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_phone, strmobileno));
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_name, strusername));
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_email, stremailid));
             userpramas.add(new BasicNameValuePair(EndUrl.Signup_password, strpassword));
+            userpramas.add(new BasicNameValuePair(EndUrl.Login_firebase_token, fcm_token));
+
+
 
             Log.e("testing", "userpramas = " + userpramas);
 
@@ -219,7 +216,7 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
@@ -228,12 +225,10 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
                         strresponse = json.getString("response");
                         strdata = json.getString("data");
 
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
+                        JSONObject jsonobjectdata = new JSONObject(strdata);
                         strtemp_user_id = jsonobjectdata.getString("temp_user_id");
-
-
-
                     } else {
+
                     }
 
 
@@ -248,18 +243,18 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(String responce) {
             super.onPostExecute(responce);
             mProgress.dismiss();
-            Log.e("testing","status = "+status);
-            Log.e("testing","strresponse = "+strresponse);
-            Log.e("testing","strmessage = "+strmessage);
+            Log.e("testing", "status = " + status);
+            Log.e("testing", "strresponse = " + strresponse);
+            Log.e("testing", "strmessage = " + strmessage);
 
-            if (status == null || status.length() == 0){
+            if (status == null || status.length() == 0) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
 
-                if (strresponse == null || strresponse.length() == 0){
+                if (strresponse == null || strresponse.length() == 0) {
 
-                }else if (strtype.equals("creation_success")){
-                    Toast.makeText(SignUp_ACtivity.this, strmessage, Toast.LENGTH_SHORT).show();
+                } else if (strtype.equals("creation_success")) {
+                    Toast.makeText(SignUp_ACtivity.this, "Otp Sent to your mobile number", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SignUp_ACtivity.this, OTP_Activity.class);
                     SharedPreferences prefuserdata = getSharedPreferences("strsignup_user_id", 0);
                     SharedPreferences.Editor prefeditor = prefuserdata.edit();
@@ -270,17 +265,15 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
                     prefeditor.commit();
 
 
-
                     startActivity(intent);
-                }else{
+                } else {
 
                 }
 
 
-
             } else if (status.equals("failure")) {
                 alertdialog(strtype, strmessage);
-            }else{
+            } else {
 
             }
 
@@ -288,6 +281,7 @@ public class SignUp_ACtivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
+
     private void alertdialog(String strresponse, String strmessage) {
 
         final AlertDialog alertDialog = new AlertDialog.Builder(

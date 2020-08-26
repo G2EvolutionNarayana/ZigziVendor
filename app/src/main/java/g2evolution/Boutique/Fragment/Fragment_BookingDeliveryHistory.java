@@ -54,34 +54,6 @@ import g2evolution.Boutique.entit.Entity_BookingDeliveryHistory;
 
 public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter_BookingDeliveryHistory.OnItemClick, View.OnClickListener {
 
-    String []OrderId =new String[]{"155112KH","155112KH","155112KH","155112KH","155112KH","155112KH","155112KH","155112KH"};
-    String []Date =new String[]{"29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30"};
-
-    String []fromlocation = new String[]{"#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-    };
-
-    String []tolocation = new String[]{"#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-            "#43, G2evolution, Marathalli, Bangalore",
-    };
-
-
-    String []DeliveryMode =new String[]{"Normal Delivery","Delivery with Altration","Delivery with Altration","Normal Delivery","Normal Delivery","Normal Delivery","Normal Delivery","Normal Delivery"};
-    String []PickupDate =new String[]{"29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30","29-01-2020 11:30"};
-
-
     JSONParser jsonParser = new JSONParser();
 
     private ArrayList<Entity_BookingDeliveryHistory> allItems1 = new ArrayList<Entity_BookingDeliveryHistory>();
@@ -140,7 +112,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
         textpending.setOnClickListener(this);
         textcompleted.setOnClickListener(this);
 
-        textpending.setBackgroundResource(R.color.theme2);
+        textpending.setBackgroundColor(Color.parseColor("#F46161"));
         textcompleted.setBackgroundResource(R.color.white);
 
         textpending.setTextColor(Color.WHITE);
@@ -164,26 +136,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
 
         return rootView;
     }
-    private void setUpReccyler() {
-        allItems1 =new ArrayList<Entity_BookingDeliveryHistory>();
 
-        for(int i=0;i<OrderId.length;i++){
-            Entity_BookingDeliveryHistory feedInfo = new Entity_BookingDeliveryHistory();
-            feedInfo.setOrderid(OrderId[i]);
-            feedInfo.setDate(Date[i]);
-            feedInfo.setFromlocation(fromlocation[i]);
-            feedInfo.setTolocation(tolocation[i]);
-            feedInfo.setDeliverymode(DeliveryMode[i]);
-            feedInfo.setPickupdate(PickupDate[i]);
-            allItems1.add(feedInfo);
-        }
-        mAdapter = new Adapter_BookingDeliveryHistory(getActivity(),allItems1, mCallback);
-        mRecyclerView.setAdapter(mAdapter);
-
-
-
-
-    }
     private void filter() {
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
@@ -269,18 +222,6 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
                 return false;
             }
         });
-
-
-
-            /*    LayoutInflater inflater1 = getLayoutInflater();
-                final View viewMyLayout = inflater1.inflate(R.layout.dialog_filter_bottom_sheet, null);
-                android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                // this is set the view from XML inside AlertDialog
-                alert.setView(viewMyLayout);
-                dialog1 = alert.create();
-                dialog1.show();*/
-
-
 
 
         submit_filter.setOnClickListener(new View.OnClickListener() {
@@ -543,7 +484,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
 
             case R.id.textpending:
 
-                textpending.setBackgroundResource(R.color.theme2);
+                textpending.setBackgroundColor(Color.parseColor("#F46161"));
                 textcompleted.setBackgroundResource(R.color.white);
 
                 textpending.setTextColor(Color.WHITE);
@@ -557,7 +498,7 @@ public class Fragment_BookingDeliveryHistory extends Fragment implements Adapter
             case R.id.textcompleted:
 
                 textpending.setBackgroundResource(R.color.white);
-                textcompleted.setBackgroundResource(R.color.theme2);
+                textcompleted.setBackgroundColor(Color.parseColor("#F46161"));
 
                 textpending.setTextColor(Color.BLACK);
                 textcompleted.setTextColor(Color.WHITE);

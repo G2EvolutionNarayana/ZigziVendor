@@ -43,15 +43,10 @@ public class Activity_CategoryBlog extends AppCompatActivity implements BaseSlid
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_blog);
 
-
-
-
         SharedPreferences prefuserdata2 = getSharedPreferences("categoryblogid", 0);
         categoryblogid = prefuserdata2.getString("categoryblogid", "");
 
-
         mDemoSlider = (SliderLayout) findViewById(R.id.slider);
-
         sliderLayout = (SliderLayout) findViewById(R.id.slider);
 
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
@@ -60,39 +55,6 @@ public class Activity_CategoryBlog extends AppCompatActivity implements BaseSlid
         mDemoSlider.setDuration(2000);
         mDemoSlider.addOnPageChangeListener(this);
         mDemoSlider.stopAutoCycle();
-
-
-
-
-
-       /* url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-        HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
-        file_maps.put("sample1",R.drawable.sample1);
-        file_maps.put("sample2",R.drawable.sample2);
-        file_maps.put("sample1",R.drawable.sample1);
-        file_maps.put("sample2", R.drawable.sample2);
-
-
-        for(String name : file_maps.keySet()){
-            TextSliderView textSliderView = new TextSliderView(Activity_CategoryBlog.this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(file_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(Activity_CategoryBlog.this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra",name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }*/
 
         new SliderImage().execute();
 
@@ -104,9 +66,7 @@ public class Activity_CategoryBlog extends AppCompatActivity implements BaseSlid
     {
         String responce;
         String status;
-        String total_count;
         private ProgressDialog pDialog;
-
 
         @Override
         protected void onPreExecute() {
@@ -183,24 +143,18 @@ public class Activity_CategoryBlog extends AppCompatActivity implements BaseSlid
 
                     TextSliderView textSliderView = new TextSliderView(Activity_CategoryBlog.this);
                     // initialize a SliderLayout
-
                     textSliderView
                             .description("")
                             .image(url_maps.get(name))
                             .setScaleType(BaseSliderView.ScaleType.Fit)
                             .setOnSliderClickListener(this);
-                    //add your extra information
                     textSliderView.bundle(new Bundle());
                     textSliderView.getBundle()
                             .putString("extra", name);
 
                     textSliderView.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
                         @Override public void onSliderClick(BaseSliderView slider) {
-                           /* Log.e("MyActivity", "index selected:" + brand_slider.getCurrentPosition());
 
-                            Intent intent=new Intent(getActivity(), Activity_Brand_List.class);
-                            startActivity(intent);*/
-                            //  Toast.makeText(getActivity(), "clicking happening", Toast.LENGTH_SHORT).show();
                         }
                     });
                     //  banner_slider.addSlider(textSliderView);

@@ -42,10 +42,14 @@ public class InitialScreenActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_initial_screen);
 
 
+
 		SharedPreferences prefuserdata = getSharedPreferences("paymentamount", 0);
 		grandtotal = prefuserdata.getString("grandtotal", "");
 		strsubtotal = prefuserdata.getString("strsubtotal", "");
 		strshipping = prefuserdata.getString("strshipping", "");
+
+
+
 
 
 		Log.e("testing","grandtotal====="+grandtotal);
@@ -62,6 +66,7 @@ public class InitialScreenActivity extends AppCompatActivity {
 
 		amt = (TextView) findViewById(R.id.amount);
 		pay = (Button) findViewById(R.id.confirmbooking);
+		Log.e("testing","Grand Total=="+grandtotal);
 
 		amt.setText(grandtotal);
 		//amt.setText("1");
@@ -73,14 +78,6 @@ public class InitialScreenActivity extends AppCompatActivity {
 		strrsaKeyUrl = EndUrl.strrsaKeyUrl;
 		strredirectUrl = EndUrl.strredirectUrl;
 		strcancelUrl = EndUrl.strcancelUrl;
-
-/*
-
-		public static final String CCAvenue_Redirect = "http://www.grocshop.in/ccavenue/ccavResponseHandler.php";
-		public static final String CCAvenue_Cancel = "http://www.grocshop.in/ccavenue/ccavResponseHandler.php";
-		public static final String CCAvenue_RSA = "http://www.grocshop.in/ccavenue/GetRSA.php";
-		Access code:  AVQB78FE28CH17BQHC
-		merchant id:   176524*/
 
 	}
 

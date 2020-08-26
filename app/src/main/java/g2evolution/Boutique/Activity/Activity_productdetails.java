@@ -1,7 +1,6 @@
 package g2evolution.Boutique.Activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,20 +9,12 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,49 +26,33 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import g2evolution.Boutique.Adapter.Adapter_Generalinfo;
 import g2evolution.Boutique.Adapter.Adapter_ProductVariations;
 import g2evolution.Boutique.Adapter.Adapter_ProductVariationsSelection;
 import g2evolution.Boutique.Adapter.Adapter_Productdescription;
-import g2evolution.Boutique.Adapter.Adapter_Sizes;
 import g2evolution.Boutique.Adapter.Image_Slider_Adapter;
 import g2evolution.Boutique.Adapter.RecyclerViewDataAdapter;
-import g2evolution.Boutique.Adapter.RecyclerViewDataAdapter2;
 import g2evolution.Boutique.EndUrl;
-import g2evolution.Boutique.FeederInfo.FeederInfo_orderdetails;
 import g2evolution.Boutique.FeederInfo.SectionDataModel;
 import g2evolution.Boutique.FeederInfo.SingleItemModel;
-import g2evolution.Boutique.MainActivity;
 import g2evolution.Boutique.R;
+import g2evolution.Boutique.Utility.CartCount;
 import g2evolution.Boutique.Utility.ConnectionDetector;
-import g2evolution.Boutique.Utility.HttpHandler;
 import g2evolution.Boutique.Utility.JSONParser;
+import g2evolution.Boutique.Utility.Utils;
 import g2evolution.Boutique.entit.Entity_Generalinfo;
 import g2evolution.Boutique.entit.Entity_Sizes;
 import g2evolution.Boutique.entit.Entity_descriptionchild;
@@ -89,105 +64,51 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class Activity_productdetails extends AppCompatActivity implements RecyclerViewDataAdapter.OnItemClick, Adapter_Generalinfo.OnItemClickcourses, Adapter_ProductVariationsSelection.OnItemClickchildadapter {
 
+    private static final String[] XMEN = {""};
+    private static ViewPager mPager;
+    private static int currentPage = 0;
     RecyclerView my_recycler_view;
     ArrayList<SectionDataModel> allSampleData;
     ArrayList<Entity_weightheader> allSampleDatavariables;
     ArrayList<Entity_Generalinfo> allSampleDataGeneralInfo;
     ArrayList<Entity_descriptionheader> allSampleDatadescription;
-    private RecyclerViewDataAdapter.OnItemClick mCallback;
     RecyclerViewDataAdapter adapter;
-
-    private Adapter_ProductVariationsSelection.OnItemClickchildadapter mCallbackchildadapter;
-
-    ImageView butdecrement, butincrement, back;
-    TextView quantity;
-
+    ImageView back, details_image;
+    TextView quantity, addcart, booknow, pdtitle, pdsubtitle, pdprice, pdsubprice, textrating, textreviews, textratingreviews, butdecrement, butincrement, textdiscount;
     int currentNos;
-    String qty;
-
-
-    TextView addcart, booknow;
-    String headers;
-    // ImageView pdimage;
-
-    TextView pdtitle, pdsubtitle, pdprice, pdsubprice;
-
-    // TextView pdabout;
-    // TextView pdusedfor,pdProcessing;
-
-    String _pid, _pdimage, _pdtitle, _pdsubtitle, _pdprice, _pdsubprice, _pdabout, __shipppingAmount, _TaxandPrice, _NetAmount, _descvalue, _totalReviewCount, _avgRating;
-
-    //  String pdusedfor,_pdProcessing;
-
-    // LinearLayout linearlayout1;
-    TextView textrating, textreviews, textratingreviews;
-
+    String multipleimages, multipleimagesid, strbuttonstatus, categoryName, Productid, UserId, cart_id, qty, headers, _pid, _pdimage, _pdtitle, _pdsubtitle, _pdprice, _pdsubprice, _pdabout, __shipppingAmount, _TaxandPrice, _NetAmount, _descvalue, _totalReviewCount, _avgRating;
     JSONParser jsonParser = new JSONParser();
     RecyclerView my_recycler;
-
-    TextView textdiscount;
-
-    String status, message, total_record;
-
-    String categoryName, Productid, UserId, cart_id;
-
     RelativeLayout relativemain;
-
-    // ArrayList<SectionDataModel> allSampleData;
     HashMap<String, String> url_maps = new HashMap<String, String>();
     WebView webviewdesc;
-
-    private ProgressDialog pDialog;
-    private String TAG = Activity_productdetails.class.getSimpleName();
-
-    String strbuttonstatus;
-
-    ImageView details_image;
-    String multipleimages, multipleimagesid;
-
-    JSONArray posts2;
-    Integer intsizes = null;
     ArrayList<String> images = new ArrayList<String>();
-    String strpincode;
+    String strpincode, finalprice;
     TextView check_text;
     EditText editpincode;
     String category, subcategoryname, catid, viewUserId;
-    Spinner spinapartment;
-    ArrayList<String> worldlist;//spinapartment
     String[] Name = new String[]{"506244", "576244", "596244", "506244",};
-    String capartmentid_id;
-    String pincode;
-    Dialog dialog; // apartment dialog
-    // ImageView cartImage,wishlistImage,searchImage;
-
     TextView discount_price;
-
     RelativeLayout relativelayoutimages;
-
-    private static ViewPager mPager;
-    private static int currentPage = 0;
-    private static final String[] XMEN = {""};
-    private ArrayList<String> XMENArray = new ArrayList<String>();
-
     TextView wishlist;
-
     RecyclerView recyclergeneralinfo;
     RecyclerView recyclercoursesoffered;
     RecyclerView recyclerviewdescription;
     String[] strtitle = new String[]{"Bangalore", "Lucknow", "Pune", "Trivandrum", "Kochi"};
     Adapter_Generalinfo courses_Adapter;
     Adapter_Generalinfo.OnItemClickcourses mCallback2;
-
     String strvariantid;
-
-    private ArrayList<Entity_Sizes> allItemscourses = new ArrayList<Entity_Sizes>();
-
-    String strsizeid, strsizename;
-
+    String strsizeid, strsizename, amount;
     List<String> arrayListkey = new ArrayList<String>();
     List<String> arrayListvalue = new ArrayList<String>();
-
     String id;
+    CartCount cartCount;
+    private RecyclerViewDataAdapter.OnItemClick mCallback;
+    private Adapter_ProductVariationsSelection.OnItemClickchildadapter mCallbackchildadapter;
+    private ProgressDialog pDialog;
+    private String TAG = Activity_productdetails.class.getSimpleName();
+    private ArrayList<String> XMENArray = new ArrayList<String>();
+    private ArrayList<Entity_Sizes> allItemscourses = new ArrayList<Entity_Sizes>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,9 +125,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
             String key = (String) myVeryOwnIterator.next();
             String value = (String) hashMap.get(key);
             Log.e("testing", "Key: " + key + " Value: " + value);
+            if (key.equals("id")) {
+            }
             arrayListkey.add(key);
             arrayListvalue.add(value);
-            //Toast.makeText(Activity_productdetails.this, "Key: "+key+" Value: "+value, Toast.LENGTH_LONG).show();
         }
 
         wishlist = (TextView) findViewById(R.id.wishlist);
@@ -317,49 +239,12 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
             }
         });
 
-    /*    SharedPreferences prefuserdata1 = this.getSharedPreferences("ProDetails", 0);
-        category = prefuserdata1.getString("category", "");
-        catid = prefuserdata1.getString("catid", "");
-        subcategoryname = prefuserdata1.getString("subcategoryname", "");
-
-*/
-
-        // linearlayout1 = (LinearLayout) findViewById(R.id.linearlayout1);
-
-       /* cartImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent =new Intent(Activity_productdetails.this,Activity_cart.class);
-                startActivity(intent);
-
-            }
-        });*/
-
-       /* wishlistImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               *//* Intent intent =new Intent(Activity_productdetails.this,Activity_WishList.class);
-                startActivity(intent);*//*
-
-            }
-        });*/
-
-      /*  searchImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =new Intent(Activity_productdetails.this,Activity_search.class);
-                startActivity(intent);
-
-            }
-        });
-*/
         textrating = (TextView) findViewById(R.id.textrating);
         textreviews = (TextView) findViewById(R.id.textreviews);
         textratingreviews = (TextView) findViewById(R.id.textratingreviews);
 
-        butdecrement = (ImageView) findViewById(R.id.butdecrement);
-        butincrement = (ImageView) findViewById(R.id.butincrement);
+        butdecrement = (TextView) findViewById(R.id.butdecrement);
+        butincrement = (TextView) findViewById(R.id.butincrement);
         details_image = (ImageView) findViewById(R.id.details_image);
 
 
@@ -408,11 +293,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         pdsubtitle = (TextView) findViewById(R.id.pdsubtitle);
         pdprice = (TextView) findViewById(R.id.pdprice);
         pdsubprice = (TextView) findViewById(R.id.pdsubprice);
-
-        // pdabout = (TextView)findViewById(R.id.pdabout);
-        // pdusedfor = (TextView)findViewById(R.id.pdusedfor);
-        //  pdProcessing = (TextView)findViewById(R.id.pdProcessing);
-
         relativemain = (RelativeLayout) findViewById(R.id.relativemain);
         relativemain.setVisibility(View.GONE);
 
@@ -447,25 +327,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                 } else {
                     new PostAddtocart().execute();
-                   /* if (intsizes == null || intsizes == 0 ){
-                        strsizeid = _pid;
-                        new PostAddtocart().execute();
-                    }else{
-                        if (strsizeid == null || strsizeid.trim().length() == 0 || strsizeid.trim().equals("null")){
-                            Toast.makeText(Activity_productdetails.this, "Please select size", Toast.LENGTH_SHORT).show();
-                        }else{
-                            new PostAddtocart().execute();
-                        }
-                    }
-*/
-
-
                 }
-
-               /* Intent i = new Intent(Activity_productdetails.this,Activity_cart.class);
-                startActivity(i);
-                */
-
             }
         });
 
@@ -489,15 +351,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                 } else {
 
-                    // new BOOK_Now().execute();
 
                 }
-
-
-               /* Intent i = new Intent(Activity_productdetails.this,Activity_cart.class);
-                startActivity(i);
-                */
-
 
             }
         });
@@ -542,12 +397,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     System.out.print(numberEx);
                 }
 
-
-                //currentNos = Integer.parseInt(recyclerViewHolders.quantity.getText().toString());
                 quantity.setText(String.valueOf(++currentNos));
                 qty = quantity.getText().toString();
-
-
             }
         });
 
@@ -564,14 +415,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 }
 
 
-               /* try {
-                    currentNos = Integer.parseInt(Countval.getText().toString());
-                } catch (NumberFormatException numberEx) {
-                    System.out.print(numberEx);
-                }
-
-
-                Countval.setText(String.valueOf(--currentNos));*/
                 qty = quantity.getText().toString();
 
             }
@@ -604,48 +447,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
     }
 
-    //image sliding
-    private void init() {
-
-
-        for (int i = 0; i < XMEN.length; i++)
-            XMENArray.add(XMEN[i]);
-
-
-        mPager.setAdapter(new Image_Slider_Adapter(Activity_productdetails.this, XMENArray));
-        CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
-        indicator.setViewPager(mPager);
-
-        // Auto start of viewpager
-        final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
-            public void run() {
-                if (currentPage == XMEN.length) {
-                    currentPage = 0;
-                }
-                mPager.setCurrentItem(currentPage++, true);
-            }
-        };
-        Timer swipeTimer = new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 2500, 2500);
-
-
-    }
-
-    public static void hideSoftKeyboard(android.app.Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(android.app.Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
 
     @Override
     public void onStop() {
-        // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
-        //   mDemoSlider.stopAutoCycle();
+
         super.onStop();
     }
 
@@ -700,16 +505,12 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
     class LoadProductList extends AsyncTask<String, String, String>
             //implements RemoveClickListner
     {
-
-
         String status;
         String response;
         String strresponse;
         String strcode, strtype, strmessage;
-
-        private ProgressDialog pDialog;
-
         Integer imagelength;
+        private ProgressDialog pDialog;
 
         @Override
         protected void onPreExecute() {
@@ -733,11 +534,15 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             // userpramas.add(new BasicNameValuePair(EndUrl.GetProductsDetails_id, Productid));
             if (arrayListkey.size() != 0) {
-                id = arrayListvalue.get(0);
+//                id = arrayListvalue.get(0);
                 for (int i = 0; i < arrayListkey.size(); i++) {
+                    if (arrayListkey.get(i).equals("id")) {
+                        id = arrayListvalue.get(i);
+                    }
                     userpramas.add(new BasicNameValuePair(arrayListkey.get(i), arrayListvalue.get(i)));
                 }
             }
+
 
             JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetProductstDetails_URL, "GET", userpramas);
 
@@ -853,9 +658,16 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                         }
 
-                        if (post.has("product_id")) {
+                        if (post.has("final_price")) {
+                            finalprice = post.getString("final_price");
+                        } else {
 
-                            strvariantid = post.getString("product_id").trim();
+                        }
+
+
+                        if (post.has("variant_id")) {
+
+                            strvariantid = post.getString("variant_id").trim();
                             if (strvariantid == null || strvariantid.trim().length() == 0 || strvariantid.trim().equals("")) {
                                 _pid = post.getString("id");
                             } else {
@@ -866,6 +678,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                             _pid = post.getString("id");
                         }
 
+                        strvariantid = _pid;
 
                         JSONArray postsvariants = post.optJSONArray("variations");
                         if (postsvariants == null) {
@@ -936,27 +749,20 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                         }
 
-
                     } else {
 
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
-
-
             return response;
-
-
         }
 
         @Override
         protected void onPostExecute(String responce) {
             super.onPostExecute(responce);
 
-            //  progressbarloading.setVisibility(View.GONE);
             pDialog.dismiss();
             if (status == null || status.trim().length() == 0 || status.equals("null")) {
 
@@ -981,13 +787,10 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 pdsubtitle.setText(_pdsubtitle);
                 pdprice.setText(_pdprice);
                 pdsubprice.setText(_pdsubprice);
-                // pdabout.setText(_pdabout);
                 final String mimeType = "text/html";
                 final String encoding = "UTF-8";
                 webviewdesc.loadDataWithBaseURL("", _pdabout, mimeType, encoding, "");
-                //  webviewdesc.loadUrl(_pdabout);
-                //   pdusedfor.setText(_pdusedfor);
-                // pdProcessing.setText(_pdProcessing);
+
 
                 textrating.setText(_avgRating);
 
@@ -1000,14 +803,11 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                 }
 
-
                 if (_pdimage == null || _pdimage.length() == 0 || _pdimage.equals("null")) {
 
                 } else {
                     Glide.with(Activity_productdetails.this)
                             .load(Uri.parse(_pdimage))
-                            // .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            //.skipMemoryCache(true)
                             .error(R.drawable.car)
                             .into(details_image);
 
@@ -1018,13 +818,14 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 if (_descvalue == null || _descvalue.trim().length() == 0 || _descvalue.trim().equals("NA") || _descvalue.trim().equals("0")) {
                     final String strrs = getResources().getString(R.string.Rs);
                     pdsubprice.setText(strrs + " " + _pdprice);
+                    amount = _pdprice;
                     pdprice.setVisibility(View.GONE);
                 } else {
                     discount_price.setText("(" + "-" + _descvalue + "%" + ")");
                     pdprice.setVisibility(View.VISIBLE);
                     final String strrs = getResources().getString(R.string.Rs);
                     pdsubprice.setText(strrs + " " + _pdsubprice);
-
+                    amount = _pdprice;
 
                     pdprice.setText(strrs + " " + _pdprice);
                     pdprice.setPaintFlags(pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -1038,12 +839,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                 courses_Adapter = new Adapter_Generalinfo(Activity_productdetails.this, allSampleDataGeneralInfo, mCallback2);
                 recyclergeneralinfo.setAdapter(courses_Adapter);
-               /* courses_Adapter = new Adapter_Sizes(Activity_productdetails.this,allItemscourses, mCallback2);
-                recyclercoursesoffered.setAdapter(courses_Adapter);
-*/
+
                 Log.e("testing", "allSampleDatavariables = " + allSampleDatavariables);
                 Adapter_ProductVariations adapter = new Adapter_ProductVariations(Activity_productdetails.this, allSampleDatavariables, mCallbackchildadapter);
-
                 recyclercoursesoffered.setLayoutManager(new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false));
 
                 recyclercoursesoffered.setAdapter(adapter);
@@ -1054,25 +852,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                 recyclerviewdescription.setAdapter(adapter2);
 
-
-
-               /* // Auto start of viewpager
-                final Handler handler = new Handler();
-                final Runnable Update = new Runnable() {
-                    public void run() {
-                        if (currentPage == imagelength) {
-                            currentPage = 0;
-                        }
-                        mPager.setCurrentItem(currentPage++, true);
-                    }
-                };
-                Timer swipeTimer = new Timer();
-                swipeTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        handler.post(Update);
-                    }
-                }, 2500, 2500);*/
 
             } else {
 
@@ -1086,175 +865,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
 //-----------------------------------------------------------------------------------------------------
 
-    private class Recentlyproducts extends AsyncTask<Void, Void, Void> {
-
-        String headers;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Showing progress dialog
-            pDialog = new ProgressDialog(Activity_productdetails.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
-
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(EndUrl.Recently_added_URL);
-
-            Log.e(TAG, "Response from url: " + jsonStr);
-
-            if (jsonStr != null) {
-                try {
-
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-
-                    // Getting JSON Array node
-
-                    Log.e("testing", "jsonObj = " + jsonObj);
-
-
-                    JSONObject response = new JSONObject(jsonObj.toString());
-
-                    Log.e("testing", "jsonParser2222" + jsonObj);
-
-                    //JSONObject jsonArray1 = new JSONObject(json.toString());
-                    //  Result = response.getString("status");
-                    JSONArray posts = response.optJSONArray("data");
-                    Log.e("testing", "jsonParser3333" + posts);
-
-                    if (posts == null) {
-                        Log.e("testing", "jon11111111111111111");
-
-                        //Toast.makeText(getContext(),"No data found",Toast.LENGTH_LONG).show();
-
-                    } else {
-
-                        Log.e("testing", "jon122222211");
-                        Log.e("testing", "jsonParser4444" + posts);
-
-                        for (int i = 0; i < posts.length(); i++) {
-                            Log.e("testing", "" + posts);
-
-                            Log.e("testing", "" + i);
-                            JSONObject post = posts.optJSONObject(i);
-                            // JSONArray posts2 = response.optJSONArray("categories");
-                            Log.e("testng", "" + post);
-                            headers = post.getString("categoryName");
-
-                            Log.e("testing", "name is 11= " + post.getString("categoryName"));
-
-
-                            String Title = post.getString("categoryName");
-
-                            SectionDataModel dm = new SectionDataModel();
-
-                            dm.setHeaderTitle(post.getString("categoryName"));
-
-                            posts2 = post.optJSONArray("products");
-
-                            ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
-                            for (int i1 = 0; i1 < posts2.length(); i1++) {
-                                JSONObject post2 = posts2.optJSONObject(i1);
-
-                               /* String Title2 = post2.getString("title");
-                                String Productid = post2.getString("productId");
-                                String Parentid = post2.getString("subcatName");
-                                String Typename = post2.getString("location");
-
-                               */
-
-                                String finalimg = null;
-
-                                finalimg = post2.getString("image");
-                              /*  JSONArray posts3 = post2.optJSONArray("multipleImages");
-                                for (int i2 = 0; i2 < posts3.length(); i2++) {
-                                    JSONObject post3 = posts3.optJSONObject(i2);
-
-                                    finalimg = post3.getString("image");
-
-
-                                    //find the group position inside the list
-                                    //groupPosition = deptList.indexOf(headerInfo);
-                                }*/
-
-                                singleItem.add(new SingleItemModel(post2.getString("productId"), post2.getString("categoryName"), post2.getString("title"), post2.getString("subTitle"), post2.getString("price"), post2.getString("discountValue"), post2.getString("afterDiscount"), finalimg, post2.getString("stockQuantity")));
-
-                            }
-
-                            dm.setAllItemsInSection(singleItem);
-
-                            allSampleData.add(dm);
-
-                        }
-
-                    }
-
-                } catch (final JSONException e) {
-                    Log.e(TAG, "Json parsing error: " + e.getMessage());
-                    Activity_productdetails.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Activity_productdetails.this,
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-
-                }
-            } else {
-
-                Log.e(TAG, "Couldn't get json from server.");
-                Activity_productdetails.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(Activity_productdetails.this,
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-
-            }
-
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            /**
-             * Updating parsed JSON data into ListView
-             * */
-
-            if (posts2.equals("[]")) {
-
-                //   Toast.makeText(Activity_productdetails.this, "No ", Toast.LENGTH_SHORT).show();
-
-            } else {
-
-                RecyclerViewDataAdapter2 adapter = new RecyclerViewDataAdapter2(Activity_productdetails.this, allSampleData);
-
-                my_recycler.setLayoutManager(new LinearLayoutManager(Activity_productdetails.this, LinearLayoutManager.VERTICAL, false));
-
-                my_recycler.setAdapter(adapter);
-
-            }
-
-        }
-
-    }
 
     private class Getproducts extends AsyncTask<Void, Void, Void> {
 
@@ -1263,12 +873,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // Showing progress dialog
-          /*  pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();*/
-
         }
 
         @Override
@@ -1277,11 +881,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
-
-            // userpramas.add(new BasicNameValuePair(EndUrl.GetProducts_id, catid));
-
-            // Making a request to url and getting response
-            //   String jsonStr = sh.makeServiceCall(EndUrl.Offer_Products_URL);
             JSONObject jsonObj = jsonParser.makeHttpRequest(EndUrl.Offer_Products_URL, "GET", userpramas);
 
             if (jsonObj != null) {
@@ -1291,7 +890,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                     Log.e("testing12", "jsonObj = " + jsonObj);
 
-                    //   JSONObject response = new JSONObject(jsonObj.toString());
 
 
                     JSONArray posts = jsonObj.optJSONArray("data");
@@ -1300,7 +898,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     if (posts == null) {
                         Log.e("testing", "jon11111111111111111");
 
-                        //Toast.makeText(getContext(),"No data found",Toast.LENGTH_LONG).show();
                     } else {
 
                         Log.e("testing", "jon122222211");
@@ -1315,19 +912,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
                         SectionDataModel dm = new SectionDataModel();
                         dm.setHeaderTitle("Offer Products");
-                        // dm.setHeaderid(post.getString("categoryId"));
                         ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
                         for (int i1 = 0; i1 < posts.length(); i1++) {
                             JSONObject post2 = posts.optJSONObject(i1);
-
-
-                               /*
-                                String Title2 = post2.getString("title");
-                                String Productid = post2.getString("productId");
-                                String Parentid = post2.getString("subcatName");
-                                String Typename = post2.getString("location");
-
-                               */
 
                             String finalimg = null;
 
@@ -1341,16 +928,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                             Log.e("testing", "offer" + post2.getString("offer"));
                             Log.e("testing", "discount_price" + post2.getString("discount_price"));
 
-                              /*  JSONArray posts3 = post2.optJSONArray("multipleImages");
-                                for (int i2 = 0; i2 < posts3.length(); i2++) {
-                                    JSONObject post3 = posts3.optJSONObject(i2);
-
-                                    finalimg = post3.getString("image");
-
-
-                                    //find the group position inside the list
-                                    //groupPosition = deptList.indexOf(headerInfo);
-                                }*/
 
                             singleItem.add(new SingleItemModel(post2.getString("product_id"), post2.getString("name"), post2.getString("name"), post2.getString("sku"), post2.getString("price"), post2.getString("offer"), post2.getString("discount_price"), finalimg, "2"));
 
@@ -1369,10 +946,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     Activity_productdetails.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                          /*  Toast.makeText( Activity_productdetails.this,
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();*/
+
                         }
                     });
 
@@ -1381,10 +955,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 Activity_productdetails.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                      /*  Toast.makeText( Activity_productdetails.this,
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();*/
+
                     }
                 });
 
@@ -1396,13 +967,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            // Dismiss the progress dialog
-          /*  if (pDialog.isShowing())
-                pDialog.dismiss();
-            *//**
-             * Updating parsed JSON data into ListView
-             * *//*
-            pDialog.dismiss();*/
+
             Log.e("testing", "allSampleData = " + allSampleData);
 
 
@@ -1429,17 +994,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_productdetails.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
-
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
-
-
         }
 
         public String doInBackground(String... args) {
@@ -1477,20 +1034,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
-                  /*  if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
-
-                    } else {
-                    }*/
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1511,25 +1054,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             } else if (status.equals("success")) {
                 Toast.makeText(Activity_productdetails.this, strmessage, Toast.LENGTH_SHORT).show();
-/*
-                Intent intent = new Intent(Activity_productdetails.this, MainActivity.class);
-
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);*/
-
-              /*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*/
 
 
             } else if (status.equals("failure")) {
@@ -1557,15 +1081,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_productdetails.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
-
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
 
 
         }
@@ -1599,26 +1117,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 try {
                     strmessage = json.getString("message");
 
-                  /*  status = json.getString("status");
-                    strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
-                    strcode = jsonobject.getString("code");
-                    strtype = jsonobject.getString("type");
-                    strmessage = jsonobject.getString("message");*/
-                  /*  if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
-
-                    } else {
-                    }*/
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1637,29 +1135,7 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             if (strmessage == null || strmessage.trim().length() == 0) {
 
-            }/*else if (status.equals("success")) {
-
-
-                Toast.makeText(Activity_productdetails.this, strmessage, Toast.LENGTH_SHORT).show();
-
-              *//*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*//*
-
-
-
-            } else if (status.equals("failure")) {
-                Toast.makeText(Activity_productdetails.this, strmessage, Toast.LENGTH_SHORT).show();
-                //  alertdialog(strtype, strmessage);
-            }*/ else {
+            } else {
                 Toast.makeText(Activity_productdetails.this, strmessage, Toast.LENGTH_SHORT).show();
             }
 
@@ -1681,16 +1157,9 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_productdetails.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
-
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
-
 
         }
 
@@ -1699,17 +1168,20 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
 
             // Retrieve JSON Objects from the given URL address
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
-            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_id, id));
-//            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_id, strvariantid));
+//            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_id, id));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_product_id, strvariantid));
             userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_user_id, viewUserId));
             userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_quantity, qty));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_proid, id));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_amount, amount));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_final_price, finalprice));
 
+            userpramas.add(new BasicNameValuePair(EndUrl.AddToCart_type, "1"));
             Log.e("testing", "userpramas = " + userpramas);
 
             String strurl = EndUrl.AddToCart_URL;
             Log.e("testing", "strurl = " + strurl);
             JSONObject json = jsonParser.makeHttpRequest(strurl, "POST", userpramas);
-
 
             Log.e("testing", "json result = " + json);
             if (json == null) {
@@ -1729,20 +1201,6 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
-                  /*  if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
-
-                    } else {
-                    }*/
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1764,29 +1222,17 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
             } else if (status.equals("success")) {
 
 
-                Intent intent = new Intent(Activity_productdetails.this, MainActivity.class);
+                if (!strmessage.equals("Already this item added into that cart.")) {
+                    Utils.Cart_Count = Utils.Cart_Count + 1;
 
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);
-
-              /*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*/
+                }
+                Toast.makeText(getApplicationContext(), strmessage, Toast.LENGTH_LONG).show();
 
 
             } else if (status.equals("failure")) {
                 Toast.makeText(Activity_productdetails.this, strmessage, Toast.LENGTH_SHORT).show();
                 //  alertdialog(strtype, strmessage);
+
             } else {
 
             }

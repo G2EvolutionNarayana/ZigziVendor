@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Adapter.Adapter_Whishlist_List;
 import g2evolution.Boutique.EndUrl;
@@ -105,70 +106,6 @@ public class Activity_WishList extends AppCompatActivity implements Adapter_Whis
     }
 
 
-    class PRODUCT_LIST extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_WishList.this, ProgressDialog.THEME_HOLO_LIGHT);
-            } else {
-                dialog = new ProgressDialog(Activity_WishList.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            allItems3.clear();
-            allItems3 = new ArrayList<FeederInfo_Whishlist_List>();
-            return postJsonObject2(EndUrl.GetCategoryChildProductList_URL, makingJson2());
-
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                dialog.dismiss();
-
-                Log.e("testing", "result in post execute=========" + result);
-
-                if (status.equals("success")) {
-
-                    Log.e("testing", "result in post execute=========" + allItems3);
-
-                    mAdapterFeeds2 = new Adapter_Whishlist_List(Activity_WishList.this, allItems3, mCallback);
-                    //  mFeedRecyler2.setLayoutManager(new LinearLayoutManager(Product_List.this, LinearLayoutManager.VERTICAL, true));
-                    mFeedRecyler2.setAdapter(mAdapterFeeds2);
-
-                } else if (status.equals("fail")) {
-
-                    allItems3.clear();
-
-                    mAdapterFeeds2 = new Adapter_Whishlist_List(Activity_WishList.this, allItems3, mCallback);
-                    mFeedRecyler2.setAdapter(mAdapterFeeds2);
-
-                    Toast.makeText(Activity_WishList.this, "no data found", Toast.LENGTH_LONG).show();
-
-                }
-
-            } else {
-
-                Toast.makeText(Activity_WishList.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-
-            }
-        }
-
-    }
 
     public JSONObject makingJson2() {
 
@@ -356,7 +293,7 @@ public class Activity_WishList extends AppCompatActivity implements Adapter_Whis
             userpramas.add(new BasicNameValuePair(EndUrl.GetWhishlist_User_id, viewUserId));
 
 
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetWhishlist_URL, "GET", userpramas);
+            JSONObject json = jsonParser.makeHttpRequest(EndUrl.GetWhishlist_URL, "POST", userpramas);
 
             Log.e("testing", "userpramas result = " + userpramas);
             Log.e("testing", "json result = " + json);
@@ -488,12 +425,7 @@ public class Activity_WishList extends AppCompatActivity implements Adapter_Whis
             /*    product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
                 prodcuts_recycler.setAdapter(product_details_adapter);*/
 
-
-
-
             }
-
-
 
         }
 
@@ -510,7 +442,7 @@ public class Activity_WishList extends AppCompatActivity implements Adapter_Whis
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_WishList.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 

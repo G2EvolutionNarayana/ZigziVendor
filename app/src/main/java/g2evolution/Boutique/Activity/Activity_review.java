@@ -40,6 +40,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Adapter.Adapter_review;
 import g2evolution.Boutique.EndUrl;
@@ -84,7 +85,9 @@ public class Activity_review extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
-
+        dialogmain = new Dialog(Activity_review.this);
+        dialogmain.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setreviewdialog();
 
         SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
         UserId = prefuserdata.getString("UserId", "");
@@ -97,8 +100,7 @@ public class Activity_review extends AppCompatActivity {
         Log.e("teting","productId = "+productId);
 
 
-        dialogmain = new Dialog(Activity_review.this);
-        dialogmain.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 
         ImageView back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +129,6 @@ public class Activity_review extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                setreviewdialog();
             }
         });
         // setUpRecycler();
@@ -158,6 +159,7 @@ public class Activity_review extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogmain.dismiss();
+                finish();
             }
         });
 
@@ -204,78 +206,8 @@ public class Activity_review extends AppCompatActivity {
 
     }
 
-    private void setUpRecycler() {
 
 
-        mListFeederInfo = new ArrayList<FeederInfo_review>();
-
-        for (int i = 0; i < Rating.length; i++)
-        {
-            FeederInfo_review feedInfo = new FeederInfo_review();
-
-            feedInfo.setTextrating(Rating[i]);
-            feedInfo.setTexttitle(details[i]);
-            feedInfo.setTextdesc(price[i]);
-
-            mListFeederInfo.add(feedInfo);
-        }
-
-        mAdapterFeeds= new Adapter_review(this , mListFeederInfo);
-        mFeedRecyler.setAdapter(mAdapterFeeds);
-
-    }
-
-
-
-    class Loader extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_review.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_review.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject(EndUrl.Rating_URL, makingJson());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-                    Toast.makeText(Activity_review.this, ""+message, Toast.LENGTH_LONG).show();
-                    dialogmain.dismiss();
-
-                }else {
-                    Toast.makeText(Activity_review.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-                Toast.makeText(Activity_review.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
 
     public JSONObject makingJson() {
 
@@ -388,65 +320,6 @@ public class Activity_review extends AppCompatActivity {
         return result;
     }
 
-
-
-
-
-
-    class Loader2 extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_review.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_review.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject2(EndUrl.RatingList_URL, makingJson2());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-                    mAdapterFeeds= new Adapter_review(Activity_review.this , allItems1);
-                    mFeedRecyler.setAdapter(mAdapterFeeds);
-
-
-
-                }else {
-
-                    mAdapterFeeds= new Adapter_review(Activity_review.this , allItems1);
-                    mFeedRecyler.setAdapter(mAdapterFeeds);
-                }
-
-            }else {
-
-                Toast.makeText(Activity_review.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
 
     public JSONObject makingJson2() {
 
@@ -717,11 +590,7 @@ public class Activity_review extends AppCompatActivity {
                 //  Log.e("testing123", "allItems1===" + allItems1);
 
 
-/*
-                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                 prodcuts_recycler.setLayoutManager(mLayoutManager);
-                product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
-                prodcuts_recycler.setAdapter(product_details_adapter);*/
+
 
                 mAdapterFeeds= new Adapter_review(Activity_review.this , allItems1);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
@@ -735,8 +604,6 @@ public class Activity_review extends AppCompatActivity {
                 mAdapterFeeds= new Adapter_review(Activity_review.this , allItems1);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
 
-            /*    product_details_adapter = new Products_Adapter(getActivity(), product_details_lists, mCallback);
-                prodcuts_recycler.setAdapter(product_details_adapter);*/
 
 
 

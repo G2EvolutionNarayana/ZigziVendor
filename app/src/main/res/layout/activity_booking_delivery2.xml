@@ -1,51 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/green"
-        android:padding="10dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/back"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:padding="5dp"
-            android:src="@drawable/back"/>
+            android:src="@drawable/back" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Book Delivery"
-            android:textColor="@color/white"
             android:layout_gravity="center"
+            android:paddingLeft="5dp"
+            android:text="Book Delivery"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingLeft="5dp"/>
+            android:textColor="@color/white" />
 
 
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pick Date and Time"
-        android:textSize="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
-        android:textColor="@color/green"
-        android:textStyle="bold"/>
+        android:layout_marginTop="20dp"
+        android:text="Pick Date and Time"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_margin="20dp"
+        android:orientation="vertical">
 
 
         <TextView
@@ -53,21 +56,23 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/grey"
-            android:hint="Select Date and Time"
             android:gravity="center"
-            android:textSize="15dp"
+            android:hint="Select Date and Time"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"/>
+            android:textColorHint="@color/black"
+            android:textSize="15dp" />
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Delivery Mode"
-        android:textSize="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
-        android:textColor="@color/green"
-        android:textStyle="bold"/>
+        android:layout_marginTop="20dp"
+        android:text="Select Delivery Mode"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/feedrecycler"
         android:layout_width="match_parent"
@@ -80,41 +85,58 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <RadioGroup
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/grey"
-        android:layout_margin="20dp"
-        android:visibility="gone"
-        android:padding="10dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Select Delivery Mode"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+
+    <RadioGroup
+        android:id="@+id/xRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingRight="@dimen/padding_20"
+        android:paddingLeft="@dimen/padding_20"
+        android:orientation="vertical">
         <RadioButton
+            android:id="@+id/radio3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Normal Delivery"
-            android:textColor="@color/black"
-            android:padding="5dp"
-            android:layout_margin="10dp"
-            android:textSize="15dp"/>
+            android:layout_gravity="start"
+            android:layout_marginRight="1dp"
+            android:background="@color/white"
+            android:layoutDirection="rtl"
+            android:padding="@dimen/dimen_10dp"
+            android:text="Online Payment"
+            android:textAlignment="textStart" />
+
         <RadioButton
+            android:id="@+id/radio4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delivery with Altration"
-            android:textColor="@color/black"
-            android:padding="5dp"
-            android:layout_margin="10dp"
-            android:textSize="15dp"/>
+            android:layout_gravity="start"
+            android:background="@color/white"
+            android:layoutDirection="rtl"
+            android:padding="@dimen/dimen_10dp"
+            android:text="Cash on Delivery(COD)"
+            android:textAlignment="textStart" />
     </RadioGroup>
 
     <TextView
         android:id="@+id/textcontinue"
         android:layout_width="200dp"
         android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_circle"
         android:gravity="center"
         android:text="Continue"
-        android:background="@drawable/bg_circle"
-        android:textColor="@color/white"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"/>
+        android:textColor="@color/white" />
 
 </LinearLayout>

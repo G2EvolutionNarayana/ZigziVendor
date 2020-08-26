@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Activity.Activity_SubSactegory"
     android:orientation="vertical"
-    android:background="@color/greyadapt">
+>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,8 +19,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/reply"
         android:layout_below="@+id/top_linear"
         />

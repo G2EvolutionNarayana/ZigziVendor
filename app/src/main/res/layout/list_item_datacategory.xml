@@ -2,21 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-
     android:orientation="vertical"
     android:padding="5dp">
 
-    <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/tools"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="0dp"
         android:orientation="horizontal"
         app:cardCornerRadius="5dp"
         app:cardUseCompatPadding="true"
+        card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="0dp">
 
         <LinearLayout
@@ -28,20 +26,19 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:background="@color/greyadapt">
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/itemTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
                     android:text="Sample title"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnMore"
@@ -50,10 +47,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:background="@color/white"
                     android:text="VIEW ALL"
-                    android:textColor="@color/green"
-                    android:visibility="gone"
-                    android:background="@color/white"/>
+                    android:textColor="@color/colorPrimary"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -63,8 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:orientation="horizontal"
-                android:background="@color/greyadapt"/>
+                android:orientation="horizontal" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

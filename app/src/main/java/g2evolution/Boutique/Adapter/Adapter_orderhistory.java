@@ -26,7 +26,6 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
     private Context mContext;
     private OnItemClick mCallback;
     int currentNos;
-
     String orderid,ORDERID;
 
     String qty;
@@ -38,13 +37,8 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
         // mInflater = LayoutInflater.from(context);
         mListFeeds=feedList;
         this.mCallback = listener;
-
         SharedPreferences prefuserdata1 = mContext.getSharedPreferences("regId", 0);
         UserId = prefuserdata1.getString("UserId", "");
-
-
-
-
 
     }
     public interface OnItemClick {
@@ -55,10 +49,8 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
         notifyDataSetChanged();
     }
 
-
     @Override
     public ViewHolder_orderhistory onCreateViewHolder(ViewGroup parent, int viewType) {
-
 
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_history, parent,false);
         ViewHolder_orderhistory rcv = new ViewHolder_orderhistory(layoutView);
@@ -69,33 +61,35 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
     @Override
     public void onBindViewHolder(final ViewHolder_orderhistory holder, final int position) {
         final FeederInfo_orderhistory feederInfo = mListFeeds.get(position);
-
-
         final String strrs = mContext.getResources().getString(R.string.Rs);
         String feedDesc = null;
 
         if (feederInfo.getDeliverystatus().equals("In_transit")){
-            holder.deliverystatus.setText("Pending");
+            holder.deliverystatus.setText("Order Status : "+"Pending");
+        }else if (feederInfo.getDeliverystatus().equals("Accepted")){
+            holder.deliverystatus.setText("Order Status : "+"Accepted");
+            holder.imgdelete.setVisibility(View.GONE);
         }else if (feederInfo.getDeliverystatus().equals("Canceled")){
-            holder.deliverystatus.setText("Cancelled");
+            holder.deliverystatus.setText("Order Status : "+"Cancelled");
             holder.imgdelete.setVisibility(View.GONE);
         }else if (feederInfo.getDeliverystatus().equals("Rejected")){
-                holder.deliverystatus.setText("Cancelled");
+                holder.deliverystatus.setText("Order Status : "+"Cancelled");
             holder.imgdelete.setVisibility(View.GONE);
         }else if (feederInfo.getDeliverystatus().equals("Delivered")){
-            holder.deliverystatus.setText("Delivered");
+            holder.deliverystatus.setText("Order Status : "+"Delivered");
+            holder.imgdelete.setVisibility(View.GONE);
+
         }else{
-            holder.deliverystatus.setText("Pending");
+            holder.deliverystatus.setText("Order Status : "+"Pending");
         }
+
 
         holder.orderdate.setText(feederInfo.getOrderdate());
         holder.orderid.setText(feederInfo.getOrderid());
         holder.totalprice.setText(strrs+feederInfo.getTotalprice());
         // holder.shippingaddress.setText(feederInfo.getShippingadress());
         holder.paymentmode.setText(feederInfo.getPaymentmode());
-
         ORDERID =  feederInfo.getOrderID();
-
 
         Log.e("testing","orderid  = " + ORDERID);
 
@@ -112,10 +106,8 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
                 Log.e("testing","orderid  = " + ORDERID);
                 prefeditor.commit();
 
-
                 Intent i = new Intent(mContext, Activity_orderdetails.class);
                 mContext.startActivity(i);
-
 
             }
         });
@@ -126,8 +118,6 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
         holder.imgdelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
 
                 if (feederInfo.getDeliverystatus().equals("Canceled") || feederInfo.getDeliverystatus().equals("Rejected")){
 
@@ -144,11 +134,8 @@ public class Adapter_orderhistory extends RecyclerView.Adapter<ViewHolder_orderh
                         mCallback.onClickedItem(position,feederInfo.getOrderid(), 1);
                     }
                 }
-
             }
         });
-
-
 
         //holder.rate.setRating(Float.parseFloat(feederInfo.get_rating()));
 

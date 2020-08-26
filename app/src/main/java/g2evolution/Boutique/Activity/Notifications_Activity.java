@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Adapter.Notification_Adapter;
 import g2evolution.Boutique.EndUrl;
@@ -349,7 +350,7 @@ public class Notifications_Activity extends AppCompatActivity implements  Notifi
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Notifications_Activity.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 

@@ -79,7 +79,7 @@ public class Activity_Profile extends AppCompatActivity {
 
     TextView name_text,txt_email_id, txt_mobile_no;
 
-    RelativeLayout relativeprofile;
+    RelativeLayout relativeprofile,xRelayDeliveryAddress,xRelayChnagePassword;
     //------------------searchable spinner----------------
     JSONObject jsonobject;
     JSONArray jsonarray;
@@ -125,7 +125,7 @@ public class Activity_Profile extends AppCompatActivity {
         });
 
         TextView textview_title1 = (TextView) findViewById(R.id.textview_title1);
-        textview_title1.setText("Profile");
+        textview_title1.setText("My Profile");
 
         dialogpincode = new Dialog(Activity_Profile.this);
         dialogpincode.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -133,6 +133,9 @@ public class Activity_Profile extends AppCompatActivity {
         name_text = (TextView) findViewById(R.id.name_text);
         txt_email_id = (TextView) findViewById(R.id.txt_email_id);
         txt_mobile_no = (TextView) findViewById(R.id.txt_mobile_no);
+
+        xRelayDeliveryAddress=(RelativeLayout)findViewById(R.id.xRelayDeliveryAddress);
+        xRelayChnagePassword=findViewById(R.id.xRelayChnagePassword);
        /* txt_email_id.setText(shemailid);
         txt_mobile_no.setText(shmobileno);
 
@@ -147,7 +150,7 @@ public class Activity_Profile extends AppCompatActivity {
         imgchangepassword = (ImageView) findViewById(R.id.imgchangepassword);
         imgchangepincode = (ImageView) findViewById(R.id.imgchangepincode);
 
-        imgdelivery.setOnClickListener(new View.OnClickListener() {
+        xRelayDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -158,7 +161,7 @@ public class Activity_Profile extends AppCompatActivity {
             }
         });
 
-        imgchangepassword.setOnClickListener(new View.OnClickListener() {
+        xRelayChnagePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Activity_Profile.this, Activity_ChangePassword.class);
@@ -484,19 +487,6 @@ public class Activity_Profile extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void args) {
 
-            // Locate the spinner in activity_main.xml
-            // Spinner mySpinner = (Spinner) findViewById(R.id.my_spinner);
-
-/*
-            MultiSelectionSpinner multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.checkbox1);
-            multiSelectionSpinner.setItems(students1);
-            // multiSelectionSpinner.setSelection(new int[]{2, 6});
-            multiSelectionSpinner.setListener(this);*/
-
-
-            // -----------------------------spinner for age-----------------------------------
-
-
             spinnerAdapter adapter = new spinnerAdapter(Activity_Profile.this, R.layout.spinner_item);
             adapter.addAll(worldlist);
             adapter.add("Select Pincode");
@@ -622,10 +612,6 @@ public class Activity_Profile extends AppCompatActivity {
             pDialog.dismiss();
             if (status == null || status.length() == 0){
 
-
-
-
-
             }else if (status.equals("success")) {
                 pDialog.dismiss();
 
@@ -692,54 +678,21 @@ public class Activity_Profile extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            //file2 = new File(listString1);
 
-            //Log.e("DO file2 listString1", "map array th is = " + file2);
 
 
 
 
             try {
 
-                // String url = "http://www.brprojects.co.in/second_doctor/customer_queries.php";
                 String url = EndUrl.GetUploadProfiles_URL;
 
-                /*for (i = 0; i < map.size(); i++) {
-                    bitmap[i] = decodeFile(map.get(i));
-
-                    Log.e("decodeFile1", "decodeFile " + decodeFile(map.get(i)));
-
-                    //bitmap[i] = decodeFile(map1.get(i));
-
-                }
-*/
-
-                //  Bitmap xyz = decodeFile(filepath);
-
-                //Bitmap xyz = decodeFile1(map1.get(i1));
-                //Log.e("xyz listString1", " main image = " + xyz);
-
-
-                //Bitmap bitmap = decodeFile(map.get(i1));
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpContext localContext = new BasicHttpContext();
                 HttpPost httpPost = new HttpPost(url);
 
                 //FileBody bin1 = new FileBody(file2);
                 entity = new MultipartEntity();
-
-
-                // ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                // xyz.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
-                // byte[] data = bos.toByteArray();
-
-
-               /* MultipartEntity mpEntity = new MultipartEntity();
-                ContentBody cbFile = new FileBody(file);
-                mpEntity.addPart("your_file", cbFile);*/
-
-
                 entity.addPart(EndUrl.GetUploadProfile_user_id, new StringBody(userid));
 
 
@@ -869,13 +822,6 @@ public class Activity_Profile extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-
-            //file2 = new File(listString1);
-
-            //Log.e("DO file2 listString1", "map array th is = " + file2);
-
-
-
 
             try {
 
@@ -1012,7 +958,7 @@ public class Activity_Profile extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
           /*  mProgress = new ProgressDialog(Activity_Profile.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 */
@@ -1026,9 +972,7 @@ public class Activity_Profile extends AppCompatActivity {
         }
 
         public String doInBackground(String... args) {
-            // Create an array
 
-            // Retrieve JSON Objects from the given URL address
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
@@ -1103,6 +1047,12 @@ public class Activity_Profile extends AppCompatActivity {
                 name_text.setText(strjsonusername);
                 txt_email_id.setText(strjsonemailid);
                 txt_mobile_no.setText(strjsonmobileno);
+                SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
+                SharedPreferences.Editor prefeditor = prefuserdata.edit();
+                prefeditor.putString("UserId", "" + userid);
+                prefeditor.putString("Username", "" + strjsonusername);
+                prefeditor.putString("Usermail", "" + strjsonemailid);
+                prefeditor.putString("Usermob", "" + strjsonmobileno);
 
                 if (strjsonprofilePath==null||strjsonprofilePath.length()==0||strjsonprofilePath.equals("")){
 

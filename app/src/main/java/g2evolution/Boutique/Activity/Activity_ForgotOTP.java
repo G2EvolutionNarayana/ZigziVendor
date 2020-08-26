@@ -222,7 +222,7 @@ public class Activity_ForgotOTP extends AppCompatActivity implements View.OnClic
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(context);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
@@ -350,7 +350,7 @@ public class Activity_ForgotOTP extends AppCompatActivity implements View.OnClic
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(context);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 

@@ -58,50 +58,6 @@ public class Adapter_RecyclerViewDataCategory extends RecyclerView.Adapter<Adapt
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
-
-/*
-
-        itemRowHolder.btnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                category = dataList.get(i).getHeaderTitle();
-                catid = dataList.get(i).getHeaderid();
-
-
-             //   Toast.makeText(v.getContext(), "click event on more, "+sectionid , Toast.LENGTH_SHORT).show();
-            //    Toast.makeText(v.getContext(), "click event on more, "+sectionName , Toast.LENGTH_SHORT).show();
-
-
-                SharedPreferences prefuserdata = mContext.getSharedPreferences("ProDetails", 0);
-                SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                prefeditor.putString("category", "" + category);
-                prefeditor.putString("catid", "" + catid);
-                prefeditor.putString("subcategoryname", "" + subcategoryname);
-
-                Log.e("testing","category  = " + category);
-                Log.e("testing","catid  = " + catid);
-                prefeditor.commit();
-
-
-                if (mCallback!=null){
-                    mCallback.onClickedItem(i,category, 1);
-                }
-
-                Intent i = new Intent(mContext, Activity_categories.class);
-                mContext.startActivity(i);
-
-            }
-        });
-
-
-*/
-       /* Glide.with(mContext)
-                .load(feedItem.getImageURL())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .error(R.drawable.bg)
-                .into(feedListRowHolder.thumbView);*/
     }
 
     @Override

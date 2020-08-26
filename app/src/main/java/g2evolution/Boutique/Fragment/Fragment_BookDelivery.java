@@ -121,10 +121,10 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
             public void onClick(View v) {
                 strlocationposition="1";
                 imageMarker.setImageResource(R.drawable.greenmarker);
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .build(getActivity());
-                startActivityForResult(intent, REQUEST_SELECT_PLACE);
+//                Intent intent = new Autocomplete.IntentBuilder(
+//                        AutocompleteActivityMode.OVERLAY, fields)
+//                        .build(getActivity());
+//                startActivityForResult(intent, REQUEST_SELECT_PLACE);
 
             }
         });
@@ -133,10 +133,10 @@ public class Fragment_BookDelivery extends Fragment implements OnMapReadyCallbac
             public void onClick(View v) {
                 strlocationposition="2";
                 imageMarker.setImageResource(R.drawable.redmarker);
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .build(getActivity());
-                startActivityForResult(intent, REQUEST_SELECT_PLACE);
+//                Intent intent = new Autocomplete.IntentBuilder(
+//                        AutocompleteActivityMode.OVERLAY, fields)
+//                        .build(getActivity());
+//                startActivityForResult(intent, REQUEST_SELECT_PLACE);
 
             }
         });

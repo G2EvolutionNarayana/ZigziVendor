@@ -51,7 +51,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="more"
-            android:textColor="@color/green"
+            android:textColor="@color/colorPrimary"
             android:background="@color/white"/>-->
 
     </RelativeLayout>

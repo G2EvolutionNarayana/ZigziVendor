@@ -38,6 +38,8 @@ import g2evolution.Boutique.Retrofit.ApiClient;
 import g2evolution.Boutique.Retrofit.ResourceList.Datum;
 import g2evolution.Boutique.Retrofit.ResourceList.ResourceListJson;
 import g2evolution.Boutique.Utility.JSONParser;
+import g2evolution.Boutique.ccavenue.WebActivity2;
+import g2evolution.Boutique.ccavenue.WebResourceActivity;
 import g2evolution.Boutique.entit.Entity_Resourse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -120,7 +122,27 @@ public class Resource_Management_Fragment extends Fragment implements Adapter_re
             strorderid = String.valueOf(follow.getResourcePackagesId());
             strorderprice = follow.getPrice();
             strorderdesc = follow.getDescription();
-            new LoadUploadResource().execute();
+//            new LoadUploadResource().execute();
+
+
+            JSONObject BuyResource=new JSONObject();
+            try {
+                BuyResource.put(EndUrl.UploadResource_resource_packages_id,strorderid);
+                BuyResource.put(EndUrl.UploadResource_user_id,UserId);
+                BuyResource.put(EndUrl.UploadResource_price,strorderprice);
+                BuyResource.put(EndUrl.UploadResource_transaction_id,"1234");
+                BuyResource.put(EndUrl.UploadResource_payment_status,"paid");
+                BuyResource.put(EndUrl.UploadResource_description,strorderdesc);
+                BuyResource.put(EndUrl.UploadResource_category_id,"");
+                BuyResource.put(EndUrl.UploadResource_cv_count,"");
+
+
+                Intent intent=new Intent(getActivity(), WebResourceActivity.class);
+                intent.putExtra("BuyResource",BuyResource.toString() );
+                startActivity(intent);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }else if (status == 2){
             SharedPreferences prefuserdata =getActivity().getSharedPreferences("ProductIDDetails", 0);
@@ -138,27 +160,6 @@ public class Resource_Management_Fragment extends Fragment implements Adapter_re
         }
 
     }
-
-
-
-
-  /*  private void setUpReccyler() {
-        openings_entity = new ArrayList<Entity_Resourse>();
-
-        for (int i = 0; i < TitleName.length; i++) {
-            Entity_Resourse feedInfo = new Entity_Resourse();
-            // feedInfo.setImages(productImage[i]);
-            feedInfo.setTitlename(TitleName[i]);
-            feedInfo.setTextcount(Titlecount[i]);
-            feedInfo.setTextdesc(Titledesc[i]);
-            feedInfo.setTextprice(TitlePrice[i]);
-
-            openings_entity.add(feedInfo);
-        }
-        openings_adapter = new Adapter_resourse(getActivity(), openings_entity, mCallbackcropnames);
-        dashboard_reccyler.setAdapter(openings_adapter);
-    }*/
-
     private void RetrofitResourcelist() {
 
 
@@ -195,17 +196,6 @@ public class Resource_Management_Fragment extends Fragment implements Adapter_re
                     }else{
                         Toast.makeText(getActivity(), response.body().getResponse().getType(), Toast.LENGTH_SHORT).show();
                     }
-
-
-
-
-
-
-
-
-                    //  Toast.makeText(Activity_Event_Details.this, message, Toast.LENGTH_SHORT).show();
-
-
                 } else  {
                     Log.e("testing","error");
                     Toast.makeText(getActivity(), response.body().getResponse().getType(), Toast.LENGTH_SHORT).show();
@@ -222,150 +212,8 @@ public class Resource_Management_Fragment extends Fragment implements Adapter_re
 
             }
         });
-
-
-
-
-
     }
-    public class LoadUploadResource extends AsyncTask<String, String, String> {
-        String responce;
-        String message;
-        String headers;
-        String childs;
-        String Result;
-
-        String status;
-        String strresponse;
-        String strdata;
-        String strcode, strtype, strmessage;
-
-        private ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-        }
-
-        protected String doInBackground(String... args) {
-            Integer result = 0;
-            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
-
-            Log.e("testing", "jsonParser startedkljhk");
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_resource_packages_id, strorderid));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_user_id, UserId));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_price, strorderprice));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_order_number, "124"));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_transaction_id, "12346"));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_payment_status, "paid"));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_description, strorderdesc));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_category_id, ""));
-            userpramas.add(new BasicNameValuePair(EndUrl.UploadResource_cv_count, ""));
-            //  Log.e("testing", "feader_reg_id" + id);
-            JSONObject json = jsonParser.makeHttpRequest(EndUrl.UploadResource_URL, "POST", userpramas);
-
-            Log.e("testing", "userpramas = " + userpramas);
-            Log.e("testing", "jsonParser = " + json);
-
-
-            if (json == null) {
-
-                Log.e("testing", "jon11111111111111111");
-                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
-
-                return responce;
-            } else {
-                Log.e("testing", "jon2222222222222");
-                // DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-
-                    status = json.getString("status");
-                    strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
-                    strcode = jsonobject.getString("code");
-                    strtype = jsonobject.getString("type");
-                    strmessage = jsonobject.getString("message");
-                    if (status.equals("success")) {
-                       /* status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        String strmatchlist = jsonobjectdata.getString("matchList");
-                        JSONObject  jsonobjectmatchlist = new JSONObject(strmatchlist);
-                        String strmatches = jsonobjectmatchlist.getString("matches");
-
-                        JSONArray responcearray = new JSONArray(strmatches);
-                        Log.e("testing", "responcearray value=" + responcearray);
-
-                        for (int i = 0; i < responcearray.length(); i++) {
-
-                            JSONObject post = responcearray.getJSONObject(i);
-
-                            String strstatus = post.getString("status");
-
-
-                        }*/
-
-                    } else {
-                    }
 
 
 
-
-
-
-
-
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-                return responce;
-            }
-
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            pDialog.dismiss();
-            if (status == null || status.length() == 0){
-
-            }else if (status.equals("success")) {
-
-                if (strresponse == null || strresponse.length() == 0){
-
-                }else if (strtype.equals("save_success")){
-                    Toast.makeText(getActivity(), strmessage, Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(getActivity(), Home_Activity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-
-                }else{
-                    Toast.makeText(getActivity(), strmessage, Toast.LENGTH_SHORT).show();
-                }
-
-
-
-            }else{
-                Toast.makeText(getActivity(), strmessage, Toast.LENGTH_SHORT).show();
-            }
-
-
-
-        }
-
-
-    }
 }

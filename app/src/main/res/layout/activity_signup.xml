@@ -32,7 +32,7 @@
             android:layout_weight=".5"
             android:padding="5dp"
             android:textColor="@color/white"
-            android:background="@color/green"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:text="SignUp"
@@ -253,7 +253,7 @@
         android:layout_marginTop="25dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        card_view:cardBackgroundColor="@color/green"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardElevation="2dp">
 
         <LinearLayout

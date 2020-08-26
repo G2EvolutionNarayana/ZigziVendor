@@ -152,9 +152,7 @@ public class Cancelled_Orders_Adapter extends RecyclerView.Adapter<Cancelled_Ord
 
             Typeface typeface = Typeface.createFromAsset(mCtx.getAssets(), "arial.ttf");
 
-            ((TextView)itemView. findViewById(R.id.cust_name_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.cust_name_text1)).setTypeface(typeface);
-            ((TextView)itemView. findViewById(R.id.order_no_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.order_no_text1)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.order_date_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.order_date_text1)).setTypeface(typeface);

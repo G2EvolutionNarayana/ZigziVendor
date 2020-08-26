@@ -148,7 +148,7 @@
             android:padding="10dp"
             android:textColor="@color/white"
             android:layout_gravity="center"
-            android:background="@color/green"
+            android:background="@color/colorPrimary"
             android:layout_marginTop="30dp"
             android:gravity="center"/>
 

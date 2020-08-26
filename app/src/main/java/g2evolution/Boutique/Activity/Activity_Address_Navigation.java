@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -16,12 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +30,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.libraries.places.api.model.Place;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -53,32 +49,28 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
-import g2evolution.Boutique.Adapter.Adapter_address;
 import g2evolution.Boutique.Adapter.Adapter_address_Navigation;
-import g2evolution.Boutique.Adapter.spinnerAdapter;
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.FeederInfo.FeederInfo_address;
 import g2evolution.Boutique.FeederInfo.WorldPopulation;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.JSONParser;
-import g2evolution.Boutique.Utility.JSONfunctions1;
 
-public class Activity_Address_Navigation extends AppCompatActivity implements Adapter_address_Navigation.OnItemClick,GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks{
+public class Activity_Address_Navigation extends AppCompatActivity implements Adapter_address_Navigation.OnItemClick, GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
 
-    TextView editaddress;
-
-    ImageView back;
-
-    private Adapter_address_Navigation.OnItemClick mCallback;
+    private static final String LOG_TAG = "MainActivity";
+    private static final int GOOGLE_API_CLIENT_ID = 0;
+    //  private PlaceArrayAdapter mPlaceArrayAdapter;
+    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
 
     // String streditaddress;
-
-    EditText editname,editmob, editcity, editstate, editmob1, editpincode, edithouseno;
-
+    TextView editaddress;
+    ImageView back,xIvAddress;
+    EditText editname, editmob, editcity, editstate, editmob1, editpincode, edithouseno;
     //------------------searchable spinner----------------
     JSONObject jsonobject;
     JSONArray jsonarray;
@@ -87,63 +79,44 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
     // Spinner spinapartment;
     String capartmentid_id;
 
-    String strname,stradd,strmob,strmob1, strhouseno, strpincode ,stremailid;
-
-    String status,message,userid,Apay;
-
     // TextView addcross,addname,address,addno;
     //  String _addcross,_addname,_address,_addno, _addpincode;
-
-
-    String Username,Usermail,Usermob;
-
+    String strname, stradd, strmob, strmob1, strhouseno, strpincode, stremailid;
+    String status, message, userid, Apay;
+    String Username, Usermail, Usermob;
     ArrayList<HashMap<String, String>> arraylist1;
-    private ArrayList<FeederInfo_address> allItems1 = new ArrayList<FeederInfo_address>();
     Context context;
-    private RecyclerView mFeedRecyler;
-    private ArrayList<FeederInfo_address> mListFeederInfo;
-
     Adapter_address_Navigation mAdapterFeeds;
     RecyclerView rView;
-
     String addressid;
-    String []name =new String[]{"jana","janardhan","reddy"};
-    String []saddress =new String[]{"marathalli","hsr","btm"};
-    String []landmark =new String[]{"beside axis bank","beside  sfddsf","opposite watertank"};
-    String []mobileno =new String[]{"8050044482","8886075422","7799944412"};
-    String []pincode =new String[]{"560037","560035","560034"};
-
+    String[] name = new String[]{"jana", "janardhan", "reddy"};
+    String[] saddress = new String[]{"marathalli", "hsr", "btm"};
+    String[] landmark = new String[]{"beside axis bank", "beside  sfddsf", "opposite watertank"};
+    String[] mobileno = new String[]{"8050044482", "8886075422", "7799944412"};
+    String[] pincode = new String[]{"560037", "560035", "560034"};
     double latitude, longitude;
-
     JSONParser jsonParser = new JSONParser();
-
-    String latitudestr,edit_string_remove;
-
-    TextView edit_setting_adress,edit_setting_remove;
-
-    String getid,getTextname,getTextlandmark,getTextmobileno,getTextstate, getTextcity, getTextmob1, getTextpincode, getTexthouseno, getGetTextlandmark1,getTextaddress,getimpnotice,getemailid;
-
-    Dialog logindialog12,logindialog123;
-
-
+    String latitudestr, edit_string_remove;
+    TextView edit_setting_adress, edit_setting_remove;
+    String getid, getTextname, getTextlandmark, getTextmobileno, getTextstate, getTextcity, getTextmob1, getTextpincode, getTexthouseno, getGetTextlandmark1, getTextaddress, getimpnotice, getemailid;
+    Dialog logindialog12, logindialog123;
     AutoCompleteTextView mAutocompleteTextView;
-
     Dialog logindialog;
-
-    private static final String LOG_TAG = "MainActivity";
-
-    private static final int GOOGLE_API_CLIENT_ID = 0;
-    private GoogleApiClient mGoogleApiClient;
-  //  private PlaceArrayAdapter mPlaceArrayAdapter;
-    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
-            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-
     String strname1, straddress, strcity,
             strpostal, strcountry, strstate, strlanti, strlong, strsublocality, stradminarea, strsubadminarea;
-
-    View convertView,convertView1;
+    View convertView, convertView1;
     EditText editlandmark;
     String strlandmrk;
+    private Adapter_address_Navigation.OnItemClick mCallback;
+    private ArrayList<FeederInfo_address> allItems1 = new ArrayList<FeederInfo_address>();
+    private RecyclerView mFeedRecyler;
+    private ArrayList<FeederInfo_address> mListFeederInfo;
+    private GoogleApiClient mGoogleApiClient;
+
+    private static boolean isValidateEmail(String email) {
+
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,9 +124,9 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         setContentView(R.layout.activity__address_navigation);
 
 
-        editaddress = (TextView)findViewById(R.id.editaddress);
+        editaddress = (TextView) findViewById(R.id.editaddress);
         //  selectadd = (TextView)findViewById(R.id.selectadd);
-        back = (ImageView)findViewById(R.id.back);
+        back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,66 +134,24 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             }
         });
 
-        // addcross = (TextView)findViewById(R.id.addcross);
-        //  addname = (TextView)findViewById(R.id.addname);
-        //  address = (TextView)findViewById(R.id.address);
-        //  addno = (TextView)findViewById(R.id.addno);
-
         SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
-        userid = prefuserdata.getString("UserId","");
+        userid = prefuserdata.getString("UserId", "");
         Username = prefuserdata.getString("Username", "");
         Usermail = prefuserdata.getString("Usermail", "");
         Usermob = prefuserdata.getString("Usermob", "");
 
-        Log.e("testing","edit_string_remove==="+edit_string_remove);
+        Log.e("testing", "edit_string_remove===" + edit_string_remove);
         SharedPreferences prefuserdata1 = this.getSharedPreferences("pay", 0);
         Apay = prefuserdata1.getString("Apay", "");
 
-        mCallback=this;
+        mCallback = this;
 
         mFeedRecyler = (RecyclerView) findViewById(R.id.recycler_view);
         mFeedRecyler.setLayoutManager(new LinearLayoutManager(Activity_Address_Navigation.this));
-        //setUpRecycler();
-        // context = this;
-        ///  lLayout = new GridLayoutManager(Activity_cart.this,2);
+
         rView = (RecyclerView) findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
-        //  rView.setLayoutManager(lLayout);
-        //   mFeedRecyler.setLayoutManager(lLayout);
         mFeedRecyler.setHasFixedSize(true);
-
-
-        // setUpRecycler();
-        //-----------------Auto Complete Map Places-----------------------------//
-
-   /*     mGoogleApiClient = new GoogleApiClient.Builder(Activity_Address_Navigation.this)
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
-                .addConnectionCallbacks(this)
-                .build();
-        mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
-*/
-      /*  mAutocompleteTextView = (AutoCompleteTextView) findViewById(R.id
-                .locationsedt);
-        mAutocompleteTextView.setThreshold(2);
-        mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-        mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
-        mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);
-
-*/
-
-/*
-
-        mAutocompleteTextView = (AutoCompleteTextView) convertView1.findViewById(R.id.locationsedt);
-        mAutocompleteTextView.setThreshold(2);
-        mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-        mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
-        mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);
-*/
-
 
         ConnectionDetector cd = new ConnectionDetector(Activity_Address_Navigation.this);
         if (cd.isConnectingToInternet()) {
@@ -234,33 +165,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
         }
 
-      /*  selectadd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (_addcross == null){
-
-                    Toast.makeText(Activity_Address_Navigation.this, "Address not found,please add address", Toast.LENGTH_LONG).show();
-
-                }
-                else if (_addname == null) {
-                }
-                else if (_address == null) {
-                }
-                else if (_addno == null) {
-                }
-                else {
-
-                    Intent i = new Intent(Activity_Address_Navigation.this,Activity_PaymentMode.class);
-                    startActivity(i);
-
-                }
-            }
-        });*/
-
-
-
-
         editaddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -268,14 +172,11 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
                 logindialog = new Dialog(Activity_Address_Navigation.this);
                 logindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                LayoutInflater inflater = (LayoutInflater)Activity_Address_Navigation.this.getSystemService(Activity_Address_Navigation.this.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) Activity_Address_Navigation.this.getSystemService(Activity_Address_Navigation.this.LAYOUT_INFLATER_SERVICE);
                 convertView = (View) inflater.inflate(R.layout.edit_address, null);
 
-                /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
 
                 logindialog.setContentView(convertView);
-                //LinearLayout logoutdialoglay=(LinearLayout)convertView.findViewById(R.id.logoutdialoglay);
-                // StartSmartAnimation.startAnimation(findViewById(R.id.loginconfirm), AnimationType.Bounce, 800, 0, true, 100);
                 logindialog.setCanceledOnTouchOutside(true);
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(logindialog.getWindow().getAttributes());
@@ -284,49 +185,29 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                 lp.gravity = Gravity.CENTER;
                 logindialog.getWindow().setAttributes(lp);
 
-               /* mGoogleApiClient = new GoogleApiClient.Builder(Activity_Address_Navigation.this)
-                        .addApi(Places.GEO_DATA_API)
-                        .enableAutoManage(Activity_Address_Navigation.this, GOOGLE_API_CLIENT_ID, Activity_Address_Navigation.this)
-                        .addConnectionCallbacks(Activity_Address_Navigation.this)
-                        .build();*/
 
-                mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
+                xIvAddress = (ImageView) convertView.findViewById(R.id.xIvAddress);
+                xIvAddress.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(Activity_Address_Navigation.this, AddressSelectionActivity.class);
+                        startActivityForResult(i, 1);
+                        logindialog.cancel();
+                    }
+                });
+                mAutocompleteTextView = (AutoCompleteTextView) convertView.findViewById(R.id
                         .locationsedt);
-             /*   mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
-                        .locationsedt);
-                mAutocompleteTextView.setThreshold(2);
-                mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);*/
-            /*    mPlaceArrayAdapter = new PlaceArrayAdapter(Activity_Address_Navigation.this, android.R.layout.simple_list_item_1,
-                        BOUNDS_MOUNTAIN_VIEW, null);
-                mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);*/
+                editlandmark = (EditText) convertView.findViewById(R.id.editlandmark);
+                editname = (EditText) convertView.findViewById(R.id.editname);
 
+                editmob = (EditText) convertView.findViewById(R.id.editmob);
+                editcity = (EditText) convertView.findViewById(R.id.editcity);
+                editstate = (EditText) convertView.findViewById(R.id.editstate);
+                editmob1 = (EditText) convertView.findViewById(R.id.editmob1);
+                editpincode = (EditText) convertView.findViewById(R.id.editpincode);
+                edithouseno = (EditText) convertView.findViewById(R.id.edithouseno);
+                Button addsubmit = (Button) convertView.findViewById(R.id.addsubmit);
 
-                editlandmark = (EditText)convertView.findViewById(R.id.editlandmark);
-                editname = (EditText)convertView.findViewById(R.id.editname);
-
-         /*       mAutocompleteTextView = (AutoCompleteTextView)convertView. findViewById(R.id
-                        .locationsedt);*/
-                editmob = (EditText)convertView.findViewById(R.id.editmob);
-                editcity = (EditText)convertView.findViewById(R.id.editcity);
-                editstate = (EditText)convertView.findViewById(R.id.editstate);
-                editmob1 = (EditText)convertView.findViewById(R.id.editmob1);
-                editpincode = (EditText)convertView.findViewById(R.id.editpincode);
-                edithouseno = (EditText)convertView.findViewById(R.id.edithouseno);
-                //  spinapartment = (Spinner) convertView.findViewById(R.id.spinapartment);
-                Button addsubmit = (Button)convertView.findViewById(R.id.addsubmit);
-
-               /* ConnectionDetector cd = new ConnectionDetector(Activity_Address_Navigation.this);
-                if (cd.isConnectingToInternet()) {
-
-                    new DownloadJSON().execute();
-
-                } else {
-
-
-                    Toast.makeText(Activity_Address_Navigation.this, "Internet Connection Not Available Enable Internet And Try Again", Toast.LENGTH_LONG).show();
-
-                }
-*/
                 addsubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -334,9 +215,9 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
                         submit();
 
-                        Log.e("testing","strpincode===="+strpincode);
-                        Log.e("testing","strpostal===="+strpostal);
-                        Log.e("testing","capartmentid_id===="+capartmentid_id);
+                        Log.e("testing", "strpincode====" + strpincode);
+                        Log.e("testing", "strpostal====" + strpostal);
+                        Log.e("testing", "capartmentid_id====" + capartmentid_id);
 
 
                     }
@@ -351,32 +232,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     private void submit() {
 
-
-        if (!Validatename()) {
-            return;
-        }
-
-
-
-        if (!validateaddress()) {
-            return;
-        }
-
-        if (!validateaddress()) {
-            return;
-        }
-
-       /* if (!validatemoibile()) {
-            return;
-        }*/
-      /*  if (capartmentid_id == null || capartmentid_id.length() == 0 || spinapartment.getSelectedItem().toString().equals("Select Pincode")){
-            Toast.makeText(Activity_Address_Navigation.this, "Please select Pincode", Toast.LENGTH_SHORT).show();
-
-        }
-        else {
-
-            if (capartmentid_id.equals(strpostal)){*/
-
         strname = editname.getText().toString();
         stradd = mAutocompleteTextView.getText().toString();
         strmob = editmob.getText().toString();
@@ -385,7 +240,45 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         strmob1 = editmob1.getText().toString();
         strpincode = editpincode.getText().toString();
         strhouseno = edithouseno.getText().toString();
-        strlandmrk=editlandmark.getText().toString();
+        strlandmrk = editlandmark.getText().toString();
+        if (!Validatename()) {
+            return;
+        }
+
+        if (!validateaddress()) {
+            return;
+        }
+
+        if (stradd.equals(null) || stradd.isEmpty()) {
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter Area", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (strlandmrk.equals(null) || strlandmrk.isEmpty()) {
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter Landmark", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (strhouseno.equals(null)||strhouseno.isEmpty()){
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter House No", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (strcity.equals(null)||strcity.isEmpty()){
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter City", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (strstate.equals(null)||strstate.isEmpty()){
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter State", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (strmob1.equals(null) || strmob1.isEmpty()||strmob1.length()!=10) {
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter Mobile number", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (strpincode.equals(null)||strpincode.isEmpty()||strpincode.length()!=6){
+            Toast.makeText(Activity_Address_Navigation.this, "Please Enter Pincode", Toast.LENGTH_LONG).show();
+            return;
+        }
         //  capartmentid_id = spinapartment.getSelectedItem().toString();
 
         ConnectionDetector cd = new ConnectionDetector(Activity_Address_Navigation.this);
@@ -409,12 +302,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
-
-
-    private static boolean isValidateEmail(String email) {
-
-        return  Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
     private void submit1() {
 
         if (!Validatename()) {
@@ -457,7 +344,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         strmob1 = editmob1.getText().toString();
         strpincode = editpincode.getText().toString();
         strhouseno = edithouseno.getText().toString();
-        strlandmrk=editlandmark.getText().toString();
+        strlandmrk = editlandmark.getText().toString();
         //  capartmentid_id = spinapartment.getSelectedItem().toString();
 
         ConnectionDetector cd = new ConnectionDetector(Activity_Address_Navigation.this);
@@ -492,8 +379,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
         mListFeederInfo = new ArrayList<FeederInfo_address>();
 
-        for (int i = 0; i < name .length; i++)
-        {
+        for (int i = 0; i < name.length; i++) {
             FeederInfo_address feedInfo = new FeederInfo_address();
 
             feedInfo.setTextname(name[i]);
@@ -505,7 +391,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             mListFeederInfo.add(feedInfo);
         }
 
-        mAdapterFeeds= new Adapter_address_Navigation(this , mListFeederInfo, mCallback);
+        mAdapterFeeds = new Adapter_address_Navigation(this, mListFeederInfo, mCallback);
         mFeedRecyler.setAdapter(mAdapterFeeds);
 
     }
@@ -571,39 +457,39 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     @Override
     public void onClickedItem(int pos, int qty, int status) {
-        Log.e("DMen", "Pos:"+ pos + "Qty:"+qty);
-        Log.e("testing","status  = "+status);
-        Log.e("testing","title inm  = "+mListFeederInfo.get(pos).getId());
+        Log.e("DMen", "Pos:" + pos + "Qty:" + qty);
+        Log.e("testing", "status  = " + status);
+        Log.e("testing", "title inm  = " + mListFeederInfo.get(pos).getId());
 
-        getid=mListFeederInfo.get(pos).getId();
-        getTextname=mListFeederInfo.get(pos).getTextname();
-        getTextlandmark=mListFeederInfo.get(pos).getTextlandmark();
-        getTextmobileno=mListFeederInfo.get(pos).getTextmobileno();
-        getTextcity=mListFeederInfo.get(pos).getCity();
-        getTextstate=mListFeederInfo.get(pos).getState();
-        getTextmob1=mListFeederInfo.get(pos).getAlternatemobileno();
-        getTextpincode=mListFeederInfo.get(pos).getTextpincode();
-        getTexthouseno=mListFeederInfo.get(pos).getHouseno();
-        getGetTextlandmark1=mListFeederInfo.get(pos).getLandMark1();
-        getimpnotice=mListFeederInfo.get(pos).getImpnotice();
-        strpostal=mListFeederInfo.get(pos).getTextpincode();
-        getTextaddress=mListFeederInfo.get(pos).getTextaddress();
-        getemailid=mListFeederInfo.get(pos).getEmailId();
-        strlanti=mListFeederInfo.get(pos).getLatitude();
-        strlong=mListFeederInfo.get(pos).getLogitude();
+        getid = mListFeederInfo.get(pos).getId();
+        getTextname = mListFeederInfo.get(pos).getTextname();
+        getTextlandmark = mListFeederInfo.get(pos).getTextlandmark();
+        getTextmobileno = mListFeederInfo.get(pos).getTextmobileno();
+        getTextcity = mListFeederInfo.get(pos).getCity();
+        getTextstate = mListFeederInfo.get(pos).getState();
+        getTextmob1 = mListFeederInfo.get(pos).getAlternatemobileno();
+        getTextpincode = mListFeederInfo.get(pos).getTextpincode();
+        getTexthouseno = mListFeederInfo.get(pos).getHouseno();
+        getGetTextlandmark1 = mListFeederInfo.get(pos).getLandMark1();
+        getimpnotice = mListFeederInfo.get(pos).getImpnotice();
+        strpostal = mListFeederInfo.get(pos).getTextpincode();
+        getTextaddress = mListFeederInfo.get(pos).getTextaddress();
+        getemailid = mListFeederInfo.get(pos).getEmailId();
+        strlanti = mListFeederInfo.get(pos).getLatitude();
+        strlong = mListFeederInfo.get(pos).getLogitude();
 
         addressid = String.valueOf(qty);
 
-        Log.e("testing","testing=================quantity"+qty);
-        Log.e("testing","testing=================getid"+getid);
-        Log.e("testing","testing=================getTextpincode==========="+strpostal);
-        Log.e("testing","testing=================getTextpincode==========="+getGetTextlandmark1);
+        Log.e("testing", "testing=================quantity" + qty);
+        Log.e("testing", "testing=================getid" + getid);
+        Log.e("testing", "testing=================getTextpincode===========" + strpostal);
+        Log.e("testing", "testing=================getTextpincode===========" + getGetTextlandmark1);
         // new Loader2().execute();
 
 
         logindialog123 = new Dialog(Activity_Address_Navigation.this);
         logindialog123.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Activity_Address_Navigation.this.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Activity_Address_Navigation.this.LAYOUT_INFLATER_SERVICE);
         View convertView = (View) inflater.inflate(R.layout.edit_setting, null);
 
         /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
@@ -618,20 +504,20 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.CENTER;
         logindialog123.getWindow().setAttributes(lp);
-        edit_setting_adress = (TextView)convertView.findViewById(R.id.edit_setting);
-        edit_setting_remove = (TextView)convertView.findViewById(R.id.remove);
+        edit_setting_adress = (TextView) convertView.findViewById(R.id.edit_setting);
+        edit_setting_remove = (TextView) convertView.findViewById(R.id.remove);
 
         edit_setting_adress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 logindialog123.dismiss();
-                Log.e("testing","edit=edit_setting_adress=="+addressid);
+                Log.e("testing", "edit=edit_setting_adress==" + addressid);
 
 
                 logindialog12 = new Dialog(Activity_Address_Navigation.this);
                 logindialog12.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                LayoutInflater inflater = (LayoutInflater)Activity_Address_Navigation.this.getSystemService(Activity_Address_Navigation.this.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) Activity_Address_Navigation.this.getSystemService(Activity_Address_Navigation.this.LAYOUT_INFLATER_SERVICE);
                 convertView1 = (View) inflater.inflate(R.layout.edit_address, null);
 
                 /* StartSmartAnimation.startAnimation(convertView.findViewById(R.id.logoutdialoglay), AnimationType.ZoomIn, 500, 0, true, 100);*/
@@ -648,15 +534,15 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                 logindialog12.getWindow().setAttributes(lp);
 
 
-                editlandmark = (EditText)convertView1.findViewById(R.id.editlandmark);
-                editname = (EditText)convertView1.findViewById(R.id.editname);
+                editlandmark = (EditText) convertView1.findViewById(R.id.editlandmark);
+                editname = (EditText) convertView1.findViewById(R.id.editname);
 
-                editmob = (EditText)convertView1.findViewById(R.id.editmob);
-                editcity = (EditText)convertView1.findViewById(R.id.editcity);
-                editstate = (EditText)convertView1.findViewById(R.id.editstate);
-                editmob1 = (EditText)convertView1.findViewById(R.id.editmob1);
-                editpincode = (EditText)convertView1.findViewById(R.id.editpincode);
-                edithouseno = (EditText)convertView1.findViewById(R.id.edithouseno);
+                editmob = (EditText) convertView1.findViewById(R.id.editmob);
+                editcity = (EditText) convertView1.findViewById(R.id.editcity);
+                editstate = (EditText) convertView1.findViewById(R.id.editstate);
+                editmob1 = (EditText) convertView1.findViewById(R.id.editmob1);
+                editpincode = (EditText) convertView1.findViewById(R.id.editpincode);
+                edithouseno = (EditText) convertView1.findViewById(R.id.edithouseno);
 
 
 
@@ -666,7 +552,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                         .addConnectionCallbacks(Activity_Address_Navigation.this)
                         .build();*/
 
-                mAutocompleteTextView = (AutoCompleteTextView)convertView1. findViewById(R.id
+                mAutocompleteTextView = (AutoCompleteTextView) convertView1.findViewById(R.id
                         .locationsedt);
              /*   mAutocompleteTextView = (AutoCompleteTextView)convertView1. findViewById(R.id
                         .locationsedt);
@@ -687,7 +573,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                 edithouseno.setText(getTexthouseno);
                 editlandmark.setText(getTextlandmark);
                 // spinapartment = (Spinner) convertView1.findViewById(R.id.spinapartment);
-                Button addsubmit = (Button)convertView1.findViewById(R.id.addsubmit);
+                Button addsubmit = (Button) convertView1.findViewById(R.id.addsubmit);
 
 
                /* ConnectionDetector cd = new ConnectionDetector(Activity_Address_Navigation.this);
@@ -726,7 +612,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             @Override
             public void onClick(View v) {
 
-                Log.e("testing","edit==edit_setting_remove="+addressid);
+                Log.e("testing", "edit==edit_setting_remove=" + addressid);
 
                 new DeteleAddressUpdate().execute();
             }
@@ -734,71 +620,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
 
         logindialog123.show();
-
-    }
-
-
-    class Loader extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_Address_Navigation.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_Address_Navigation.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject(EndUrl.ADDdeliveryAddress_URL, makingJson());
-
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-                    //  Toast.makeText(Activity_Address_Navigation.this, ""+message, Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(Activity_Address_Navigation.this, Activity_Address_Navigation.class);
-
-                  /*  SharedPreferences prefuserdata = getSharedPreferences("regotp", 0);
-                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("otpid", "" + userid);
-                    prefeditor.putString("mobile", "" + strmobileno);
-                    //   prefeditor.putString("designationId", "" + designationId);
-
-                    prefeditor.commit();*/
-                    startActivity(intent);
-                    finish();
-
-                }else {
-                    // Toast.makeText(Activity_Address_Navigation.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-
-                Toast.makeText(Activity_Address_Navigation.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-
-            }
-        }
 
     }
 
@@ -810,24 +631,24 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
         try {
 
-            object.put(EndUrl.ADDdeliveryAddress_Id,userid);
-            object.put(EndUrl.ADDdeliveryAddress_name,strname);
-            object.put(EndUrl.ADDdeliveryAddress_address,stradd);
-            object.put(EndUrl.ADDdeliveryAddress_mobile,strmob);
-            object.put(EndUrl.ADDdeliveryAddress_pincode,capartmentid_id);
+            object.put(EndUrl.ADDdeliveryAddress_Id, userid);
+            object.put(EndUrl.ADDdeliveryAddress_name, strname);
+            object.put(EndUrl.ADDdeliveryAddress_address, stradd);
+            object.put(EndUrl.ADDdeliveryAddress_mobile, strmob);
+            object.put(EndUrl.ADDdeliveryAddress_pincode, capartmentid_id);
 
-            object.put(EndUrl.ADDdeliveryAddress_add_landmark,strlandmrk);
+            object.put(EndUrl.ADDdeliveryAddress_add_landmark, strlandmrk);
 
-            object.put(EndUrl.ADDdeliveryAddress_latitude,strlanti);
-            object.put(EndUrl.ADDdeliveryAddress_longitude,strlong);
+            object.put(EndUrl.ADDdeliveryAddress_latitude, strlanti);
+            object.put(EndUrl.ADDdeliveryAddress_longitude, strlong);
 
             //if you want to modify some value just do like this.
 
-            details.put(EndUrl.ADDdeliveryAddressjsonobject_outside_otp,object);
-            Log.d("json",details.toString());
-            Log.e("testing","json"+details.toString());
+            details.put(EndUrl.ADDdeliveryAddressjsonobject_outside_otp, object);
+            Log.d("json", details.toString());
+            Log.e("testing", "json" + details.toString());
 
-            Log.e("testing","details===Address="+details);
+            Log.e("testing", "details===Address=" + details);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -836,9 +657,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
-
-
-    public JSONObject postJsonObject(String url, JSONObject loginJobj){
+    public JSONObject postJsonObject(String url, JSONObject loginJobj) {
         InputStream inputStream = null;
         String result = "";
         try {
@@ -876,7 +695,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
-            if(inputStream != null)
+            if (inputStream != null)
 
                 result = convertInputStreamToString(inputStream);
             else
@@ -891,10 +710,10 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         try {
 
             json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            Log.e("testing", "result in post message=========" + json.getString("message"));
             status = json.getString("status");
             message = json.getString("message");
 
@@ -921,74 +740,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         // 11. return result
 
         return json;
-
-    }
-
-
-    class UpdateAddress extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_Address_Navigation.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_Address_Navigation.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject5(EndUrl.ADDdeliveryAddress_Updte_URL, makingJson5());
-
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-                    //   Toast.makeText(Activity_Address_Navigation.this, ""+message, Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(Activity_Address_Navigation.this, Activity_Address_Navigation.class);
-
-                  /*  SharedPreferences prefuserdata = getSharedPreferences("regotp", 0);
-                    SharedPreferences.Editor prefeditor = prefuserdata.edit();
-                    prefeditor.putString("otpid", "" + userid);
-                    prefeditor.putString("mobile", "" + strmobileno);
-                    //   prefeditor.putString("designationId", "" + designationId);
-
-                    prefeditor.commit();*/
-
-                    startActivity(intent);
-                    finish();
-                    logindialog12.dismiss();
-
-
-                }else {
-                    //  Toast.makeText(Activity_Address_Navigation.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-
-                Toast.makeText(Activity_Address_Navigation.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-
-            }
-        }
 
     }
 
@@ -1001,22 +752,22 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         try {
 
 
-            object.put(EndUrl.ADDdeliveryAddress__latitude,strlanti);
-            object.put(EndUrl.ADDdeliveryAddress__longitude,strlong);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_Id,userid);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_address_Id,addressid);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_name,strname);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_address,stradd);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_pincode,strpostal);
-            object.put(EndUrl.ADDdeliveryAddress_Updte_mobile,strmob);
+            object.put(EndUrl.ADDdeliveryAddress__latitude, strlanti);
+            object.put(EndUrl.ADDdeliveryAddress__longitude, strlong);
+            object.put(EndUrl.ADDdeliveryAddress_Updte_Id, userid);
+            object.put(EndUrl.ADDdeliveryAddress_Updte_address_Id, addressid);
+            object.put(EndUrl.ADDdeliveryAddress_Updte_name, strname);
+            object.put(EndUrl.ADDdeliveryAddress_Updte_address, stradd);
+            object.put(EndUrl.ADDdeliveryAddress_Updte_pincode, strpostal);
+            object.put(EndUrl.ADDdeliveryAddress_Updte_mobile, strmob);
 
-            object.put(EndUrl.ADDdeliveryAddress_addlandmark,strlandmrk);
+            object.put(EndUrl.ADDdeliveryAddress_addlandmark, strlandmrk);
 
             //if you want to modify some value just do like this.
 
-            details.put(EndUrl.ADDdeliveryAddressjsonobject_Updte_outside_otp,object);
-            Log.d("json",details.toString());
-            Log.e("testing","json"+details.toString());
+            details.put(EndUrl.ADDdeliveryAddressjsonobject_Updte_outside_otp, object);
+            Log.d("json", details.toString());
+            Log.e("testing", "json" + details.toString());
 
 
         } catch (JSONException e) {
@@ -1026,9 +777,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
-
-
-    public JSONObject postJsonObject5(String url, JSONObject loginJobj){
+    public JSONObject postJsonObject5(String url, JSONObject loginJobj) {
         InputStream inputStream = null;
         String result = "";
         try {
@@ -1066,7 +815,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
-            if(inputStream != null)
+            if (inputStream != null)
 
                 result = convertInputStreamToString(inputStream);
             else
@@ -1081,10 +830,10 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         try {
 
             json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            Log.e("testing", "result in post message=========" + json.getString("message"));
             status = json.getString("status");
             message = json.getString("message");
 
@@ -1114,67 +863,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
-    //--------------------------------------------------------------------------------------------------------------
-
-    class Address extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_Address_Navigation.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_Address_Navigation.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            mListFeederInfo = new ArrayList<FeederInfo_address>();
-            return postJsonObject1(EndUrl.DeliveryAddress_URL, makingJson1());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-
-                    mAdapterFeeds= new Adapter_address_Navigation(Activity_Address_Navigation.this , mListFeederInfo, mCallback);
-                    mFeedRecyler.setAdapter(mAdapterFeeds);
-                 /*   addcross.setText(_addcross);
-                    addname.setText(_addname);
-                    address.setText(_address);
-                    addno.setText(_addno);
-
-*/
-                    // Toast.makeText(Activity_Address_Navigation.this, ""+message, Toast.LENGTH_LONG).show();
-
-
-                }else {
-                    // Toast.makeText(Activity_Address_Navigation.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-                Toast.makeText(Activity_Address_Navigation.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
-
     public JSONObject makingJson1() {
 
         JSONObject details = new JSONObject();
@@ -1183,8 +871,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
         try {
 
-            object.put(EndUrl.DeliveryAddress_userId,userid);
-
+            object.put(EndUrl.DeliveryAddress_userId, userid);
 
 
             //if you want to modify some value just do like this.
@@ -1201,9 +888,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
-
-
-    public JSONObject postJsonObject1(String url, JSONObject loginJobj){
+    public JSONObject postJsonObject1(String url, JSONObject loginJobj) {
         InputStream inputStream = null;
         String result = "";
         try {
@@ -1241,7 +926,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
-            if(inputStream != null)
+            if (inputStream != null)
 
                 result = convertInputStreamToString(inputStream);
             else
@@ -1257,10 +942,10 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         try {
 
             json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            Log.e("testing", "result in post message=========" + json.getString("message"));
             status = json.getString("status");
             message = json.getString("message");
             //  total_record = json.getString("total_record");
@@ -1310,74 +995,17 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
+    //--------------------------------------------------------------------------------------------------------------
+
     private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         String result = "";
-        while((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();
         return result;
-    }
-//-----------------------------------------------------------------------------------------------------
-
-
-
-
-
-    class Loader2 extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_Address_Navigation.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_Address_Navigation.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject2(EndUrl.AddressDelete_URL, makingJson2());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-
-                    //  Toast.makeText(Activity_Address_Navigation.this, message, Toast.LENGTH_LONG).show();
-                    logindialog123.dismiss();
-                    new Address().execute();
-
-                    // logindialog12.dismiss();
-
-                }else {
-                    //  Toast.makeText(Activity_Address_Navigation.this, message, Toast.LENGTH_LONG).show();
-
-                }
-
-            }else {
-                Toast.makeText(Activity_Address_Navigation.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
     }
 
     public JSONObject makingJson2() {
@@ -1387,13 +1015,12 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         JSONObject object = new JSONObject();
 
 
-
         try {
 
-            object.put(EndUrl.AddressDelete_AddressId,addressid);
+            object.put(EndUrl.AddressDelete_AddressId, addressid);
 
-            Log.d("json",object.toString());
-            Log.e("testing","json"+details.toString());
+            Log.d("json", object.toString());
+            Log.e("testing", "json" + details.toString());
 
 
         } catch (JSONException e) {
@@ -1403,9 +1030,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
     }
 
-
-
-    public JSONObject postJsonObject2(String url, JSONObject loginJobj){
+    public JSONObject postJsonObject2(String url, JSONObject loginJobj) {
         InputStream inputStream = null;
         String result = "";
         String headers;
@@ -1444,7 +1069,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
-            if(inputStream != null)
+            if (inputStream != null)
 
                 result = convertInputStreamToString2(inputStream);
             else
@@ -1460,16 +1085,15 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
 
             json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            Log.e("testing", "result in post message=========" + json.getString("message"));
             status = json.getString("status");
             message = json.getString("message");
 
             // String arrayresponce = json.getString("data");
             //  Log.e("testing", "adapter value=" + arrayresponce);
-
 
 
         } catch (JSONException e) {
@@ -1482,245 +1106,22 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
     }
 
     private String convertInputStreamToString2(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         String result = "";
-        while((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();
         return result;
     }
 
-
-   /* private class DownloadJSON extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // Locate the WorldPopulation Class
-            world = new ArrayList<WorldPopulation>();
-            // Create an array to populate the spinner
-            worldlist = new ArrayList<String>();
-            List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
-            // JSON file URL address
-            jsonobject = JSONfunctions1
-                    .getJSONfromURL(EndUrl.Pincode_URL, "GET",userpramas);
-
-
-            Log.e("testing","apartments = "+jsonobject);
-
-            try {
-                // Locate the NodeList name
-                jsonarray = jsonobject.getJSONArray("data");
-                for (int i = 0; i < jsonarray.length(); i++) {
-                    jsonobject = jsonarray.getJSONObject(i);
-
-                    WorldPopulation worldpop = new WorldPopulation();
-
-                    worldpop.setAname(jsonobject.optString("pincode"));
-                    worldpop.setAid(jsonobject.optString("pincodeId "));
-				*//*	worldpop.setPopulation(jsonobject.optString("population"));
-					worldpop.setFlag(jsonobject.optString("flag"));*//*
-                    world.add(worldpop);
-
-                    // Populate spinner with country names
-                    worldlist.add(jsonobject.optString("pincode"));
-
-                }
-            } catch (Exception e) {
-                //Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-
-
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void args) {
-            // Locate the spinner in activity_main.xml
-            // Spinner mySpinner = (Spinner) findViewById(R.id.my_spinner);
-
-*//*
-            MultiSelectionSpinner multiSelectionSpinner = (MultiSelectionSpinner) findViewById(R.id.checkbox1);
-            multiSelectionSpinner.setItems(students1);
-            // multiSelectionSpinner.setSelection(new int[]{2, 6});
-            multiSelectionSpinner.setListener(this);*//*
-
-
-            // -----------------------------spinner for age-----------------------------------
-
-
-            spinnerAdapter adapter = new spinnerAdapter(Activity_Address_Navigation.this, R.layout.spinner_item);
-            adapter.addAll(worldlist);
-            adapter.add("Select Pincode");
-            spinapartment.setAdapter(adapter);
-            spinapartment.setSelection(adapter.getCount());
-
-            *//*CurrentLocation
-                    .setAdapter(new ArrayAdapter<String>(Signup_Tutor.this,
-                            R.layout.spinner_item,
-                            worldlist));*//*
-
-            // Spinner on item click listener
-            spinapartment
-                    .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                        @Override
-                        public void onItemSelected(AdapterView<?> arg0,
-                                                   View arg1, int position, long arg3) {
-                            // TODO Auto-generated method stub
-                            // Locate the textviews in activity_main.xml
-                            if(spinapartment.getSelectedItem() == "Select Pincode")
-                            {
-                                //Do nothing.
-                            }
-                            else{
-
-                                capartmentid_id = world.get(position).getAname();
-
-                              //  capartmentid_id=strpincode;
-                                Log.e("ugender", "ugender = " + capartmentid_id);
-                                // new DownloadJSON4().execute();
-                            }
-
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> arg0) {
-                            // TODO Auto-generated method stub
-                        }
-                    });
-
-
-        }
-    }*/
-
-   /* //-------------------------------Autotext------------------------------------------------------------------
-
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-            final String placeId = String.valueOf(item.placeId);
-            Log.i(LOG_TAG, "Selected: " + item.description);
-            Log.e("testing","seelcted description = "+item.description);
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            Log.i(LOG_TAG, "Fetching details for ID: " + item.placeId);
-        }
-    };
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            Log.e("testing","places ========= "+places);
-            if (!places.getStatus().isSuccess()) {
-                Log.e(LOG_TAG, "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
-            }
-            final Place place = places.get(0);
-
-
-            LatLng latLng = place.getLatLng();
-
-            strname1 = place.getName().toString();
-            straddress = place.getAddress().toString();
-            Log.e("testing","latitude"+latLng.latitude);
-            Log.e("testing","longitude"+latLng.longitude);
-
-
-            Geocoder geocoder = new Geocoder(Activity_Address_Navigation.this, Locale.getDefault());
-            String result = null;
-            try {
-                List<android.location.Address> addressList = geocoder.getFromLocation(
-                        latLng.latitude, latLng.longitude, 1);
-                if (addressList != null && addressList.size() > 0) {
-                    android.location.Address address = addressList.get(0);
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                        sb.append(address.getAddressLine(i)).append("\n");
-                    }
-                    sb.append(address.getLocality()).append("\n");
-                    sb.append(address.getPostalCode()).append("\n");
-                    sb.append(address.getCountryName());
-                    result = sb.toString();
-                    strcity = address.getLocality();
-                    strpostal = address.getPostalCode();
-                    strcountry = address.getCountryName();
-                    strstate = address.getAdminArea();
-                    strsublocality = address.getSubLocality();
-                    stradminarea = address.getAdminArea();
-                    strsubadminarea = address.getSubAdminArea();
-                    Double doulatitude = address.getLatitude();
-                    Double doulongitude = address.getLongitude();
-
-                    Log.e("testing","location doulatitude"+doulatitude);
-                    Log.e("testing","location doulongitude"+doulongitude);
-                    Log.e("testing","location strpostal"+strpostal);
-
-                    strlanti = doulatitude.toString();
-                    strlong = doulongitude.toString();
-
-
-                    Log.e("testing1","strlanti======"+strlanti);
-                    Log.e("testing1","strlong======"+strlong);
-
-
-                *//*    SharedPreferences prefuserdata = getActivity(). getSharedPreferences("Autocompletext", 0);
-                    SharedPreferences.Editor prefeditor =prefuserdata.edit();
-                    prefeditor.putString("Latitudevalue", "" + latitude);
-                    prefeditor.putString("Longitudevalue", "" + longitude);
-                    prefeditor.putString("postalcode", "" + strpostal);
-                    prefeditor.putString("firstdate", "" + firstdate);
-                    prefeditor.putString("seconddate", "" + seconddate);
-                    prefeditor.commit();*//*
-
-                   *//* Log.e("testing","strlanti = "+strlanti);
-                    Log.e("testing","strlong = "+strlong);
-                    Log.e("testing","strpostal = "+strpostal);
-                    Log.e("testing","strcity = "+strcity);
-                    Log.e("testing","strcountry = "+strcountry);
-                    Log.e("testing","strstate = "+strstate);
-                    Log.e("testing","strsublocality = "+strsublocality);
-                    Log.e("testing","stradminarea = "+stradminarea);
-                    Log.e("testing","strsubadminarea = "+strsubadminarea);
-                    Log.e("testing","straddress = "+straddress);
-                    Log.e("testing","strname = "+strname);*//*
-
-
-                }
-            } catch (IOException e) {
-                // Log.e(TAG, "Unable connect to Geocoder", e);
-            }
-
-
-           *//*
-            // Selecting the first object buffer.
-            final Place place = places.get(2);
-            CharSequence attributions = places.getAttributions();
-
-            mNameTextView.setText(Html.fromHtml(place.getName() + ""));
-            mAddressTextView.setText(Html.fromHtml(place.getAddress() + ""));
-            mIdTextView.setText(Html.fromHtml(place.getId() + ""));
-            mPhoneTextView.setText(Html.fromHtml(place.getPhoneNumber() + ""));
-            mWebTextView.setText(place.getWebsiteUri() + "");
-            if (attributions != null) {
-                mAttTextView.setText(Html.fromHtml(attributions.toString()));
-            }*//*
-        }
-    };
-*/
     @Override
     public void onConnected(Bundle bundle) {
         //  mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
         Log.i(LOG_TAG, "Google Places API connected.");
 
-        Log.e("testing","LOG_TAG====api connected");
+        Log.e("testing", "LOG_TAG====api connected");
     }
 
     @Override
@@ -1732,21 +1133,16 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                         connectionResult.getErrorCode(),
                 Toast.LENGTH_LONG).show();
 
-        Log.e("testing","LOG_TAG====api failed");
+        Log.e("testing", "LOG_TAG====api failed");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
         //  mPlaceArrayAdapter.setGoogleApiClient(null);
         Log.e(LOG_TAG, "Google Places API connection suspended.");
-        Log.e("testing","LOG_TAG====api suspend");
+        Log.e("testing", "LOG_TAG====api suspend");
     }
-    /*   @Override
-       public void onPause() {
-           super.onPause();
-           mGoogleApiClient.stopAutoManage(Activity_Address_Navigation.this);
-           mGoogleApiClient.disconnect();
-       }*/
+
     @Override
     public void onStop() {
         super.onStop();
@@ -1757,6 +1153,115 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
     }
 
 
+
+
+
+
+    class Address extends AsyncTask<Void, Void, JSONObject> {
+
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (android.os.Build.VERSION.SDK_INT >= 11) {
+                dialog = new ProgressDialog(Activity_Address_Navigation.this, ProgressDialog.THEME_HOLO_LIGHT);
+            } else {
+                dialog = new ProgressDialog(Activity_Address_Navigation.this);
+            }
+            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            mListFeederInfo = new ArrayList<FeederInfo_address>();
+            return postJsonObject1(EndUrl.DeliveryAddress_URL, makingJson1());
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                dialog.dismiss();
+
+                Log.e("testing", "result in post execute=========" + result);
+
+                if (status.equals("success")) {
+
+
+                    mAdapterFeeds = new Adapter_address_Navigation(Activity_Address_Navigation.this, mListFeederInfo, mCallback);
+                    mFeedRecyler.setAdapter(mAdapterFeeds);
+
+
+                } else {
+                }
+
+            } else {
+                Toast.makeText(Activity_Address_Navigation.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }
+
+    }
+
+    class Loader2 extends AsyncTask<Void, Void, JSONObject> {
+
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (android.os.Build.VERSION.SDK_INT >= 11) {
+                dialog = new ProgressDialog(Activity_Address_Navigation.this, ProgressDialog.THEME_HOLO_LIGHT);
+            } else {
+                dialog = new ProgressDialog(Activity_Address_Navigation.this);
+            }
+            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+
+            return postJsonObject2(EndUrl.AddressDelete_URL, makingJson2());
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                dialog.dismiss();
+
+                Log.e("testing", "result in post execute=========" + result);
+
+                if (status.equals("success")) {
+
+                    //  Toast.makeText(Activity_Address_Navigation.this, message, Toast.LENGTH_LONG).show();
+                    logindialog123.dismiss();
+                    new Address().execute();
+
+                    // logindialog12.dismiss();
+
+                } else {
+                    //  Toast.makeText(Activity_Address_Navigation.this, message, Toast.LENGTH_LONG).show();
+
+                }
+
+            } else {
+                Toast.makeText(Activity_Address_Navigation.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }
+
+    }
+
     class AddAddress extends AsyncTask<String, String, String> {
         String responce;
         JSONArray responcearccay;
@@ -1765,20 +1270,14 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         String strdata;
         ProgressDialog mProgress;
         String strcode, strtype, strmessage;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_Address_Navigation.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
-
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
-
 
         }
 
@@ -1789,12 +1288,11 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
-
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_user_id, userid));
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_address_type, ""));
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_name, strname));
-            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_phone, strmob));
-            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Alternate_phone, strmob1));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_phone, strmob1));
+            userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Alternate_phone, strmob));
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_House_no, strhouseno));
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Locality, stradd));
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_Landmark, strlandmrk));
@@ -1813,7 +1311,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
             if (json == null) {
 
                 Log.e("testing", "jon11111111111111111");
-                // Toast.makeText(getActivity(),"Data is not Found",Toast.LENGTH_LONG);
 
                 return responce;
             } else {
@@ -1823,24 +1320,10 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
-                  /*  if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
-
-                    } else {
-                    }*/
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1853,44 +1336,19 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         protected void onPostExecute(String responce) {
             super.onPostExecute(responce);
             mProgress.dismiss();
-            Log.e("testing","status = "+status);
-            Log.e("testing","strresponse = "+strresponse);
-            Log.e("testing","strmessage = "+strmessage);
+            Log.e("testing", "status = " + status);
+            Log.e("testing", "strresponse = " + strresponse);
+            Log.e("testing", "strmessage = " + strmessage);
 
-            if (status == null || status.length() == 0){
+            if (status == null || status.length() == 0) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
                 logindialog.dismiss();
                 new LoadAddress().execute();
 
-/*
-                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
-
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);*/
-
-                //  new LoadProductList().execute();
-
-              /*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*/
-
-
-
             } else if (status.equals("failure")) {
                 Toast.makeText(Activity_Address_Navigation.this, strmessage, Toast.LENGTH_SHORT).show();
-                //  alertdialog(strtype, strmessage);
-            }else{
+            } else {
 
             }
 
@@ -1907,20 +1365,14 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         String strdata;
         ProgressDialog mProgress;
         String strcode, strtype, strmessage;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_Address_Navigation.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
-
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
-
 
         }
 
@@ -1929,7 +1381,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
             // Retrieve JSON Objects from the given URL address
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
-
 
 
             userpramas.add(new BasicNameValuePair(EndUrl.AddAddress_id, addressid));
@@ -1966,23 +1417,11 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
-                  /*  if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
 
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
-
-                    } else {
-                    }*/
 
 
                 } catch (JSONException e) {
@@ -1996,43 +1435,20 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         protected void onPostExecute(String responce) {
             super.onPostExecute(responce);
             mProgress.dismiss();
-            Log.e("testing","status = "+status);
-            Log.e("testing","strresponse = "+strresponse);
-            Log.e("testing","strmessage = "+strmessage);
+            Log.e("testing", "status = " + status);
+            Log.e("testing", "strresponse = " + strresponse);
+            Log.e("testing", "strmessage = " + strmessage);
 
-            if (status == null || status.length() == 0){
+            if (status == null || status.length() == 0) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
                 logindialog123.dismiss();
                 new LoadAddress().execute();
-/*
-                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
-
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);*/
-
-                //  new LoadProductList().execute();
-
-              /*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*/
-
-
 
             } else if (status.equals("failure")) {
                 Toast.makeText(Activity_Address_Navigation.this, strmessage, Toast.LENGTH_SHORT).show();
                 //  alertdialog(strtype, strmessage);
-            }else{
+            } else {
 
             }
 
@@ -2040,6 +1456,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         }
 
     }
+
     class DeteleAddressUpdate extends AsyncTask<String, String, String> {
         String responce;
         JSONArray responcearccay;
@@ -2048,19 +1465,16 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         String strdata;
         ProgressDialog mProgress;
         String strcode, strtype, strmessage;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgress = new ProgressDialog(Activity_Address_Navigation.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 
-           /* pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading.....");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
+
 
 
         }
@@ -2070,7 +1484,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
             // Retrieve JSON Objects from the given URL address
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
-
 
 
             userpramas.add(new BasicNameValuePair(EndUrl.DeleteAddress_id, addressid));
@@ -2096,25 +1509,10 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
-                  /*  if (status.equals("success")) {
-                        status = json.getString("status");
-                        strresponse = json.getString("response");
-                        strdata = json.getString("data");
-
-                        JSONObject  jsonobjectdata = new JSONObject(strdata);
-                        str_user_id = jsonobjectdata.getString("user_id");
-                        Log.e("testing","userid - "+str_user_id);
-
-
-
-                    } else {
-                    }*/
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -2126,43 +1524,20 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         protected void onPostExecute(String responce) {
             super.onPostExecute(responce);
             mProgress.dismiss();
-            Log.e("testing","status = "+status);
-            Log.e("testing","strresponse = "+strresponse);
-            Log.e("testing","strmessage = "+strmessage);
+            Log.e("testing", "status = " + status);
+            Log.e("testing", "strresponse = " + strresponse);
+            Log.e("testing", "strmessage = " + strmessage);
 
-            if (status == null || status.length() == 0){
+            if (status == null || status.length() == 0) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
                 logindialog123.dismiss();
                 new LoadAddress().execute();
-/*
-                Intent intent = new Intent(Activity_WishList.this, MainActivity.class);
-
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);*/
-
-                //  new LoadProductList().execute();
-
-              /*  Log.e("testing","status 2= "+status);
-                if (strtype == null || strtype.length() == 0){
-
-                    Log.e("testing","status 3= "+status);
-                }else if (strtype.equals("‘verify_success")){
-
-                    Log.e("testing","status 4= "+strtype);
-
-                }else{
-
-                }*/
-
-
 
             } else if (status.equals("failure")) {
                 Toast.makeText(Activity_Address_Navigation.this, strmessage, Toast.LENGTH_SHORT).show();
                 //  alertdialog(strtype, strmessage);
-            }else{
+            } else {
 
             }
 
@@ -2170,6 +1545,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
         }
 
     }
+
     class LoadAddress extends AsyncTask<String, String, String>
             //implements RemoveClickListner
     {
@@ -2197,7 +1573,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
             //  product_details_lists = new ArrayList<Product_list>();
 
-            mListFeederInfo =new ArrayList<FeederInfo_address>();
+            mListFeederInfo = new ArrayList<FeederInfo_address>();
             List<NameValuePair> userpramas = new ArrayList<NameValuePair>();
 
 
@@ -2218,7 +1594,7 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
                     status = json.getString("status");
                     strresponse = json.getString("response");
-                    JSONObject  jsonobject = new JSONObject(strresponse);
+                    JSONObject jsonobject = new JSONObject(strresponse);
                     strcode = jsonobject.getString("code");
                     strtype = jsonobject.getString("type");
                     strmessage = jsonobject.getString("message");
@@ -2228,8 +1604,6 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                         strresponse = json.getString("response");
                         String arrayresponse = json.getString("data");
                         Log.e("testing", "adapter value=" + arrayresponse);
-
-
 
 
                         JSONArray responcearray = new JSONArray(arrayresponse);
@@ -2258,15 +1632,8 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
                             mListFeederInfo.add(feedInfo);
 
 
-
-
-
-
-
-
-
                         }
-                    }else{
+                    } else {
 
                     }
                 } catch (JSONException e) {
@@ -2287,34 +1654,41 @@ public class Activity_Address_Navigation extends AppCompatActivity implements Ad
 
             //  progressbarloading.setVisibility(View.GONE);
             pDialog.dismiss();
-            if (status == null || status.trim().length() == 0 || status.equals("null")){
+            if (status == null || status.trim().length() == 0 || status.equals("null")) {
 
-            }else if (status.equals("success")) {
+            } else if (status.equals("success")) {
 
 
-                mAdapterFeeds= new Adapter_address_Navigation(Activity_Address_Navigation.this , mListFeederInfo, mCallback);
+                mAdapterFeeds = new Adapter_address_Navigation(Activity_Address_Navigation.this, mListFeederInfo, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
 
 
+            } else {
 
 
-
-            }
-            else {
-
-
-
-                mAdapterFeeds= new Adapter_address_Navigation(Activity_Address_Navigation.this , mListFeederInfo, mCallback);
+                mAdapterFeeds = new Adapter_address_Navigation(Activity_Address_Navigation.this, mListFeederInfo, mCallback);
                 mFeedRecyler.setAdapter(mAdapterFeeds);
 
 
-
             }
-
 
 
         }
 
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                mAutocompleteTextView.setText(data.getStringExtra("Address"));
+                editcity.setText(data.getStringExtra("city"));
+                editstate.setText(data.getStringExtra("state"));
+                editpincode.setText(data.getStringExtra("postalCode"));
+                editlandmark.setText(data.getStringExtra("knownName"));
+
+                logindialog.show();
+            }
+        }
     }
 
 }

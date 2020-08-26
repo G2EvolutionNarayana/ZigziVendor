@@ -16,7 +16,7 @@
 			android:id="@+id/headerpageofbroadband"
 			android:layout_width="match_parent"
 			android:layout_height="50dp"
-			android:background="@color/green"
+			android:background="@color/colorPrimary"
 			android:orientation="horizontal">
 
 			<ImageView
@@ -71,7 +71,7 @@
 					android:textStyle="bold"
 					android:gravity="center"
 					android:text="Amount Payable"
-					android:textColor="@color/green"
+					android:textColor="@color/colorPrimary"
 
 					android:textSize="18sp" />
 

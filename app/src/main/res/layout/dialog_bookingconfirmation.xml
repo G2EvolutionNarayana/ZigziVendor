@@ -39,14 +39,17 @@
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/title_text"
-                    android:layout_margin="5dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/theme"
+                    android:textColor="@color/colorPrimary"
                     android:textAllCaps="true"
+                    android:paddingTop="@dimen/padding_5"
+                    android:paddingBottom="@dimen/padding_5"
+                    android:fontFamily="@font/roboto_bold"
                     android:layout_centerVertical="true"
                     android:text="Confirm Booking"
-                    android:textSize="25dp"/>
+                    android:textSize="16sp"/>
 
                 <LinearLayout
                     android:id="@+id/line1"
@@ -69,7 +72,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Distance:   "
-                        android:textSize="25dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textSize="14sp"
                         android:textColor="@color/black"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="40dp"/>
@@ -79,7 +83,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/textdistance"
                         android:text="Rs 150"
-                        android:textSize="25dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textSize="14sp"
                         android:layout_toRightOf="@+id/textdist"
                         android:textColor="@color/black"
                         android:layout_marginTop="10dp"
@@ -101,7 +106,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Amount:   "
-                        android:textSize="25dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textSize="14sp"
                         android:textColor="@color/black"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="40dp"/>
@@ -111,7 +117,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/textprice"
                         android:text="Rs 150"
-                        android:textSize="25dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textSize="14sp"
                         android:layout_toRightOf="@+id/textamt"
                         android:textColor="@color/black"
                         android:layout_marginTop="10dp"
@@ -126,7 +133,7 @@
                 <Button
                     android:id="@+id/submit_filter"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="35dp"
                     android:text="submit"
                     android:background="@drawable/butbg"
                     android:textColor="@color/white"

@@ -4,30 +4,36 @@
 
     <item
         android:id="@+id/home"
+        android:enabled="true"
         android:icon="@drawable/home1"
-        android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:title="HOME" />
+        android:title="Home"
+        app:showAsAction="ifRoom" />
 
-  <!--  <item
-        android:id="@+id/cart"
-        android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/cart1"
-        android:title="ADDRESS" />-->
+    <!--  <item
+          android:id="@+id/cart"
+          android:enabled="true"
+          app:showAsAction="ifRoom"
+          android:icon="@drawable/cart1"
+          android:title="ADDRESS" />-->
 
     <item
         android:id="@+id/orderhistory"
         android:enabled="true"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/orderhistory1"
-        android:title="ORDER HISTORY" />
+        android:title="My Orders"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/wish"
+        android:enabled="true"
+        android:icon="@drawable/wish_list"
+        android:title="Wishlist"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/profile1"
         android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:title="PROFILE" />
+        android:icon="@drawable/profile1"
+        android:title="Profile"
+        app:showAsAction="ifRoom" />
 
 </menu>

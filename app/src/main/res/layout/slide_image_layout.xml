@@ -9,5 +9,5 @@
         android:adjustViewBounds="true"
         android:layout_gravity="center"
         android:src="@drawable/car"
-        android:scaleType="centerCrop"/>
+        android:scaleType="fitXY"/>
 </FrameLayout>

@@ -202,7 +202,7 @@
                     android:padding="15dp"
                     android:text="Categories"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/green" />
+                    android:textColor="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/textoffers"

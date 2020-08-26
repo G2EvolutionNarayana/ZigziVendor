@@ -214,7 +214,7 @@
         android:layout_marginTop="25dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        card_view:cardBackgroundColor="@color/green"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardElevation="2dp">
 
         <LinearLayout
@@ -249,7 +249,7 @@
         android:layout_marginTop="20dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        card_view:cardBackgroundColor="@color/green"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardElevation="2dp">
 
         <LinearLayout
@@ -293,7 +293,7 @@
             android:layout_height="wrap_content"
             android:textSize="18dp"
             android:text="Signup?"
-            android:textColor="@color/green"/>
+            android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>
         </LinearLayout>

@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.R;
@@ -123,189 +124,6 @@ public class Activity_ChangePassword extends AppCompatActivity {
     }
 
 
-
-    class newpasswordLoader extends AsyncTask<Void, Void, JSONObject> {
-
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (android.os.Build.VERSION.SDK_INT >= 11) {
-                dialog = new ProgressDialog(Activity_ChangePassword.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
-                dialog = new ProgressDialog(Activity_ChangePassword.this);
-            }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-
-            return postJsonObject3(EndUrl.NewPASSWORD_URL, makingJson3());
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-
-            if (result!=null) {
-                dialog.dismiss();
-
-                Log.e("testing","result in post execute========="+result);
-
-                if (status.equals("success")){
-                    Toast.makeText(Activity_ChangePassword.this, ""+message, Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(Activity_ChangePassword.this, Login.class);
-
-
-                    startActivity(intent);
-                    finish();
-
-                }else {
-                    Toast.makeText(Activity_ChangePassword.this, ""+message, Toast.LENGTH_LONG).show();
-                }
-
-            }else {
-                Toast.makeText(Activity_ChangePassword.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        }
-
-    }
-
-    public JSONObject makingJson3() {
-
-        JSONObject details = new JSONObject();
-        //  JSONObject jobj = new JSONObject();
-        JSONObject object = new JSONObject();
-
-        try {
-
-            object.put(EndUrl.NewPASSWORD_MOBILENO,shmobileno);
-            object.put(EndUrl.NewPASSWORD_PASSWORD,strnewpassword);
-
-
-            //if you want to modify some value just do like this.
-
-         /*   details.put(EndUrl.SIGNUPjsonobject_outside_register,object);
-            Log.d("json",details.toString());
-            Log.e("testing","json"+details.toString());
-
-*/
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return object;
-
-    }
-
-
-
-    public JSONObject postJsonObject3(String url, JSONObject loginJobj){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-
-            //http://localhost:9000/api/products/GetAllProducts
-            HttpPost httpPost = new HttpPost(url);
-
-            System.out.println(url);
-            String json = "";
-
-            // 4. convert JSONObject to JSON to String
-
-            json = loginJobj.toString();
-
-            System.out.println(json);
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        JSONObject json = null;
-        try {
-
-            json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
-            status = json.getString("status");
-            message = json.getString("message");
-
-            String arrayresponce = json.getString("data");
-            Log.e("testing", "adapter value=" + arrayresponce);
-
-            JSONArray responcearray = new JSONArray(arrayresponce);
-            Log.e("testing", "responcearray value=" + responcearray);
-
-            for (int i = 0; i < responcearray.length(); i++) {
-
-                JSONObject post = responcearray.getJSONObject(i);
-                HashMap<String, String> map = new HashMap<String, String>();
-
-                // empId = post.getString("empId");
-                userid  = post.getString("userid ");
-                /*username  = post.getString("userName ");
-                usermail  = post.getString("userEmail ");
-                usermobile  = post.getString("userMobile ");
-*/
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // 11. return result
-
-        return json;
-
-    }
-
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-    }
     class ChangePassword extends AsyncTask<String, String, String> {
         String responce;
         JSONArray responcearccay;
@@ -319,7 +137,7 @@ public class Activity_ChangePassword extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
           /*  mProgress = new ProgressDialog(Activity_Profile.this);
-            mProgress.setMessage("Fetching data...");
+            mProgress.setMessage("Please wait");
             mProgress.show();
             mProgress.setCancelable(false);
 */

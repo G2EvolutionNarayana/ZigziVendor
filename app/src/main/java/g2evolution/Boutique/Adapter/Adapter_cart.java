@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import g2evolution.Boutique.Activity.Activity_cart;
 import g2evolution.Boutique.EndUrl;
@@ -75,9 +76,6 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
         strbuttonstatus = prefuserdata.getString("addtocart","");
         strquantity1 = prefuserdata.getString("quantity","");
 
-
-
-
     }
     public interface OnItemClick {
         void onClickedItem(int pos, int qty, int status);
@@ -102,37 +100,28 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
     public void onBindViewHolder(final ViewHolder_cart holder, final int position) {
         final FeederInfo_cart feederInfo = mListFeeds.get(position);
 
-
         String feedDesc = null;
-
 
         final String strrs = mContext.getResources().getString(R.string.Rs);
         holder.cartname.setText(feederInfo.getCartname());
+        if (feederInfo.getCartprodetails()==null){
+            holder.cartprodetails.setVisibility(View.GONE);
+        }
         holder.cartprodetails.setText(feederInfo.getCartprodetails());
-        holder.carttotalamount.setText(strrs+" "+feederInfo.getCarttotalamount());
+//        holder.carttotalamount.setText(strrs+" "+feederInfo.getCarttotalamount());
         holder.cartquantity.setText(feederInfo.getCartquantity());
 
 
-        if (feederInfo.getStrsize() == null || feederInfo.getStrsize().equals("0")||feederInfo.getStrsize().equals("")||feederInfo.getStrsize().equals("null")){
-            holder.textsize.setText("");
-        }else{
-            holder.textsize.setText(feederInfo.getStrsize());
-        }
-
-        //  holder.pdsubprice.setText(strrs+" "+feederInfo.getCartamount());
-        //   holder.carttotalamount.setText(strrs+" "+feederInfo.getAfterdiscount());
-
-
         if (feederInfo.getDiscountvalue() == null || feederInfo.getDiscountvalue().trim().length() == 0 || feederInfo.getDiscountvalue().trim().equals("null")){
-            holder.pdprice.setVisibility(View.GONE);
+//            holder.pdprice.setVisibility(View.GONE);
             holder.pdsubprice.setText(strrs+" "+feederInfo.getCartamount());
         }else if (feederInfo.getDiscountvalue().trim().equals("0")){
-            holder.pdprice.setVisibility(View.GONE);
+//            holder.pdprice.setVisibility(View.GONE);
         }else{
-            holder.pdprice.setText(strrs+" "+feederInfo.getCartamount());
-            holder. pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//            holder.pdprice.setText(strrs+" "+feederInfo.getCartamount());
+//            holder. pdprice.setPaintFlags(holder.pdprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.pdsubprice.setText(strrs+" "+feederInfo.getAfterdiscount());
-            holder. pdprice.setVisibility(View.VISIBLE);
+//            holder. pdprice.setVisibility(View.VISIBLE);
         }
 
 
@@ -155,12 +144,6 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
             @Override
             public void onClick(View view) {
 
-      /*  stockquantity=feederInfo.getStockquntity();
-
-        int stockquantyi=Integer.parseInt(stockquantity);*/
-
-
-
                 int currentNos = Integer.parseInt(holder.cartquantity.getText().toString());
 
                 //  Log.e("testing","stockquantyistockquantyistockquantyi===="+stockquantyi);
@@ -168,15 +151,7 @@ public class Adapter_cart extends RecyclerView.Adapter<ViewHolder_cart> {
                 Log.e("testing","stockquantity===="+stockquantity);
                 Log.e("testing","currentNoscurrentNoscurrentNoscurrentNos===="+currentNos);
 
-      /*  if (currentNos >= stockquantyi){
 
-            Log.e("testing","succesddd");
-
-            Toast.makeText(mContext, "Product quantity is not Available", Toast.LENGTH_SHORT).show();
-
-
-
-        }else {*/
 
                 holder.cartquantity.setText(String.valueOf(++currentNos));
 

@@ -72,8 +72,7 @@ public class Activity_BookDelivery extends AppCompatActivity {
         textbookdelivery = (TextView) findViewById(R.id.textbookdelivery);
         textbookhistory = (TextView) findViewById(R.id.textbookhistory);
 
-        textbookdelivery.setTextColor(Color.BLUE);
-        textbookhistory.setTextColor(Color.BLACK);
+
         Fragment_BookDelivery fragment2 = new Fragment_BookDelivery();
         FragmentTransaction fragmentTransaction2 =
                 getSupportFragmentManager().beginTransaction();
@@ -82,8 +81,10 @@ public class Activity_BookDelivery extends AppCompatActivity {
         textbookdelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textbookdelivery.setTextColor(Color.BLUE);
-                textbookhistory.setTextColor(Color.BLACK);
+                textbookdelivery.setTextColor(Color.WHITE);
+                textbookdelivery.setBackgroundColor(Color.parseColor("#d96666"));
+                textbookhistory.setBackgroundColor(Color.parseColor("#F2F2F2"));
+                textbookhistory.setTextColor(Color.parseColor("#AAAAAA"));
 
                 Fragment_BookDelivery fragment2 = new Fragment_BookDelivery();
                 FragmentTransaction fragmentTransaction2 =
@@ -96,16 +97,15 @@ public class Activity_BookDelivery extends AppCompatActivity {
         textbookhistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textbookdelivery.setTextColor(Color.BLACK);
-                textbookhistory.setTextColor(Color.BLUE);
-
+                textbookhistory.setTextColor(Color.WHITE);
+                textbookdelivery.setTextColor(Color.parseColor("#AAAAAA"));
+                textbookdelivery.setBackgroundColor(Color.parseColor("#F2F2F2"));
+                textbookhistory.setBackgroundColor(Color.parseColor("#d96666"));
                 Fragment_BookingDeliveryHistory fragment2 = new Fragment_BookingDeliveryHistory();
                 FragmentTransaction fragmentTransaction2 =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction2.replace(R.id.fragment_container, fragment2);
                 fragmentTransaction2.commit();
-
-
             }
         });
 

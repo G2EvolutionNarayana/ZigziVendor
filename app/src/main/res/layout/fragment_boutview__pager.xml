@@ -13,13 +13,18 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabSelectedTextColor="@color/colorText"
         android:minHeight="?attr/actionBarSize"
         app:tabMode="scrollable"
+        app:tabBackground="@drawable/tab_background"
         app:tabGravity="fill"
-        android:background="@drawable/tab_bg"
-        app:tabTextAppearance="@style/MyCustomTextAppearance"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/grey5"
+        tools:ignore="MissingConstraints"
+
+
+        />
 
     <!-- View pager to swipe views -->
     <androidx.viewpager.widget.ViewPager

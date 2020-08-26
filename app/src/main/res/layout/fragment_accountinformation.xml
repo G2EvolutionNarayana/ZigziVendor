@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/green"
+        android:background="@color/colorPrimary"
         android:padding="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="fitXY"
-                android:background="@color/green"
+                android:background="@color/colorPrimary"
                 android:src="@drawable/splash"/>
             <TextView
                 android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                                 android:paddingTop="5dp"
                                 android:text="User Name"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/green" />
+                                android:textColor="@color/colorPrimary" />
 
                             <TextView
                                 android:id="@+id/textusername"
@@ -162,7 +162,7 @@
                                 android:paddingTop="5dp"
                                 android:text="Email ID"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/green" />
+                                android:textColor="@color/colorPrimary" />
 
                             <TextView
                                 android:id="@+id/textemailid"
@@ -212,7 +212,7 @@
                                 android:paddingTop="5dp"
                                 android:text="Mobile no"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@color/green" />
+                                android:textColor="@color/colorPrimary" />
 
                             <TextView
                                 android:id="@+id/textmobileno"

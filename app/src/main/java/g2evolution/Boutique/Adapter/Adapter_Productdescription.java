@@ -31,7 +31,7 @@ public class Adapter_Productdescription extends RecyclerView.Adapter<Adapter_Pro
 
     @Override
     public ItemRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_productvariations, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_productdescription, viewGroup, false);
         ItemRowHolder mh = new ItemRowHolder(v);
         return mh;
     }
@@ -50,8 +50,6 @@ public class Adapter_Productdescription extends RecyclerView.Adapter<Adapter_Pro
         itemRowHolder.recycler_view_list.setHasFixedSize(true);
         itemRowHolder.recycler_view_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         itemRowHolder.recycler_view_list.setAdapter(itemListDataAdapter);
-
-
 
 
        /* Glide.with(mContext)

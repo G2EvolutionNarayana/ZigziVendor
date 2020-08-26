@@ -6,8 +6,6 @@
     android:layout_margin="3dp"
     android:background="@color/white">
 
-
-
     <LinearLayout
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
@@ -22,11 +20,7 @@
             android:textSize="15dp"
             android:textColor="@color/black"
             android:layout_weight="1"
-            android:gravity="center"/>
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/grey"/>
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/textvalue"
@@ -36,7 +30,7 @@
             android:textSize="15dp"
             android:textColor="@color/black"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center_vertical"/>
     </LinearLayout>
 
 </RelativeLayout>

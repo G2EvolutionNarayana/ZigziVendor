@@ -146,7 +146,6 @@ public class New_Booking_Adapter extends RecyclerView.Adapter<New_Booking_Adapte
         public Title_List_ViewHolder(View itemView) {
             super(itemView);
             booking_image = itemView.findViewById(R.id.booking_image);
-            view_details_text = itemView.findViewById(R.id.view_details_text);
             cust_name_text1 = itemView.findViewById(R.id.cust_name_text1);
             order_no_text1 = itemView.findViewById(R.id.order_no_text1);
             order_date_text1 = itemView.findViewById(R.id.order_date_text1);
@@ -155,20 +154,13 @@ public class New_Booking_Adapter extends RecyclerView.Adapter<New_Booking_Adapte
 
             Typeface typeface = Typeface.createFromAsset(mCtx.getAssets(), "arial.ttf");
 
-            ((TextView)itemView. findViewById(R.id.cust_name_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.cust_name_text1)).setTypeface(typeface);
-            ((TextView)itemView. findViewById(R.id.order_no_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.order_no_text1)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.order_date_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.order_date_text1)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.delivery_date_text)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.delivery_date_text1)).setTypeface(typeface);
             ((TextView)itemView. findViewById(R.id.view_details_text)).setTypeface(typeface);
-
-
-
-
-
 
         }
     }

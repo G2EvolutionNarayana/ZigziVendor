@@ -32,7 +32,7 @@
                 android:text="Software Technical writer"
                 android:textSize="16sp"
                 android:theme="@style/fontStyle"
-                android:textColor="@color/green"
+                android:textColor="@color/colorPrimary"
                 android:padding="3dp"/>
 
 

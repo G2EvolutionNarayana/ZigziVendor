@@ -46,6 +46,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 
 /**
@@ -158,7 +159,7 @@ public class Activity_Payment extends AppCompatActivity {
 
 
         Environment appEnvironment = ((Application) getApplication()).getEnvironment();
-        builder.setAmount(price)
+        builder.setAmount(String.valueOf(price))
                 .setTxnId(txnId)
                 .setPhone(phone)
                 .setProductName(productName)

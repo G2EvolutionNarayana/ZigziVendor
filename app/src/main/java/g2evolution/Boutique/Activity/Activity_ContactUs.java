@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +20,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,18 +43,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 
 import g2evolution.Boutique.EndUrl;
 import g2evolution.Boutique.MainActivity;
 import g2evolution.Boutique.R;
 import g2evolution.Boutique.Utility.ConnectionDetector;
 import g2evolution.Boutique.Utility.JSONParser;
+import g2evolution.Boutique.ccavenue.WebViewActivity;
+import g2evolution.Boutique.ccavenue.utility.AvenuesParams;
+import g2evolution.Boutique.ccavenue.utility.LoadingDialog;
 
 public class Activity_ContactUs extends AppCompatActivity {
 
     JSONParser jsonParser = new JSONParser();
 
-    EditText editusername, editemailid,  editmessage;
+    EditText editusername, editemailid, editmessage;
 
     ImageView imgsend;
 
@@ -53,9 +67,10 @@ public class Activity_ContactUs extends AppCompatActivity {
     ImageView imgcancel;
 
     String strusername, stremailid, strcontactus, strsendmessage;
-    TextView textemail, textmobileno,editcontactno,editaddress;
+    TextView textemail, textmobileno, editaddress;
+    EditText editcontactno;
 
-    String message,status;
+    String message, status;
 
     LinearLayout linearcontact;
     CardView cardcontactno;
@@ -76,31 +91,40 @@ public class Activity_ContactUs extends AppCompatActivity {
         shemailid = prefuserdata.getString("Usermail", "");
         shmobileno = prefuserdata.getString("Usermob", "");
 
-        Log.e("testing","shuesrid = "+shuesrid);
-        Log.e("testing","shname = "+shname);
-        Log.e("testing","shemailid = "+shemailid);
-        Log.e("testing","shmobileno = "+shmobileno);
+
+//        SharedPreferences prefuserdata = getSharedPreferences("regId", 0);
+//        _userId = prefuserdata.getString("UserId", "");
+//        _userName = prefuserdata.getString("Username", "");
+//        _userEmail = prefuserdata.getString("Usermail", "");
+//        _usermob = prefuserdata.getString("Usermob", "");
 
 
-        linearcontact=(LinearLayout)findViewById(R.id.linearcontact);
-        cardcontactno=(CardView) findViewById(R.id.cardcontactno);
 
-        if (shuesrid==null||shuesrid.length()==0||shuesrid.equals("")||shuesrid.equals("null")){
+        Log.e("testing", "shuesrid = " + shuesrid);
+        Log.e("testing", "shname = " + shname);
+        Log.e("testing", "shemailid = " + shemailid);
+        Log.e("testing", "shmobileno = " + shmobileno);
+
+
+        linearcontact = (LinearLayout) findViewById(R.id.linearcontact);
+        cardcontactno = (CardView) findViewById(R.id.cardcontactno);
+
+        if (shuesrid == null || shuesrid.length() == 0 || shuesrid.equals("") || shuesrid.equals("null")) {
 
             linearcontact.setVisibility(View.GONE);
             cardcontactno.setVisibility(View.GONE);
 
-        }else {
+        } else {
 
 
         }
         //editusername = (EditText) findViewById(R.id.editusername);
         editemailid = (EditText) findViewById(R.id.editemailid);
-        editcontactno = (TextView) findViewById(R.id.editcontactno);
+        editcontactno = (EditText) findViewById(R.id.editcontactno);
         editmessage = (EditText) findViewById(R.id.editmessage);
 
-      //  editusername.setText(shname);
-       // editemailid.setText(shemailid);
+        //  editusername.setText(shname);
+        // editemailid.setText(shemailid);
         editcontactno.setText(shmobileno);
 
         textemail = (TextView) findViewById(R.id.textemail);
@@ -110,7 +134,7 @@ public class Activity_ContactUs extends AppCompatActivity {
 
         imgcancel = (ImageView) findViewById(R.id.imgcancel);
 
-       // imgsend = (ImageView) findViewById(R.id.imgsend);
+        // imgsend = (ImageView) findViewById(R.id.imgsend);
 
         editaddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,15 +170,18 @@ public class Activity_ContactUs extends AppCompatActivity {
 
                     }
 
-            }else
-
-                {
+                } else {
 
                     shemailid = editemailid.getText().toString();
                     strsendmessage = editmessage.getText().toString();
 
                     if (!validateEmail()) {
                         return;
+                    }
+                    if (editcontactno.getText().toString().length() != 10) {
+                        editcontactno.setError("Enter Phone number");
+
+
                     }
                     if (strsendmessage == null || strsendmessage.length() == 0) {
 
@@ -170,7 +197,7 @@ public class Activity_ContactUs extends AppCompatActivity {
                             shemailid = editemailid.getText().toString();
                             strsendmessage = editmessage.getText().toString();
 
-                            new Loader123().execute();
+                            mCallContact(shemailid,strsendmessage,editcontactno.getText().toString());
 
                         } else {
 
@@ -182,6 +209,13 @@ public class Activity_ContactUs extends AppCompatActivity {
                 }
             }
         });
+
+
+
+
+
+
+
 
 
         imgcancel.setOnClickListener(new View.OnClickListener() {
@@ -201,20 +235,75 @@ public class Activity_ContactUs extends AppCompatActivity {
             }
         });
 
+    }
+    public void mCallContact( String email,  String message, String number) {
+        LoadingDialog.showLoadingDialog(Activity_ContactUs.this, "Loading...");
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, "mainIntent.getStringExtra(AvenuesParams.RSA_KEY_URL)",
 
-/*
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://zigzi.in/admin/api/rest/contacts/store",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Toast.makeText(WebViewActivity.this,response,Toast.LENGTH_LONG).show();
+                        LoadingDialog.cancelLoading();
+                        Log.e("testing","response "+response);
 
-        textmobileno.setOnClickListener(new View.OnClickListener() {
+                        if (response != null && !response.equals("")) {
+                            try {
+                                JSONObject obj = new JSONObject(response);
+
+                                if (obj.getString("status").equals("success")){
+
+                                    Toast.makeText(getApplicationContext(),"Query sent successfully",Toast.LENGTH_LONG).show();
+
+                                }else {
+                                    Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_LONG).show();
+
+                                }
+
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+//                                JSONArray heroArray = obj.getJSONArray("keys");
+//                                JSONObject heroObject = heroArray.getJSONObject(0);
+//                               String rr=heroObject.getString("key");
+
+
+                        }
+                        else
+                        {
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        LoadingDialog.cancelLoading();
+                        //Toast.makeText(WebViewActivity.this,error.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }) {
             @Override
-            public void onClick(View v) {
-                Uri number = Uri.parse("7022165904");
-
-                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
-                startActivity(callIntent);
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+//                params.put(AvenuesParams.ACCESS_CODE, ac);
+                params.put("name", "");
+                params.put("phone", number);
+                params.put("email", email);
+                params.put("subject", "");
+                params.put("user_id", shuesrid);
+                params.put("message", message);
+                return params;
             }
-        });
-*/
 
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 
@@ -234,6 +323,7 @@ public class Activity_ContactUs extends AppCompatActivity {
 
         return true;
     }
+
     private static boolean isValidateEmail(String email) {
 
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -248,10 +338,10 @@ public class Activity_ContactUs extends AppCompatActivity {
             super.onPreExecute();
             if (android.os.Build.VERSION.SDK_INT >= 11) {
                 dialog = new ProgressDialog(Activity_ContactUs.this, ProgressDialog.THEME_HOLO_LIGHT);
-            }else{
+            } else {
                 dialog = new ProgressDialog(Activity_ContactUs.this);
             }
-            dialog.setMessage(Html.fromHtml("<b>"+"Loading..."+"</b>"));
+            dialog.setMessage(Html.fromHtml("<b>" + "Loading..." + "</b>"));
             dialog.setIndeterminate(true);
             dialog.setCancelable(false);
             dialog.show();
@@ -268,24 +358,24 @@ public class Activity_ContactUs extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
 
-            if (result!=null) {
+            if (result != null) {
                 dialog.dismiss();
 
-                Log.e("testing","result in post execute========="+result);
+                Log.e("testing", "result in post execute=========" + result);
 
-                if (status.equals("success")){
+                if (status.equals("success")) {
 
-                //    Toast.makeText(Activity_ContactUs.this, ""+message, Toast.LENGTH_LONG).show();
+                    //    Toast.makeText(Activity_ContactUs.this, ""+message, Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(Activity_ContactUs.this, MainActivity.class);
                     startActivity(intent);
-                  //  finish();
+                    //  finish();
 
-                }else {
-                    Toast.makeText(Activity_ContactUs.this, ""+message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(Activity_ContactUs.this, "" + message, Toast.LENGTH_LONG).show();
                 }
 
-            }else {
+            } else {
                 Toast.makeText(Activity_ContactUs.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
@@ -301,18 +391,18 @@ public class Activity_ContactUs extends AppCompatActivity {
 
         try {
 
-            object.put(EndUrl.fragment_feedback_emailid,shemailid);
-            object.put(EndUrl.fragment_feedback_userid,shuesrid);
-            object.put(EndUrl.fragment_feedback_message,strsendmessage);
+            object.put(EndUrl.fragment_feedback_emailid, shemailid);
+            object.put(EndUrl.fragment_feedback_userid, shuesrid);
+            object.put(EndUrl.fragment_feedback_message, strsendmessage);
 
             //    object.put(EndUrl.fragment_feedback_userid,stremailid);
-           // object.put(EndUrl.SIGNUP__json_insideMOBILENO,strusername);
-          //  object.put(EndUrl.SIGNUP__json_insideMOBILENO,strsendmessage);
+            // object.put(EndUrl.SIGNUP__json_insideMOBILENO,strusername);
+            //  object.put(EndUrl.SIGNUP__json_insideMOBILENO,strsendmessage);
             //if you want to modify some value just do like this.
 
-        //    details.put(EndUrl.SIGNUPjsonobject_outside_register,object);
-            Log.d("json",details.toString());
-            Log.e("testing","json"+details.toString());
+            //    details.put(EndUrl.SIGNUPjsonobject_outside_register,object);
+            Log.d("json", details.toString());
+            Log.e("testing", "json" + details.toString());
 
 
         } catch (JSONException e) {
@@ -323,8 +413,7 @@ public class Activity_ContactUs extends AppCompatActivity {
     }
 
 
-
-    public JSONObject postJsonObject123(String url, JSONObject loginJobj){
+    public JSONObject postJsonObject123(String url, JSONObject loginJobj) {
         InputStream inputStream = null;
         String result = "";
         try {
@@ -362,7 +451,7 @@ public class Activity_ContactUs extends AppCompatActivity {
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
-            if(inputStream != null)
+            if (inputStream != null)
 
                 result = convertInputStreamToString123(inputStream);
             else
@@ -377,10 +466,10 @@ public class Activity_ContactUs extends AppCompatActivity {
         try {
 
             json = new JSONObject(result);
-            Log.e("testing","testing in json result======="+result);
-            Log.e("testing","testing in json result json======="+json);
-            Log.e("testing","result in post status========="+json.getString("status"));
-            Log.e("testing","result in post message========="+json.getString("message"));
+            Log.e("testing", "testing in json result=======" + result);
+            Log.e("testing", "testing in json result json=======" + json);
+            Log.e("testing", "result in post status=========" + json.getString("status"));
+            Log.e("testing", "result in post message=========" + json.getString("message"));
             status = json.getString("status");
             message = json.getString("message");
 
@@ -396,7 +485,7 @@ public class Activity_ContactUs extends AppCompatActivity {
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 // empId = post.getString("empId");
-              String  userid  = post.getString("userid ");
+                String userid = post.getString("userid ");
 
             }
 
@@ -411,10 +500,10 @@ public class Activity_ContactUs extends AppCompatActivity {
     }
 
     private String convertInputStreamToString123(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         String result = "";
-        while((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();

@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="smarton"
-            android:textColor="@color/green"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             android:textStyle="bold" />
 

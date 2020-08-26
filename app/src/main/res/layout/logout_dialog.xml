@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:background="@color/green">
+        android:background="@color/colorPrimary">
         <TextView
             android:text="Log Out"
             android:layout_width="0dp"
@@ -53,7 +53,7 @@
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:id="@+id/no"
-                android:background="@color/green"/>
+                android:background="@color/colorPrimary"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -69,7 +69,7 @@
                 android:gravity="center"
                 android:id="@+id/yes"
                 android:textColor="@color/white"
-                android:background="@color/green"
+                android:background="@color/colorPrimary"
 
                 />
         </LinearLayout>

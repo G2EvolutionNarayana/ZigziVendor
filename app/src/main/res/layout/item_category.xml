@@ -1,53 +1,50 @@
 <LinearLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:app="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    app:ignore="NamespaceTypo">
 
-
-
-    >
-    <LinearLayout
-        android:id="@+id/linearlayout"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_margin="3dp">
-     <!--   <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/fedderthumbnail"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:civ_border_color="@color/colorWhite"
-            app:civ_border_width="0.5dp"
-            android:src="@drawable/logo" />-->
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp">
 
-        <ImageView
-            android:id="@+id/fedderthumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:civ_border_color="@color/colorWhite"
-            app:civ_border_width="0.5dp"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="fitXY"/>
-
-        <TextView
-            android:id="@+id/feedername"
+        <LinearLayout
+            android:id="@+id/linearlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="12dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:gravity="center"
-            android:minLines="2"
-            android:maxLines="2"
-            android:layout_marginTop="10dp"
-            />
+            android:orientation="vertical">
 
-    </LinearLayout>
+
+            <ImageView
+                android:id="@+id/fedderthumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"
+              />
+
+            <TextView
+                android:id="@+id/feedername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:padding="@dimen/dimen_10dp"
+                android:background="@color/white"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

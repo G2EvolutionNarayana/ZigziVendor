@@ -1,129 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/grey3">
+    android:windowSoftInputMode="stateHidden"
+    android:background="@color/white">
 
-    <ScrollView
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_15dp"
+        android:paddingBottom="@dimen/dimen_15dp">
 
-        <LinearLayout
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:orientation="vertical"
-                    android:background="@color/black">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:gravity="center_horizontal"
+                    android:text="Forgot Password"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/dimen_20dp"
+                    android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="210dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="50dp"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:src="@drawable/logo"
-                            android:padding="10dp"/>
-                        <TextView
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:text="We have sent you an access code via SMS for mobile number verification."
-                            android:textColor="@color/white"
-                            android:textSize="10dp"
-                            android:gravity="center"/>
-
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearlogin"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:fontFamily="@font/roboto_regular"
+                    android:paddingTop="10dp"
+                    android:text="Please enter 4 digit OTP below"
+                    android:textColor="#555555"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/title_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Zigzi"
+                    android:textColor="@color/white"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/sub_title_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Best fashion collection for you"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
 
-                    <LinearLayout
-                        android:id="@+id/linearlayout1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="210dp"
-                        android:background="@drawable/bordergrey2">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Enter code here"
-                            android:layout_marginTop="50dp"
-                            android:layout_gravity="center"
-                            />
-
-                        <EditText
-                            android:id="@+id/otp_edit"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:maxLength="6"
-                            android:inputType="number"
-                            android:gravity="center"
-                            android:text=""
-                            android:background="@drawable/radiobg"
-                            android:padding="5dp"
-                            android:layout_gravity="center"
-                            android:hint="OTP"
-                            android:textColor="@color/black"
-                            android:layout_marginTop="30dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="30dp"
-                            android:textSize="25sp" />
+            </LinearLayout>
 
 
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/linearlayout2"
-                        android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:orientation="vertical"
-                        android:layout_below="@+id/linearlayout1"
-                        android:background="@drawable/borderdown"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginBottom="10dp">
+        </ScrollView>
 
 
-                    </LinearLayout>
-                    <Button
-                        android:id="@+id/butverify"
-                        android:layout_width="150dp"
-                        android:layout_height="40dp"
-                        android:text="Verify"
-                        android:background="@drawable/green_border"
-                        android:textColor="@color/white"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"/>
-                </LinearLayout>
+    </LinearLayout>
 
-            </RelativeLayout>
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
 
-    </ScrollView>
-</LinearLayout>
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:paddingLeft="@dimen/dimen_15dp"
+            android:paddingBottom="@dimen/dimen_15dp"
+            android:text="One time password"
+            android:textColor="#555555"
+            android:textSize="18sp" />
+
+
+        <com.chaos.view.PinView
+            android:id="@+id/otp_edit"
+            style="@style/PinWidget.PinView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:cursorVisible="true"
+            android:gravity="center"
+            android:hint="Hint."
+            android:inputType="phone"
+            android:keyboardNavigationCluster="false"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:cursorWidth="2dp"
+            app:hideLineWhenFilled="false"
+            app:itemCount="4"
+            app:itemHeight="60dp"
+            app:itemRadius="2dp"
+            app:itemSpacing="@dimen/dimen_15dp"
+            app:itemWidth="60dp"
+            app:lineColor="#555555"
+            app:lineWidth="2dp"
+            app:viewType="rectangle" />
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_15dp">
+
+        <Button
+            android:id="@+id/butverify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/signup_btn_background"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="PROCEED"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgcancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/dimen_20dp"
+            android:src="@drawable/ic_cross" />
+    </RelativeLayout>
+
+</RelativeLayout>
+
+
