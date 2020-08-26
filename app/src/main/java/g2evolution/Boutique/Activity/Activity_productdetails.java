@@ -383,6 +383,8 @@ public class Activity_productdetails extends AppCompatActivity implements Recycl
                 }
 
 
+
+
             }
         });
 
